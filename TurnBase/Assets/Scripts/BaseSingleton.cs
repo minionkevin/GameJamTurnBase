@@ -1,18 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseSingleton : MonoBehaviour
+public class BaseSingleton<T>: MonoBehaviour where T:BaseSingleton<T>
 {
-    // Start is called before the first frame update
-    void Start()
+    private static T instance;
+    public static T Instance
     {
-        
+        get
+        {
+            if(instance == null)
+            {
+                instance = FindObjectOfType<T>();
+            }
+            if(instance == null) Debug.LogError("Can't find singleton " + typeof(T).Name);
+            return instance;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        if (instance == null)
+        {
+            instance = (T)this;
+            DontDestroyOnLoad(gameObject); 
+        }
+        else if (instance != this)
+        {
+            Debug.LogError("Another instance "+  typeof(T).Name + " exists");
+            Destroy(gameObject);
+        }
     }
 }
