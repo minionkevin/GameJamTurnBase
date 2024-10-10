@@ -16,6 +16,8 @@ Unity版本:2022.3.17f1
    ![image](https://github.com/user-attachments/assets/298c814d-4ed4-4a5f-8fe2-9286f1c982d4)
 8. 确定按钮
    ![image](https://github.com/user-attachments/assets/79e005e2-725e-42cd-a850-1c6bcac2772d)
+   a. 记录所有指令并调用
+   b. 当玩家按下键盘的时候就把这个指令加到list里面，确定之后就只需要遍历list来调用就可以了
 
 ## 人物动作
 1. 移动（单次为1格）
