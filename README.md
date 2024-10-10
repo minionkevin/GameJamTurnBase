@@ -92,7 +92,7 @@ Unity版本:2022.3.17f1
 ## 规则
 1. 代码里所有公共变量用大写开头例如NodeManager，私有变量用小写开头例如startTime
 2. 复用的所有gamobject放入prefab.改动的时候尽量改prefab减少merge conflict
-3. 所有任务都开新的分支，做好之后先和main merge，然后建立PR
+3. 所有任务都开新的分支（分支名字为做的任务名），做好之后先和main merge，然后建立PR
 4. 检查别人的PR时，一定要切到那个分支去测试
 5. 尽量避免复制粘贴相同代码，复用性的代码都写成函数
 
