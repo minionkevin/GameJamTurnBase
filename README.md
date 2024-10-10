@@ -3,7 +3,7 @@
 Unity版本:2022.3.17f1
 
 ## UI
-1. 根据输入大小，生成格子
+1. ~~根据输入大小，生成格子~~
 2. 人物血条
    ![image](https://github.com/user-attachments/assets/fe14eb1b-ffd0-4737-98b1-cafcfc01ad78)
 4. 人物输入按钮（共八个）+键盘输入
