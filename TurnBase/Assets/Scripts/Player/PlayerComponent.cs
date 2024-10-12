@@ -16,9 +16,9 @@ public class PlayerComponent : MonoBehaviour
         // 注意：这里并没有写完，因为是回合制，现在只是确定能移动
         // 应该是把这一回合的指令存储下来，当玩家按下confirm按钮的时候再统一处理指令
         // 只做测试用
-        if (Input.GetKeyDown(KeyCode.W)) HandleMove(new int2(0, -1));
+        if (Input.GetKeyDown(KeyCode.W)) HandleMove(new int2(0, 1));
         if (Input.GetKeyDown(KeyCode.A)) HandleMove(new int2(-1, 0));
-        if (Input.GetKeyDown(KeyCode.S)) HandleMove(new int2(0, 1));
+        if (Input.GetKeyDown(KeyCode.S)) HandleMove(new int2(0, -1));
         if (Input.GetKeyDown(KeyCode.D)) HandleMove(new int2(1, 0));
     }
 

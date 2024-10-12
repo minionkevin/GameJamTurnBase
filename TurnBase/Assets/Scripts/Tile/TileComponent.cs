@@ -6,7 +6,7 @@ public class TileComponent : MonoBehaviour
 {
     // 注意：alpha=0，用之前需要先调整
     public GameObject EffectLayer;
-    public RectTransform PlayerLayerRect;
+    public Transform PlayerLayerRect;
     // Debug only
     public TextMeshProUGUI PosLabel;
 
@@ -20,9 +20,9 @@ public class TileComponent : MonoBehaviour
         PosLabel.text = "(" + tilePos.x + "," + tilePos.y + ")";
     }
 
-    public void AddPlayer(GameObject playerPrefab)
+    public void AddPlayerToTile(GameObject playerPrefab)
     {
-        playerPrefab.GetComponent<RectTransform>().SetParent(PlayerLayerRect);
+        playerPrefab.GetComponent<Transform>().SetParent(PlayerLayerRect);
         playerPrefab.transform.localPosition = Vector3.zero;
     }
 }
