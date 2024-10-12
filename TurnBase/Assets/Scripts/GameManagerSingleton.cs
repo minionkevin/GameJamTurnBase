@@ -1,10 +1,8 @@
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class GameStartSingleton : BaseSingleton<GameStartSingleton>
+public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 {
-    
     // 这里的大部分数据应该都是private+从data里read
     // 写成public只是为了测试方便
     public int Width = 7;
@@ -25,6 +23,8 @@ public class GameStartSingleton : BaseSingleton<GameStartSingleton>
     public GameObject BossLeftHandPrefab;
     public GameObject BossRightHandPrefab;
 
+    public PlayerComponent Player;
+
     
     void Start()
     {
@@ -34,6 +34,7 @@ public class GameStartSingleton : BaseSingleton<GameStartSingleton>
         // player spawn
         var player = Instantiate(PlayerPrefab);
         var playerComponent = player.GetComponent<PlayerComponent>();
+        Player = playerComponent;
         playerComponent.Setup(PlayerStartPos);
         TileManagerSingleton.Instance.AddObjectToTile(PlayerStartPos,player);
 
