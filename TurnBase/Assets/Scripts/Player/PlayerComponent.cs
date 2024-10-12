@@ -28,7 +28,7 @@ public class PlayerComponent : MonoBehaviour
         int2 newPos = dir + currPlayerPos;
         if (!CheckLimit(newPos)) return;
         currPlayerPos = newPos;
-        TileManagerSingleton.Instance.MovePlayer(currPlayerPos, gameObject);
+        TileManagerSingleton.Instance.MoveObjectToTile(currPlayerPos, gameObject);
     }
 
     private bool CheckLimit(int2 newPos)

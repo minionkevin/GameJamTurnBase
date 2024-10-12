@@ -47,14 +47,16 @@ public class TileManagerSingleton : BaseSingleton<TileManagerSingleton>
         }
     }
 
-    public void AddPlayer(int2 pos,GameObject playerPrefab)
+    public void AddObjectToTile(int2 pos,GameObject objectPrefab)
     {
-        TileList[GetIndexPos(pos)].AddPlayerToTile(playerPrefab);
+        TileList[GetIndexPos(pos)].AddPlayerToTile(objectPrefab);
     }
     
-    public void MovePlayer(int2 pos,GameObject playerPrefab)
+    // 这个函数之后可以在加一个bool为 isPlayer
+    // 方便做动画，boss和player的移动动画应该是不一样的
+    public void MoveObjectToTile(int2 pos,GameObject objectPrefab)
     {
-        TileList[GetIndexPos(pos)].AddPlayerToTile(playerPrefab);
+        TileList[GetIndexPos(pos)].AddPlayerToTile(objectPrefab);
         
         // Add animation
     }

@@ -564,10 +564,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Width: 7
   Height: 6
+  bossHeadPos:
+    x: 3
+    y: 5
+  bossLeftHandPos:
+    x: 0
+    y: 5
+  bossRightHandPos:
+    x: 5
+    y: 5
   PlayerStartPos:
     x: 0
     y: 0
   PlayerPrefab: {fileID: 8487742318341802092, guid: 19b39d30dd96eee4598d394c848a5c4b, type: 3}
+  BossPrefab: {fileID: 8487742318341802092, guid: 7d3d73c376134ca48876b57e2a131d97, type: 3}
+  BossHeadPrefab: {fileID: 8487742318341802092, guid: 2dd8f65a33a6e7049ab70cef93da1a5f, type: 3}
+  BossLeftHandPrefab: {fileID: 8487742318341802092, guid: fdfbee191ea26224291def36ddb5c6cc, type: 3}
+  BossRightHandPrefab: {fileID: 8487742318341802092, guid: 8ad0ecd137309ea4791a940e7dbd5804, type: 3}
 --- !u!4 &1720132322
 Transform:
   m_ObjectHideFlags: 0
