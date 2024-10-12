@@ -13,7 +13,6 @@ public class PlayerComponent : MonoBehaviour
 
     public void HandleMove(int2 dir)
     {
-        Debug.LogError("MOVE");
         int2 newPos = dir + currPlayerPos;
         if (!CheckLimit(newPos)) return;
         currPlayerPos = newPos;
