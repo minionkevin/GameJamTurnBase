@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.Events;
+using System;
 
-public class CountDown : MonoBehaviour
+public class CountDown : BaseSingleton<CountDown>
 {
     [SerializeField]
     TMP_Text CountDown_Text;
@@ -17,8 +15,7 @@ public class CountDown : MonoBehaviour
     float timer = 0;
     bool isTiming = false;
 
-    public UnityAction OnTimerStart;
-    public UnityAction OnTimerEnd;
+    public Action OnTimerEnd;
 
     private void OnEnable()
     {
@@ -44,6 +41,13 @@ public class CountDown : MonoBehaviour
     public void UpdateTimerDisplay()
     {
         CountDown_Text.text = curTime.ToString("00:00");
+
+        if (curTime <= 0)
+        {
+            isTiming = false;
+            // 计时结束，（执行对战）
+            OnTimerEnd?.Invoke();
+        }
     }
 
     /// <summary>

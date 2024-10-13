@@ -23,6 +23,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public GameObject BossLeftHandPrefab;
     public GameObject BossRightHandPrefab;
 
+    public CountDown CountDown_UI;
+
     public PlayerComponent Player;
 
     
@@ -51,6 +53,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         TileManagerSingleton.Instance.AddObjectToTile(bossLeftHandPos,bossLeftHand);
         var bossRightHand = Instantiate(BossRightHandPrefab);
         TileManagerSingleton.Instance.AddObjectToTile(bossRightHandPos,bossRightHand);
+
+        // 开启游戏循环
+        CountDown_UI.SetTimerInit();
     }
     
 }

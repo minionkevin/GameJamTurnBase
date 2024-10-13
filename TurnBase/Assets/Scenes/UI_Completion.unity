@@ -335,6 +335,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1807670229825782492, guid: 53a28cda3eba1594cac62a25274a1d7a, type: 3}
   m_PrefabInstance: {fileID: 7259615420307436514}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &180961205 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5936197134230754990, guid: 53a28cda3eba1594cac62a25274a1d7a, type: 3}
+  m_PrefabInstance: {fileID: 7259615420307436514}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71df81d8b24f67948aa22bdf9c9cda3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &258266489
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1609,6 +1620,7 @@ MonoBehaviour:
   BossHeadPrefab: {fileID: 8487742318341802092, guid: 2dd8f65a33a6e7049ab70cef93da1a5f, type: 3}
   BossLeftHandPrefab: {fileID: 8487742318341802092, guid: fdfbee191ea26224291def36ddb5c6cc, type: 3}
   BossRightHandPrefab: {fileID: 8487742318341802092, guid: 8ad0ecd137309ea4791a940e7dbd5804, type: 3}
+  CountDown_UI: {fileID: 180961205}
   Player: {fileID: 0}
 --- !u!4 &1720132322
 Transform:
@@ -2298,6 +2310,10 @@ PrefabInstance:
     - target: {fileID: 1807670229825782492, guid: 53a28cda3eba1594cac62a25274a1d7a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5936197134230754990, guid: 53a28cda3eba1594cac62a25274a1d7a, type: 3}
+      propertyPath: CountDownCycle
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
