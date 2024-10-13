@@ -45,6 +45,8 @@ public class PlayerInputComponent : MonoBehaviour
     {
         TriggerPlayerInput?.Invoke();
 
+        // 计时器暂停（等到下一回合重置）
+
         // confirm之后需要block玩家输入
         // 直到下一轮到玩家
         
