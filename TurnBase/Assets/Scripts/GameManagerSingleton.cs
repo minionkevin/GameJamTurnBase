@@ -11,7 +11,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public int2 bossHeadPos;
     public int2 bossLeftHandPos;
     public int2 bossRightHandPos;
-    
+
+    public int bossStartHp = 40;
+    public int playerStartHp = 4;       // 玩家初始血量（心形的个数）
     
     // 有了config之后从scriptableobject read
     public int2 PlayerStartPos;
