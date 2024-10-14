@@ -8,6 +8,7 @@ public class CountDown : BaseSingleton<CountDown>
     TMP_Text CountDown_Text;
 
     // 计时循环
+    [HideInInspector]
     public int CountDownCycle = 60;
 
     // 计时及状态
@@ -15,27 +16,18 @@ public class CountDown : BaseSingleton<CountDown>
     float timer = 0;
     bool isTiming = false;
 
-    public Action OnTimerEnd;
+    public Action OnTimerEnd;   // 计时结束后的事件
 
-    private void OnEnable()
+    /// <summary>
+    /// 初始化计时器
+    /// </summary>
+    public void Setup(int cycleTime)
     {
-        SetTimerInit();
-    }
+        curTime = CountDownCycle = cycleTime;
+        timer = 0;
+        isTiming = true;
 
-    private void Update()
-    {
-        if (!isTiming)
-        {
-            return;
-        }
-
-        timer += Time.deltaTime;
-        if (timer > 1)
-        {
-            timer = 0;
-            curTime--;
-            UpdateTimerDisplay();
-        }
+        UpdateTimerDisplay();
     }
 
     public void UpdateTimerDisplay()
@@ -50,18 +42,6 @@ public class CountDown : BaseSingleton<CountDown>
         }
     }
 
-    /// <summary>
-    /// 初始化计时器
-    /// </summary>
-    public void SetTimerInit()
-    {
-        curTime = CountDownCycle;
-        timer = 0;
-        isTiming = true;
-
-        UpdateTimerDisplay();
-    }
-
 
     /// <summary>
     /// 暂停计时器
@@ -69,6 +49,23 @@ public class CountDown : BaseSingleton<CountDown>
     public void SetTimerPause()
     {
         isTiming = false;
+    }
+
+    private void Update()
+    {
+        if (!isTiming)
+        {
+            return;
+        }
+
+        timer += Time.deltaTime;
+        // todo:使用假的计时间隔
+        if (timer > 1)
+        {
+            timer = 0;
+            curTime--;
+            UpdateTimerDisplay();
+        }
     }
 
 }
