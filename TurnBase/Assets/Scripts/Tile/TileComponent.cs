@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using Unity.Mathematics;
@@ -21,12 +22,17 @@ public class TileComponent : MonoBehaviour
         PosLabel.text = "(" + tilePos.x + "," + tilePos.y + ")";
     }
 
-    public async void AddObjectToTile(GameObject objPrefab)
+    public int GetTileIndex()
+    {
+        return tileIndex;
+    }
+
+    public Task AddObjectToTile(GameObject objPrefab)
     {
         objPrefab.GetComponent<Transform>().SetParent(ObjectLayerRect);
         // Add animation
         Transform trans = objPrefab.GetComponent<Transform>();
-        await trans.DOLocalMove(Vector3.zero, 0.5f).AsyncWaitForCompletion();
+        return trans.DOLocalMove(Vector3.zero, 0.5f).AsyncWaitForCompletion();
     }
 
     public void SetObjectToTile(GameObject objPrefab)

@@ -114,12 +114,12 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // todo read boss指令data
         // BossInputList.Add(BossInputType.ATTACK1);
         
-        BossInputList.Add(BossInputType.ATTACK10);
-        BossInputList.Add(BossInputType.ATTACK11);
-        BossInputList.Add(BossInputType.ATTACK12);
-        BossInputList.Add(BossInputType.ATTACK13);
-        BossInputList.Add(BossInputType.ATTACK14);
-        BossInputList.Add(BossInputType.ATTACK15);
+        BossInputList.Add(BossInputType.ATTACK40);
+        BossInputList.Add(BossInputType.ATTACK41);
+        BossInputList.Add(BossInputType.ATTACK42);
+        BossInputList.Add(BossInputType.ATTACK43);
+        BossInputList.Add(BossInputType.ATTACK44);
+        BossInputList.Add(BossInputType.ATTACK45);
         
         for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
         {
@@ -128,7 +128,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         }
     }
 
-    private void HandleBossInput(int value)
+    private async void HandleBossInput(int value)
     {
         switch (value)
         {
@@ -168,6 +168,43 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             case BossInputType.ATTACK25:
                 Boss.DoAttack2Step(5);
                 break;
+            case BossInputType.ATTACK30:
+                await Boss.DoAttack3Pre();
+                break;
+            case BossInputType.ATTACK31:
+                Boss.DoAttack3Step(1);
+                break;
+            case BossInputType.ATTACK32:
+                Boss.DoAttack3Step(2);
+                break;
+            case BossInputType.ATTACK33:
+                Boss.DoAttack3Step(3);
+                break;
+            case BossInputType.ATTACK34:
+                Boss.DoAttack3Step(4);
+                break;
+            case BossInputType.ATTACK35:
+                Boss.DoAttack3Step(5);
+                break;
+            case BossInputType.ATTACK40:
+                await Boss.DoAttack4Pre();
+                break;
+            case BossInputType.ATTACK41:
+                Boss.DoAttack4Step(1);
+                break;
+            case BossInputType.ATTACK42:
+                Boss.DoAttack4Step(2);
+                break;
+            case BossInputType.ATTACK43:
+                Boss.DoAttack4Step(3);
+                break;
+            case BossInputType.ATTACK44:
+                Boss.DoAttack4Step(4);
+                break;
+            case BossInputType.ATTACK45:
+                Boss.DoAttack4Step(5);
+                break;
+            
             default:
                 Debug.LogError("wrong boss attack type");
                 break;

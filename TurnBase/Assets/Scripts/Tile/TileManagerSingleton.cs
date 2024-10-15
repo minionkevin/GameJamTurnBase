@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
@@ -48,16 +49,16 @@ public class TileManagerSingleton : BaseSingleton<TileManagerSingleton>
         }
     }
 
-    public void AddObjectToTile(int2 pos,GameObject objectPrefab)
+    public Task AddObjectToTile(int2 pos,GameObject objectPrefab)
     {
-        TileList[GetIndexPos(pos)].AddObjectToTile(objectPrefab);
+        return TileList[GetIndexPos(pos)].AddObjectToTile(objectPrefab);
     }
     
     // 这个函数之后可以在加一个bool为 isPlayer
     // 方便做动画，boss和player的移动动画应该是不一样的
     public async void MoveObjectToTile(int2 pos,GameObject objectPrefab)
     {
-        TileList[GetIndexPos(pos)].AddObjectToTile(objectPrefab);
+        await TileList[GetIndexPos(pos)].AddObjectToTile(objectPrefab);
     }
 
     private int2 GetIntPos(int index)
