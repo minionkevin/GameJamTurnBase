@@ -1398,6 +1398,7 @@ MonoBehaviour:
   - {fileID: 1345845814}
   - {fileID: 1426137842}
   memoryContainerRect: {fileID: 19500426}
+  MaxActionCount: 5
 --- !u!1 &1708914734
 GameObject:
   m_ObjectHideFlags: 0
