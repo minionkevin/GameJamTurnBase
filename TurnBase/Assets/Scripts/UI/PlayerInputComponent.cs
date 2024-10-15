@@ -15,6 +15,7 @@ public class PlayerInputComponent : MonoBehaviour
 
     public RectTransform memoryContainerRect;
     private List<GameObject> memoryList = new List<GameObject>();
+    public int MaxActionCount = 5;  // 最大指令数
 
     // 控制是否输入可用（地图生成前/对战中，所有输入都不可用）
     public static bool InputEnabled = false;
@@ -27,7 +28,7 @@ public class PlayerInputComponent : MonoBehaviour
     /// <param name="button"></param>
     public void HandleAButton(Button button)
     {
-        if (!InputEnabled) return;
+        if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
         GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.DoMove(new int2(-1, 0));
     }
@@ -38,7 +39,7 @@ public class PlayerInputComponent : MonoBehaviour
     /// <param name="button"></param>
     public void HandleDButton(Button button)
     {
-        if (!InputEnabled) return;
+        if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
         GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.DoMove(new int2(1, 0));
     }
@@ -49,7 +50,7 @@ public class PlayerInputComponent : MonoBehaviour
     /// <param name="button"></param>
     public void HandleJumpButton(Button button)
     {
-        if (!InputEnabled) return;
+        if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
         GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.DoJump();
     }
@@ -60,7 +61,7 @@ public class PlayerInputComponent : MonoBehaviour
     /// <param name="button"></param>
     public void HandleHorizontalAtk(Button button)
     {
-        if (!InputEnabled) return;
+        if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
         GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.DoHorizontalAttack();
     }
@@ -71,7 +72,7 @@ public class PlayerInputComponent : MonoBehaviour
     /// <param name="button"></param>
     public void HandleCrossAtk(Button button)
     {
-        if (!InputEnabled) return;
+        if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
         GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.DoCrossAttack();
     }
@@ -82,7 +83,7 @@ public class PlayerInputComponent : MonoBehaviour
     /// <param name="button"></param>
     public void HandleHeal(Button button)
     {
-        if (!InputEnabled) return;
+        if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
         GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.DoHeal();
     }
@@ -93,7 +94,7 @@ public class PlayerInputComponent : MonoBehaviour
     /// <param name="button"></param>
     public void HandleProtected(Button button)
     {
-        if (!InputEnabled) return;
+        if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
         GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.DoProtected();
     }
@@ -103,7 +104,7 @@ public class PlayerInputComponent : MonoBehaviour
     /// </summary>
     public void HandleConfirm()
     {
-        if (!InputEnabled) return;
+        if (!InputEnabled ) return;
         GameManagerSingleton.Instance.EnterBattle();
     }
 

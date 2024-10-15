@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerComponent : MonoBehaviour
 {
     // 每次玩家移动需更新
-    private int2 currPlayerPos;
+    [HideInInspector]
+    public int2 currPlayerPos;
 
     
     [HideInInspector]
