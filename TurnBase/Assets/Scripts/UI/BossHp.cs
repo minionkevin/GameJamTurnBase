@@ -11,15 +11,15 @@ public class BossHp : MonoBehaviour
     int maxHp;
     int curHp;
 
-    // ²âÊÔÓÃ
-    // Ö®ºóÉ¾´Ëµ÷ÓÃ£¬ÔÚGameManagerÖĞµ÷ÓÃ
+    // æµ‹è¯•ç”¨
+    // ä¹‹ååˆ æ­¤è°ƒç”¨ï¼Œåœ¨GameManagerä¸­è°ƒç”¨
     private void OnEnable()
     {
         Setup(40);
     }
 
     /// <summary>
-    /// ³õÊ¼»¯
+    /// åˆå§‹åŒ–
     /// </summary>
     /// <param name="_maxHp"></param>
     public void Setup(int _maxHp)
@@ -29,7 +29,7 @@ public class BossHp : MonoBehaviour
     }
 
     /// <summary>
-    /// ¸üĞÂÑªÌõUIÏÔÊ¾
+    /// æ›´æ–°è¡€æ¡UIæ˜¾ç¤º
     /// </summary>
     public void Update_HpDisplay()
     {
@@ -37,9 +37,9 @@ public class BossHp : MonoBehaviour
     }
 
     /// <summary>
-    /// ÊÜ»÷
+    /// å—å‡»
     /// </summary>
-    /// <param name="_damageValue">ÊÜµ½µÄÉËº¦×ÜÎªÕıÖµ</param>
+    /// <param name="_damageValue">å—åˆ°çš„ä¼¤å®³æ€»ä¸ºæ­£å€¼</param>
     public void OnTakeDamage(int _damageValue)
     {
         curHp -= _damageValue;
@@ -47,7 +47,7 @@ public class BossHp : MonoBehaviour
 
         if (curHp <= 0)
         {
-            // todo:BossËÀÍöÂß¼­
+            // todo:Bossæ­»äº¡é€»è¾‘
             Debug.Log("Boss Die!");
             return;
         }

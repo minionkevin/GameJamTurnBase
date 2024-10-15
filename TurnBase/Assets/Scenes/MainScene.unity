@@ -2151,8 +2151,8 @@ MonoBehaviour:
   Width: 7
   Height: 6
   bossHeadPos:
-    x: 3
-    y: 5
+    x: 1
+    y: 0
   bossLeftHandPos:
     x: 0
     y: 5
@@ -2175,6 +2175,8 @@ MonoBehaviour:
   PlayerHp_UI: {fileID: 1333744986}
   Player: {fileID: 0}
   Boss: {fileID: 0}
+  PlayerInputList: 
+  PlayerInput: {fileID: 447450013}
 --- !u!4 &1720132322
 Transform:
   m_ObjectHideFlags: 0

@@ -14,9 +14,13 @@ public class PlayerComponent : MonoBehaviour
     [HideInInspector]
     public bool isUnderProtected;   // 护盾开启的状态
 
+
+    private PlayerInputType preInputType;
+    private int healMax;
     
     public void Setup(int2 playerPos)
     {
+        healMax = 4;
         currPlayerPos = playerPos;
         // 初始化时，重置到默认状态
         ResetPlayerState();
@@ -49,15 +53,12 @@ public class PlayerComponent : MonoBehaviour
     /// <param name="attackPosList"></param>
     public void DoHorizontalAttack()
     {
-        // 攻击力和攻击范围应该读表
-        List<int2> list = new List<int2>() {new int2(-2,0), new int2(-1, 0), new int2(0, 0), new int2(1, 0), new int2(2, 0)};
-        int damage = 2;
-
-        for (int i = 0; i < list.Count; i++)
+        List<int2> attackList = new List<int2>();
+        for (int i = -2; i < 3; i++)
         {
-            // check boss head or hand on the pos
-            // currPlayerPos + list[i]
+            attackList.Add(new int2(currPlayerPos.x + i,currPlayerPos.y));
         }
+        GameManagerSingleton.Instance.Boss.CheckForDamage(2, attackList);
     }
 
     /// <summary>
@@ -66,12 +67,8 @@ public class PlayerComponent : MonoBehaviour
     /// <param name="attackPosList"></param>
     public void DoCrossAttack()
     {
-        // 攻击力和攻击范围应该读表
-        List<int2> list = new List<int2>() { new int2(0, 1), new int2(-1, 0), new int2(0, 0), new int2(1, 0) };
-        int damage = 4;
-
-        // check boss head or hand on the pos
-        // currPlayerPos + list[i]
+        List<int2> attackList = new List<int2>() { new int2(currPlayerPos.x, currPlayerPos.y + 1), new int2(currPlayerPos.x -1, currPlayerPos.y), currPlayerPos, new int2(currPlayerPos.x+1, currPlayerPos.y) };
+        GameManagerSingleton.Instance.Boss.CheckForDamage(4, attackList);
     }
 
     /// <summary>
@@ -79,6 +76,8 @@ public class PlayerComponent : MonoBehaviour
     /// </summary>
     public void DoHeal()
     {
+        healMax--;
+        if (healMax <= 0) return;
         GameManagerSingleton.Instance.PlayerHp_UI.OnGetRecovery(2);
         // Anim
 
@@ -100,8 +99,12 @@ public class PlayerComponent : MonoBehaviour
         // Audio
     }
 
-    public void OnTakgeDamage(int _damage)
+    public void OnTakeDamage(int _damage)
     {
+        if (isJumping) return;
+
+        if (isUnderProtected) _damage /= 2;
+        
         // Anim
 
         // VFX
@@ -131,3 +134,14 @@ public class PlayerComponent : MonoBehaviour
 
 }
 
+public class PlayerInputType
+{
+    public const int MOVEA = 0;
+    public const int MOVED = 1;
+    public const int ATTACK1 = 2;
+    public const int ATTACK2 = 3;
+    public const int DEFENSE = 4;
+    public const int HEAL = 5;
+    public const int JUMP = 6;
+    public const int JUMPATTACK = 7;
+}

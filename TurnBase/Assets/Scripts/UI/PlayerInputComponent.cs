@@ -30,7 +30,7 @@ public class PlayerInputComponent : MonoBehaviour
     {
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
-        GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.DoMove(new int2(-1, 0));
+        GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.MOVEA);
     }
     
     /// <summary>
@@ -41,7 +41,7 @@ public class PlayerInputComponent : MonoBehaviour
     {
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
-        GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.DoMove(new int2(1, 0));
+        GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.MOVED);
     }
 
     /// <summary>
@@ -50,9 +50,10 @@ public class PlayerInputComponent : MonoBehaviour
     /// <param name="button"></param>
     public void HandleJumpButton(Button button)
     {
+        if (GameManagerSingleton.Instance.PlayerInputList[^1] == PlayerInputType.JUMP) return;
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
-        GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.DoJump();
+        GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.JUMP);
     }
 
     /// <summary>
@@ -63,7 +64,7 @@ public class PlayerInputComponent : MonoBehaviour
     {
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
-        GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.DoHorizontalAttack();
+        GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.ATTACK1);
     }
 
     /// <summary>
@@ -74,7 +75,7 @@ public class PlayerInputComponent : MonoBehaviour
     {
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
-        GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.DoCrossAttack();
+        GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.ATTACK2);
     }
 
     /// <summary>
@@ -85,7 +86,7 @@ public class PlayerInputComponent : MonoBehaviour
     {
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
-        GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.DoHeal();
+        GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.HEAL);
     }
 
     /// <summary>
@@ -96,7 +97,7 @@ public class PlayerInputComponent : MonoBehaviour
     {
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
-        GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.DoProtected();
+        GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.DEFENSE);
     }
 
     /// <summary>

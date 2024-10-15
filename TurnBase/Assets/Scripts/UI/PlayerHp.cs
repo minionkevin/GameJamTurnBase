@@ -10,22 +10,22 @@ public class PlayerHp : MonoBehaviour
     [SerializeField]
     Heart HeartPref;
 
-    // ÓÉÓÚ°ë¿ÅĞÄµÄ´æÔÚ£¬´æ´¢ÖµÎªÊäÈëÖµ*2£»
+    // ç”±äºåŠé¢—å¿ƒçš„å­˜åœ¨ï¼Œå­˜å‚¨å€¼ä¸ºè¾“å…¥å€¼*2ï¼›
     int maxHp;
     int curHp;
     List<Heart> HeartsList;
 
-    // ²âÊÔÓÃ
-    // Ö®ºóÉ¾´Ëµ÷ÓÃ£¬ÔÚGameManagerÖĞµ÷ÓÃ
+    // æµ‹è¯•ç”¨
+    // ä¹‹ååˆ æ­¤è°ƒç”¨ï¼Œåœ¨GameManagerä¸­è°ƒç”¨
     private void OnEnable()
     {
         Setup(4);
     }
 
     /// <summary>
-    /// ³õÊ¼»¯
+    /// åˆå§‹åŒ–
     /// </summary>
-    /// <param name="_realMaxHp">Î´Ëõ·ÅµÄ³õÊ¼ÑªÁ¿</param>
+    /// <param name="_realMaxHp">æœªç¼©æ”¾çš„åˆå§‹è¡€é‡</param>
     public void Setup(int _realMaxHp)
     {
         curHp = maxHp = _realMaxHp * 2;
@@ -39,8 +39,8 @@ public class PlayerHp : MonoBehaviour
     }
 
     /// <summary>
-    /// ¸üĞÂÑªÌõUIÏÔÊ¾
-    /// °ë¸ñÑªÂß¼­
+    /// æ›´æ–°è¡€æ¡UIæ˜¾ç¤º
+    /// åŠæ ¼è¡€é€»è¾‘
     /// </summary>
     public void Update_HpDisplay()
     {
@@ -65,9 +65,9 @@ public class PlayerHp : MonoBehaviour
     }
 
     /// <summary>
-    /// ÊÜ»÷
+    /// å—å‡»
     /// </summary>
-    /// <param name="_damageValue">´«ÈëÒÑ¾­Ëõ·ÅºóµÄÉËº¦Öµ£¨0.5->1£©</param>
+    /// <param name="_damageValue">ä¼ å…¥å·²ç»ç¼©æ”¾åçš„ä¼¤å®³å€¼ï¼ˆ0.5->1ï¼‰</param>
     public void OnTakeDamage(int _damageValue)
     {
         curHp -= _damageValue;
@@ -75,16 +75,16 @@ public class PlayerHp : MonoBehaviour
 
         if (curHp <= 0)
         {
-            // todo:BossËÀÍöÂß¼­
+            // todo:Bossæ­»äº¡é€»è¾‘
             Debug.Log("Boss Die!");
             return;
         }
     }
 
     /// <summary>
-    /// »Ö¸´
+    /// æ¢å¤
     /// </summary>
-    /// <param name="_recoverValue">´«ÈëÒÑ¾­Ëõ·ÅºóµÄ»Ö¸´Öµ£¨2->4£©</param>
+    /// <param name="_recoverValue">ä¼ å…¥å·²ç»ç¼©æ”¾åçš„æ¢å¤å€¼ï¼ˆ2->4ï¼‰</param>
     public void OnGetRecovery(int _recoverValue)
     {
         curHp += _recoverValue;

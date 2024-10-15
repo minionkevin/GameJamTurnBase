@@ -79,7 +79,6 @@ public class TileManagerSingleton : BaseSingleton<TileManagerSingleton>
     /// <returns></returns>
     public bool CheckPos(int2 posForCheck,int2 objPos)
     {
-        bool2 result = posForCheck == objPos;
-        return result.x && result.y;
+        return posForCheck.Equals(objPos);
     }
 }

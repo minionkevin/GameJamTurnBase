@@ -36,10 +36,12 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public PlayerComponent Player;
     public BossComponent Boss;
 
-    public Action PlayerActionList;
+    // public Action PlayerActionList;
+
+    public List<int> PlayerInputList = new List<int>();
     
     public PlayerInputComponent PlayerInput;
-
+    
 
     void Start()
     {
@@ -58,6 +60,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         var boss = Instantiate(BossPrefab);
         boss.GetComponent<Transform>().SetParent(transform);
         var bossComponent = boss.GetComponent<BossComponent>();
+        Boss = bossComponent;
         bossComponent.Setup(bossHeadPos,bossLeftHandPos,bossRightHandPos);
 
         var bossHead = Instantiate(BossHeadPrefab);
@@ -115,6 +118,44 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         
     }
 
+    private void HandlePlayerInput()
+    {
+        // todo 跳跃攻击
+        foreach (int input in PlayerInputList)
+        {
+            switch (input)
+            {
+                case PlayerInputType.MOVEA: 
+                    Player.DoMove(new int2(-1,0));
+                    break;
+                case PlayerInputType.MOVED: 
+                    Player.DoMove(new int2(1,0));
+                    break;
+                case PlayerInputType.ATTACK1: 
+                    Player.DoHorizontalAttack();
+                    break;
+                case PlayerInputType.ATTACK2: 
+                    Player.DoCrossAttack();
+                    break;
+                case PlayerInputType.DEFENSE:
+                    Player.DoProtected();
+                    break;
+                case PlayerInputType.HEAL:
+                    Player.DoHeal();
+                    break;
+                case PlayerInputType.JUMP:
+                    Player.DoJump();
+                    break;
+                case PlayerInputType.JUMPATTACK:
+                    Player.DoJump();
+                    break;
+                default:
+                    Debug.LogError("wrong player attack type");
+                    break;
+            }
+        }
+    }
+
     /// <summary>
     /// 对战过程
     /// </summary>
@@ -122,17 +163,13 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     IEnumerator BattleCoroutine()
     {
         // 每做完一个指令，等待所有动画完成，再开始下一个指令
-        PlayerActionList?.Invoke();
-        PlayerActionList = null;
+        HandlePlayerInput();
         
         yield return new WaitForFixedUpdate();
         
         PlayerInput.ClearMemoryList();
         
         yield return null;
-        
-        
-        // 清空action的reference
 
         // 重新开始下一轮
         EnterGame();
