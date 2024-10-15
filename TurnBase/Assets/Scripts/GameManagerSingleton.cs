@@ -114,12 +114,12 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // todo read boss指令data
         // BossInputList.Add(BossInputType.ATTACK1);
         
-        BossInputList.Add(BossInputType.ATTACK10);
-        BossInputList.Add(BossInputType.ATTACK11);
-        BossInputList.Add(BossInputType.ATTACK12);
-        BossInputList.Add(BossInputType.ATTACK13);
-        BossInputList.Add(BossInputType.ATTACK14);
-        BossInputList.Add(BossInputType.ATTACK15);
+        BossInputList.Add(BossInputType.ATTACK20);
+        BossInputList.Add(BossInputType.ATTACK21);
+        BossInputList.Add(BossInputType.ATTACK22);
+        BossInputList.Add(BossInputType.ATTACK23);
+        BossInputList.Add(BossInputType.ATTACK24);
+        BossInputList.Add(BossInputType.ATTACK25);
         
         for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
         {
@@ -149,6 +149,24 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 break;
             case BossInputType.ATTACK15:
                 Boss.HandleVerticalMove(false);
+                break;
+            case BossInputType.ATTACK20:
+                Boss.DoAttack2Pre();
+                break;
+            case BossInputType.ATTACK21:
+                Boss.DoAttack2Step(1);
+                break;
+            case BossInputType.ATTACK22:
+                Boss.DoAttack2Step(2);
+                break;
+            case BossInputType.ATTACK23:
+                Boss.DoAttack2Step(3);
+                break;
+            case BossInputType.ATTACK24:
+                Boss.DoAttack2Step(4);
+                break;
+            case BossInputType.ATTACK25:
+                Boss.DoAttack2Step(5);
                 break;
             default:
                 Debug.LogError("wrong boss attack type");
@@ -200,22 +218,22 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // 每做完一个指令，等待所有动画完成，再开始下一个指令
 
         ReorderInput();
-        
-        // todo safety check
-        for (int i = 0; i < inputLists.Count; i++)
-        {
-            if(i%2 == 0)HandlePlayerInput(inputLists[i]);
-            else HandleBossInput(inputLists[i]);
-        
-            yield return new WaitForSecondsRealtime(3f);
-        }
+        //
+        // // todo safety check
+        // for (int i = 0; i < inputLists.Count; i++)
+        // {
+        //     if(i%2 == 0)HandlePlayerInput(inputLists[i]);
+        //     else HandleBossInput(inputLists[i]);
+        //
+        //     yield return new WaitForSecondsRealtime(3f);
+        // }
 
         // boss测试
-        // for (int i = 0; i < BossInputList.Count; i++)
-        // {
-        //     HandleBossInput(BossInputList[i]);   
-        //     yield return new WaitForSecondsRealtime(3);
-        // }
+        for (int i = 0; i < BossInputList.Count; i++)
+        {
+            HandleBossInput(BossInputList[i]);   
+            yield return new WaitForSecondsRealtime(3);
+        }
         
         
         yield return new WaitForFixedUpdate();

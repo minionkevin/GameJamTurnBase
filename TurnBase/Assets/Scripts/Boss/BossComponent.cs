@@ -45,7 +45,7 @@ public class BossComponent : MonoBehaviour
         }
     }
     
-    public async void DoAttack1Pre()
+    public void DoAttack1Pre()
     {
         int2 playerPos = GameManagerSingleton.Instance.Player.GetPlayerPos(); 
         // 判断玩家在左右
@@ -168,9 +168,81 @@ public class BossComponent : MonoBehaviour
         }
     }
 
+    public void DoAttack2Pre()
+    {
+        int2 leftPos = new int2(1,GameManagerSingleton.Instance.Height-2);
+        DoMove(leftHandObj,leftPos);
+        currLeftHandPos = leftPos;
+        int2 rightPos = new int2(GameManagerSingleton.Instance.Width-2,GameManagerSingleton.Instance.Height-2);
+        DoMove(rightHandObj,rightPos);
+        currRightHandPos = rightPos;
+        int2 headPos = new int2(GameManagerSingleton.Instance.Width/2,GameManagerSingleton.Instance.Height-1);
+        DoMove(headObj,headPos);
+        currHeadPos = headPos;
+    }
+
+    public void DoAttack2Step(int step)
+    {
+        switch (step)
+        {
+            case 1:
+                PerformAttack(leftHandObj, currLeftHandPos, true);
+                break;
+            case 2:
+                PerformAttack(rightHandObj, currRightHandPos, false);
+                MoveHand(leftHandObj, 2, GameManagerSingleton.Instance.Height - 2, ref currLeftHandPos);
+                break;
+            case 3:
+                PerformAttack(leftHandObj, currLeftHandPos, true);
+                MoveHand(rightHandObj, GameManagerSingleton.Instance.Width - 3, GameManagerSingleton.Instance.Height - 2, ref currRightHandPos);
+                break;
+            case 4:
+                PerformAttack(rightHandObj, currRightHandPos, false);
+                MoveHand(leftHandObj, 1, GameManagerSingleton.Instance.Height - 2, ref currLeftHandPos);
+                break;
+            case 5:
+                MoveHand(rightHandObj, GameManagerSingleton.Instance.Width - 2, GameManagerSingleton.Instance.Height - 2, ref currRightHandPos);
+                DoHeadVerticalAttack(); 
+                MoveHand(headObj, currHeadPos.x, 1, ref currHeadPos);
+                break;
+        }
+    }
+
+    private void PerformAttack(GameObject handObj, int2 handPos, bool isLeft)
+    {
+        DoAOEAttack(handObj, handPos, isLeft);
+    }
+
+    private void MoveHand(GameObject handObj, int x, int y, ref int2 currentHandPos)
+    {
+        int2 newPos = new int2(x, y);
+        DoMove(handObj, newPos);
+        currentHandPos = newPos;
+    }
+    
+
     private void DoMove(GameObject obj, int2 pos)
     {
         TileManagerSingleton.Instance.MoveObjectToTile(pos,obj);
+    }
+
+    private async void DoHeadVerticalAttack()
+    {
+        List<int2> attackList = new List<int2>();
+
+        while (currHeadPos.y >= 0)
+        {
+            int2 targetPos = new int2(currHeadPos.x, currHeadPos.y--);
+            if (CheckLimit(targetPos))
+            {
+                attackList.Add(targetPos);
+            }
+        }
+        GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
+
+        currHeadPos = attackList[^1];
+        
+        await TriggerVerticalAttackAnimation(attackList[^1],headObj);
     }
 
     private async void DoVerticalAttack(GameObject obj, int2 pos,bool value)
@@ -191,6 +263,33 @@ public class BossComponent : MonoBehaviour
         else currRightHandPos = attackList[^1];
         
         await TriggerVerticalAttackAnimation(attackList[^1],obj);
+    }
+    
+    public void DoAOEAttack(GameObject obj, int2 pos,bool isLeft)
+    {
+        int2 tmp = new int2();
+        List<int2> attackList = new List<int2>();
+        for (int i = 0; i < 3; i++)
+        {
+            int2 targetPos = new int2(pos.x, pos.y - i);
+            if (CheckLimit(targetPos)) attackList.Add(targetPos);
+        }
+        
+        tmp = attackList[^1];
+        
+        int2 sidePos = new int2(tmp.x - 1, tmp.y);
+        if(CheckLimit(sidePos)) attackList.Add(sidePos);
+        sidePos = new int2(tmp.x + 1 , tmp.y);
+        if(CheckLimit(sidePos)) attackList.Add(sidePos);
+        
+        if (isLeft) currLeftHandPos = tmp;
+        else currRightHandPos = tmp;
+        
+        GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
+        
+        // add animation
+        TileManagerSingleton.Instance.AddObjectToTile(tmp,obj);
+        
     }
 
     private Task TriggerVerticalAttackAnimation(int2 targetPos, GameObject obj)
@@ -233,4 +332,11 @@ public class BossInputType
     public const int ATTACK13 = 13;
     public const int ATTACK14 = 14;
     public const int ATTACK15 = 15;
+
+    public const int ATTACK20 = 20;
+    public const int ATTACK21 = 21;
+    public const int ATTACK22 = 22;
+    public const int ATTACK23 = 23;
+    public const int ATTACK24 = 24;
+    public const int ATTACK25 = 25;
 }
