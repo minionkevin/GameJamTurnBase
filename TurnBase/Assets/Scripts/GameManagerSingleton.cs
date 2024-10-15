@@ -114,17 +114,17 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // todo read boss指令data
         // BossInputList.Add(BossInputType.ATTACK1);
         
-        BossInputList.Add(BossInputType.ATTACK40);
-        BossInputList.Add(BossInputType.ATTACK41);
-        BossInputList.Add(BossInputType.ATTACK42);
-        BossInputList.Add(BossInputType.ATTACK43);
-        BossInputList.Add(BossInputType.ATTACK44);
-        BossInputList.Add(BossInputType.ATTACK45);
+        BossInputList.Add(BossInputType.ATTACK10);
+        BossInputList.Add(BossInputType.ATTACK11);
+        BossInputList.Add(BossInputType.ATTACK12);
+        BossInputList.Add(BossInputType.ATTACK13);
+        BossInputList.Add(BossInputType.ATTACK14);
+        BossInputList.Add(BossInputType.ATTACK15);
         
         for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
         {
-            if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
             if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
+            if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
         }
     }
 
@@ -257,20 +257,21 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         ReorderInput();
         //
         // // todo safety check
-        // for (int i = 0; i < inputLists.Count; i++)
-        // {
-        //     if(i%2 == 0)HandlePlayerInput(inputLists[i]);
-        //     else HandleBossInput(inputLists[i]);
-        //
-        //     yield return new WaitForSecondsRealtime(3f);
-        // }
+        // switch back to i%2==0 for player after boss pose finish
+        for (int i = 0; i < inputLists.Count; i++)
+        {
+            if(i%2 != 0)HandlePlayerInput(inputLists[i]);
+            else HandleBossInput(inputLists[i]);
+        
+            yield return new WaitForSecondsRealtime(1f);
+        }
 
         // boss测试
-        for (int i = 0; i < BossInputList.Count; i++)
-        {
-            HandleBossInput(BossInputList[i]);   
-            yield return new WaitForSecondsRealtime(1);
-        }
+        // for (int i = 0; i < BossInputList.Count; i++)
+        // {
+        //     HandleBossInput(BossInputList[i]);   
+        //     yield return new WaitForSecondsRealtime(1);
+        // }
         
         
         yield return new WaitForFixedUpdate();
