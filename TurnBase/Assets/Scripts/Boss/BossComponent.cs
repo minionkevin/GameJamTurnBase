@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -172,7 +173,7 @@ public class BossComponent : MonoBehaviour
         TileManagerSingleton.Instance.MoveObjectToTile(pos,obj);
     }
 
-    private void DoVerticalAttack(GameObject obj, int2 pos,bool value)
+    private async void DoVerticalAttack(GameObject obj, int2 pos,bool value)
     {
         List<int2> attackList = new List<int2>();
         for (int i = 0; i < 3; i++)
@@ -186,11 +187,23 @@ public class BossComponent : MonoBehaviour
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
         
-        // 用动画来动手
         if (value) currLeftHandPos = attackList[^1];
         else currRightHandPos = attackList[^1];
         
-        TileManagerSingleton.Instance.MoveObjectToTile(attackList[^1],obj);
+        await TriggerVerticalAttackAnimation(attackList[^1],obj);
+    }
+
+    private Task TriggerVerticalAttackAnimation(int2 targetPos, GameObject obj)
+    {
+        var TileManager = TileManagerSingleton.Instance;
+        TileManager.TileList[TileManager.GetIndexPos(targetPos)].SetObjectToTile(obj);
+        Transform currTrans = obj.GetComponent<Transform>();
+
+        Sequence timeline = DOTween.Sequence();
+        timeline.Insert(0, currTrans.DOLocalMove(Vector3.zero, 0.5f).SetEase(Ease.Linear));
+        timeline.Insert(0, currTrans.DOScale(0.75f, 0.15f));
+        timeline.Insert(0.3f, currTrans.DOScale(1f, 0.15f));
+        return timeline.Play().AsyncWaitForCompletion();
     }
     
     private bool CheckLimit(int2 targetPos)

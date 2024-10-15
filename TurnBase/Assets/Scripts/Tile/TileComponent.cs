@@ -28,4 +28,9 @@ public class TileComponent : MonoBehaviour
         Transform trans = objPrefab.GetComponent<Transform>();
         await trans.DOLocalMove(Vector3.zero, 0.5f).AsyncWaitForCompletion();
     }
+
+    public void SetObjectToTile(GameObject objPrefab)
+    {
+        objPrefab.GetComponent<Transform>().SetParent(ObjectLayerRect);
+    }
 }

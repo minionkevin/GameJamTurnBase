@@ -65,7 +65,7 @@ public class TileManagerSingleton : BaseSingleton<TileManagerSingleton>
         return new int2(index % width, index / width);
     }
 
-    private int GetIndexPos(int2 pos)
+    public int GetIndexPos(int2 pos)
     {
         return pos.y * width + pos.x;
     }

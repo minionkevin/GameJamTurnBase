@@ -207,7 +207,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             if(i%2 == 0)HandlePlayerInput(inputLists[i]);
             else HandleBossInput(inputLists[i]);
         
-            yield return new WaitForSecondsRealtime(3);
+            yield return new WaitForSecondsRealtime(3f);
         }
 
         // boss测试
