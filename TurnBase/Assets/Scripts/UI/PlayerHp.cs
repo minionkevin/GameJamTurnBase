@@ -59,7 +59,6 @@ public class PlayerHp : MonoBehaviour
             {
                 HeartsList[i].SetDisplay(curHp % 2 == 1 ? -1 : 0);
             }
-            
         }
         
     }
@@ -71,12 +70,13 @@ public class PlayerHp : MonoBehaviour
     public void OnTakeDamage(int _damageValue)
     {
         curHp -= _damageValue;
+        if (curHp <= 0) curHp = 0;
         Update_HpDisplay();
 
         if (curHp <= 0)
         {
-            // todo:Boss死亡逻辑
-            Debug.Log("Boss Die!");
+            // todo:Player死亡逻辑
+            Debug.Log("Player Die!");
             return;
         }
     }

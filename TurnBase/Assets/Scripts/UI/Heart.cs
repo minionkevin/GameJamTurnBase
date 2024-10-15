@@ -9,14 +9,14 @@ public class Heart : MonoBehaviour
     Image HeartMask;
 
     //[SerializeField]
-    //Sprite FullSprite;  // Âú¸ñĞÄĞÎ
+    //Sprite FullSprite;  // æ»¡æ ¼å¿ƒå½¢
     //[SerializeField]
-    //Sprite HalfSprite;  // °ë¸ñĞÄĞÎ
+    //Sprite HalfSprite;  // åŠæ ¼å¿ƒå½¢
 
     /// <summary>
-    /// ÉèÖÃÑªÁ¿×´Ì¬
+    /// è®¾ç½®è¡€é‡çŠ¶æ€
     /// </summary>
-    /// <param name="_value">1_ÂúÑª£»0_¿ÕÑª£»-1_°ëÑª</param>
+    /// <param name="_value">1_æ»¡è¡€ï¼›0_ç©ºè¡€ï¼›-1_åŠè¡€</param>
     public void SetDisplay(int _value)
     {
         if (_value == 1)

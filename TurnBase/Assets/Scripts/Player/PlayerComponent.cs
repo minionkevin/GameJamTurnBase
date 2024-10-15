@@ -37,6 +37,15 @@ public class PlayerComponent : MonoBehaviour
         currPlayerPos = newPos;
         TileManagerSingleton.Instance.MoveObjectToTile(currPlayerPos, gameObject);
     }
+    
+
+    /// <returns>
+    /// 玩家位置
+    /// </returns>
+    public int2 GetPlayerPos()
+    {
+        return currPlayerPos;
+    }
 
     /// <summary>
     /// 跳跃
@@ -99,7 +108,15 @@ public class PlayerComponent : MonoBehaviour
         // Audio
     }
 
-    public void OnTakeDamage(int _damage)
+    public void CheckForDamage(List<int2> attackList,int value)
+    {
+        foreach (var pos in attackList)
+        {
+            if (currPlayerPos.Equals(pos)) OnTakeDamage(value);
+        }
+    }
+
+    private void OnTakeDamage(int _damage)
     {
         if (isJumping) return;
 
@@ -127,9 +144,9 @@ public class PlayerComponent : MonoBehaviour
     // ------------------------------------------
 
 
-    private bool CheckLimit(int2 newPos)
+    private bool CheckLimit(int2 targetPos)
     {
-        return newPos.x >= 0 && newPos.x < GameManagerSingleton.Instance.Width && newPos.y >= 0 && newPos.y < GameManagerSingleton.Instance.Height;
+        return targetPos.x >= 0 && targetPos.x < GameManagerSingleton.Instance.Width && targetPos.y >= 0 && targetPos.y < GameManagerSingleton.Instance.Height;
     }
 
 }

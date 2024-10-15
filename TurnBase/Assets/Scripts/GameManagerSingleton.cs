@@ -61,7 +61,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         boss.GetComponent<Transform>().SetParent(transform);
         var bossComponent = boss.GetComponent<BossComponent>();
         Boss = bossComponent;
-        bossComponent.Setup(bossHeadPos,bossLeftHandPos,bossRightHandPos);
 
         var bossHead = Instantiate(BossHeadPrefab);
         TileManagerSingleton.Instance.AddObjectToTile(bossHeadPos,bossHead);
@@ -69,6 +68,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         TileManagerSingleton.Instance.AddObjectToTile(bossLeftHandPos,bossLeftHand);
         var bossRightHand = Instantiate(BossRightHandPrefab);
         TileManagerSingleton.Instance.AddObjectToTile(bossRightHandPos,bossRightHand);
+        bossComponent.Setup(bossHeadPos,bossLeftHandPos,bossRightHandPos,bossHead,bossLeftHand,bossRightHand);
 
         // player hp & boss hp spawn
         BossHp_UI.Setup(bossStartHp);
@@ -163,7 +163,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     IEnumerator BattleCoroutine()
     {
         // 每做完一个指令，等待所有动画完成，再开始下一个指令
-        HandlePlayerInput();
+        // HandlePlayerInput();
+        Boss.DoAttack1Pre();
         
         yield return new WaitForFixedUpdate();
         
