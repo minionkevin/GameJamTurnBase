@@ -38,9 +38,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     public Action PlayerActionList;
     
+    public PlayerInputComponent PlayerInput;
 
-    public Action OnBattleStart;
-    public Action OnBattleEnd;
 
     void Start()
     {
@@ -72,8 +71,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         BossHp_UI.Setup(bossStartHp);
         PlayerHp_UI.Setup(playerStartHp);
 
-        OnBattleEnd += EnterGame;
-        //
+        
         EnterGame();
     }
 
@@ -101,6 +99,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         CountDown.Instance.SetTimerPause();
 
         // 根据Player的指令队列和Boss当前要使用的指令队列，交替重排行动
+        // 双数是player，单数是boss（data）
+        // PlayerActionList应该包含所有的指令
 
 
         // 进入对战
@@ -121,23 +121,21 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     /// <returns></returns>
     IEnumerator BattleCoroutine()
     {
-        OnBattleStart?.Invoke();
-
+        // 每做完一个指令，等待所有动画完成，再开始下一个指令
         PlayerActionList?.Invoke();
         PlayerActionList = null;
-
-        // confirm之后需要block玩家输入
-        // 直到下一轮到玩家
+        
         yield return new WaitForFixedUpdate();
-        // 这里应该有个callback
-        // 当这件事完成之后，销毁这个，再去完成下一个，然后再销毁
-        //foreach (var item in memoryList)
-        //{
-        //    Destroy(item);
-        //}
-
-        OnBattleEnd?.Invoke();
+        
+        PlayerInput.ClearMemoryList();
+        
         yield return null;
+        
+        
+        // 清空action的reference
+
+        // 重新开始下一轮
+        EnterGame();
     }
 
 

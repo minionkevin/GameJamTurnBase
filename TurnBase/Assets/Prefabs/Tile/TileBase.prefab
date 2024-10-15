@@ -337,7 +337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EffectLayer: {fileID: 7181525597303701794}
-  PlayerLayerRect: {fileID: 6126757421584287113}
+  ObjectLayerRect: {fileID: 6126757421584287113}
   PosLabel: {fileID: 2914451738855603658}
 --- !u!1 &5127724245619538229
 GameObject:
@@ -349,7 +349,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6126757421584287113}
   m_Layer: 0
-  m_Name: PlayerLayer
+  m_Name: ObjectLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

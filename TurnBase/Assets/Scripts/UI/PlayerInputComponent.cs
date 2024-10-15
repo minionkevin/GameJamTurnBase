@@ -126,21 +126,13 @@ public class PlayerInputComponent : MonoBehaviour
     /// <summary>
     /// 清空指令
     /// </summary>
-    private void ClearMemoryList()
+    public void ClearMemoryList()
     {
         foreach (var item in memoryList)
         {
             Destroy(item);
         }
-    }
-
-    private void OnEnable()
-    {
-        GameManagerSingleton.Instance.OnBattleEnd += ClearMemoryList;
-    }
-    private void OnDisable()
-    {
-        GameManagerSingleton.Instance.OnBattleEnd -= ClearMemoryList;
+        memoryList.Clear();
     }
 
     // -----------------------------------------------------------
