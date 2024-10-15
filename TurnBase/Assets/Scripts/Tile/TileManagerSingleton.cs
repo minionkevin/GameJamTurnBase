@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -49,16 +50,14 @@ public class TileManagerSingleton : BaseSingleton<TileManagerSingleton>
 
     public void AddObjectToTile(int2 pos,GameObject objectPrefab)
     {
-        TileList[GetIndexPos(pos)].AddPlayerToTile(objectPrefab);
+        TileList[GetIndexPos(pos)].AddObjectToTile(objectPrefab);
     }
     
     // 这个函数之后可以在加一个bool为 isPlayer
     // 方便做动画，boss和player的移动动画应该是不一样的
-    public void MoveObjectToTile(int2 pos,GameObject objectPrefab)
+    public async void MoveObjectToTile(int2 pos,GameObject objectPrefab)
     {
-        TileList[GetIndexPos(pos)].AddPlayerToTile(objectPrefab);
-        
-        // Add animation
+        TileList[GetIndexPos(pos)].AddObjectToTile(objectPrefab);
     }
 
     private int2 GetIntPos(int index)
@@ -66,8 +65,19 @@ public class TileManagerSingleton : BaseSingleton<TileManagerSingleton>
         return new int2(index % width, index / width);
     }
 
-    private int GetIndexPos(int2 pos)
+    public int GetIndexPos(int2 pos)
     {
         return pos.y * width + pos.x;
+    }
+
+    /// <summary>
+    /// 核对要检测的位置是否存放某物体
+    /// </summary>
+    /// <param name="posForCheck">要查看的位置</param>
+    /// <param name="objPos">物体的位置</param>
+    /// <returns></returns>
+    public bool CheckPos(int2 posForCheck,int2 objPos)
+    {
+        return posForCheck.Equals(objPos);
     }
 }

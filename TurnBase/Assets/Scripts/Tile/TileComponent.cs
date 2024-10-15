@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
@@ -6,7 +7,7 @@ public class TileComponent : MonoBehaviour
 {
     // 注意：alpha=0，用之前需要先调整
     public GameObject EffectLayer;
-    public Transform PlayerLayerRect;
+    public Transform ObjectLayerRect;
     // Debug only
     public TextMeshProUGUI PosLabel;
 
@@ -20,9 +21,16 @@ public class TileComponent : MonoBehaviour
         PosLabel.text = "(" + tilePos.x + "," + tilePos.y + ")";
     }
 
-    public void AddPlayerToTile(GameObject playerPrefab)
+    public async void AddObjectToTile(GameObject objPrefab)
     {
-        playerPrefab.GetComponent<Transform>().SetParent(PlayerLayerRect);
-        playerPrefab.transform.localPosition = Vector3.zero;
+        objPrefab.GetComponent<Transform>().SetParent(ObjectLayerRect);
+        // Add animation
+        Transform trans = objPrefab.GetComponent<Transform>();
+        await trans.DOLocalMove(Vector3.zero, 0.5f).AsyncWaitForCompletion();
+    }
+
+    public void SetObjectToTile(GameObject objPrefab)
+    {
+        objPrefab.GetComponent<Transform>().SetParent(ObjectLayerRect);
     }
 }
