@@ -114,12 +114,12 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // todo read boss指令data
         // BossInputList.Add(BossInputType.ATTACK1);
         
-        BossInputList.Add(BossInputType.ATTACK20);
-        BossInputList.Add(BossInputType.ATTACK21);
-        BossInputList.Add(BossInputType.ATTACK22);
-        BossInputList.Add(BossInputType.ATTACK23);
-        BossInputList.Add(BossInputType.ATTACK24);
-        BossInputList.Add(BossInputType.ATTACK25);
+        BossInputList.Add(BossInputType.ATTACK10);
+        BossInputList.Add(BossInputType.ATTACK11);
+        BossInputList.Add(BossInputType.ATTACK12);
+        BossInputList.Add(BossInputType.ATTACK13);
+        BossInputList.Add(BossInputType.ATTACK14);
+        BossInputList.Add(BossInputType.ATTACK15);
         
         for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
         {
@@ -136,19 +136,19 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 Boss.DoAttack1Pre();
                 break;
             case BossInputType.ATTACK11:
-                Boss.DoAttack1Step1();
+                Boss.DoAttack1Step(1);
                 break;
             case BossInputType.ATTACK12:
-                Boss.HandleVerticalAttackAndMove(true);
+                Boss.DoAttack1Step(2);
                 break;
             case BossInputType.ATTACK13:
-                Boss.HandleVerticalAttackAndMove(false);
+                Boss.DoAttack1Step(3);
                 break;
             case BossInputType.ATTACK14:
-                Boss.HandleVerticalMove(true);
+                Boss.DoAttack1Step(4);
                 break;
             case BossInputType.ATTACK15:
-                Boss.HandleVerticalMove(false);
+                Boss.DoAttack1Step(5);
                 break;
             case BossInputType.ATTACK20:
                 Boss.DoAttack2Pre();
@@ -232,7 +232,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         for (int i = 0; i < BossInputList.Count; i++)
         {
             HandleBossInput(BossInputList[i]);   
-            yield return new WaitForSecondsRealtime(3);
+            yield return new WaitForSecondsRealtime(1);
         }
         
         

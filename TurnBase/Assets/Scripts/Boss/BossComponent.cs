@@ -17,7 +17,7 @@ public class BossComponent : MonoBehaviour
     // 需要reset
     private bool isPlayerOnLeft;
 
-    private int yPos;
+    private int attack1yPos;
 
     public void Setup(int2 bossHeadPos, int2 bossLeftHandPos, int2 bossRightHandPos,GameObject head, GameObject leftHand, GameObject rightHand)
     {
@@ -29,158 +29,122 @@ public class BossComponent : MonoBehaviour
         rightHandObj = rightHand;
     }
 
-    public void CheckForDamage(int value, List<int2> attackList)
+    #region attack1-连续下劈
+    public void DoAttack1Step(int step)
     {
-        foreach (int2 pos in attackList)
+        switch (step)
         {
-            if(TileManagerSingleton.Instance.CheckPos(currHeadPos, pos))
-            {
-                GameManagerSingleton.Instance.BossHp_UI.OnTakeDamage(value*2);
-            }
-            else if (TileManagerSingleton.Instance.CheckPos(currLeftHandPos, pos) ||
-                     TileManagerSingleton.Instance.CheckPos(currRightHandPos, pos))
-            {
-                GameManagerSingleton.Instance.BossHp_UI.OnTakeDamage(value);
-            }
+            case 1:
+                DoAttackSingleHand();
+                break;
+            case 2:
+                DoAttackAndMoveHand(Attack1StepCheck(true));
+                break;
+            case 3:
+                DoAttackAndMoveHand(Attack1StepCheck(false));
+                break;
+            case 4:
+                HandleVerticalMove(true);
+                break;
+            case 5:
+                HandleVerticalMove(false);
+                break;
+            
         }
     }
     
     public void DoAttack1Pre()
     {
         int2 playerPos = GameManagerSingleton.Instance.Player.GetPlayerPos(); 
-        // 判断玩家在左右
-        // todo 简化
+        
         if (playerPos.x < GameManagerSingleton.Instance.Width / 2)
         {
-            int2 leftHandPos = new int2(playerPos.x, currLeftHandPos.y);
-            DoMove(leftHandObj, leftHandPos);
-            currLeftHandPos = leftHandPos;
-            int2 rightHandPos = new int2(playerPos.x + 1, currLeftHandPos.y);
-            DoMove(rightHandObj,rightHandPos);
-            currRightHandPos = rightHandPos;
+            MoveHand(leftHandObj, playerPos.x, currLeftHandPos.y,ref currLeftHandPos);
+            MoveHand(rightHandObj,playerPos.x+1,currLeftHandPos.y,ref currRightHandPos);
+            
             isPlayerOnLeft = true;
-            yPos = currLeftHandPos.y;
+            attack1yPos = currLeftHandPos.y;
         }
         else
         {
-            int2 rightHandPos = new int2(playerPos.x, currRightHandPos.y);
-            DoMove(rightHandObj, rightHandPos);
-            currRightHandPos = rightHandPos;
-            int2 leftHandPos = new int2(rightHandPos.x - 1, currRightHandPos.y);
-            DoMove(leftHandObj,leftHandPos);
-            currLeftHandPos = leftHandPos;
-            yPos = currRightHandPos.y;
+            MoveHand(rightHandObj,playerPos.x, currRightHandPos.y,ref currRightHandPos);
+            MoveHand(leftHandObj, currRightHandPos.x-1, currRightHandPos.y,ref currLeftHandPos);
+            
+            attack1yPos = currRightHandPos.y;
         }
     }
 
-    public void DoAttack1Step1()
+    private void DoAttackSingleHand()
     {
         if(isPlayerOnLeft) DoVerticalAttack(leftHandObj, currLeftHandPos,true);
         else DoVerticalAttack(rightHandObj,currRightHandPos,false);
     }
-
-    public void HandleVerticalAttackAndMove(bool isFirstTime)
+    
+    private bool Attack1StepCheck(bool isFirstTime)
     {
         bool tmp = false;
         switch (isPlayerOnLeft)
         {
             case true when isFirstTime:
-                tmp = true;
-                break;
-            case true when !isFirstTime:
-            case false when isFirstTime:
-                tmp = false;
-                break;
             case false when !isFirstTime:
                 tmp = true;
                 break;
         }
-        
-        DoAttack1Step2(tmp);
+        return tmp;
     }
 
-    public void HandleVerticalMove(bool isFirstTime)
+    private void HandleVerticalMove(bool isFirstTime)
     {
-        bool tmp = false;
         switch (isFirstTime)
         {
             case true when isPlayerOnLeft:
-                tmp = false;
+                DoAttackAndResetHand(rightHandObj, ref currRightHandPos, leftHandObj, ref currLeftHandPos, false, false);
                 break;
             case false when isPlayerOnLeft:
+                DoAttackAndResetHand(leftHandObj, ref currLeftHandPos, rightHandObj, ref currRightHandPos, true, true);
+                break;
             case true when !isPlayerOnLeft:
-                tmp = true;
+                DoAttackAndResetHand(leftHandObj, ref currLeftHandPos, rightHandObj, ref currRightHandPos, true, false);
                 break;
             case false when !isPlayerOnLeft:
-                tmp = false;
+                DoAttackAndResetHand(rightHandObj, ref currRightHandPos, leftHandObj, ref currLeftHandPos, false, true);
                 break;
         }
-        if (isPlayerOnLeft) DoAttack1StepLeft(tmp);
-        else DoAttack1StepRight(tmp);
     }
 
-    private void DoAttack1Step2(bool value)
+    private void DoAttackAndMoveHand(bool value)
     {
         if (value)
         {
-            int2 newPos = new int2(isPlayerOnLeft?currRightHandPos.x + 1:currRightHandPos.x - 1, yPos);
             DoVerticalAttack(rightHandObj,currRightHandPos,false);
-            DoMove(leftHandObj,newPos);
-            currLeftHandPos = newPos;
+            MoveHand(leftHandObj, isPlayerOnLeft ? currRightHandPos.x + 1 : currRightHandPos.x - 1, attack1yPos, ref currLeftHandPos);
         }
         else
         {
-            int2 newPos = new int2(isPlayerOnLeft?currLeftHandPos.x + 1:currLeftHandPos.x - 1,yPos);
             DoVerticalAttack(leftHandObj, currLeftHandPos,true);
-            DoMove(rightHandObj,newPos);
-            currRightHandPos = newPos;
+            MoveHand(rightHandObj,isPlayerOnLeft?currLeftHandPos.x + 1:currLeftHandPos.x - 1,attack1yPos,ref currRightHandPos);
         }
     }
 
-    public void DoAttack1StepLeft(bool value)
+    private void DoAttackAndResetHand(GameObject attackHand, ref int2 attackPos, GameObject moveHand, ref int2 movePos, bool isAttackHandLeft, bool value)
     {
-        if (value)
-        {
-            DoVerticalAttack(leftHandObj, currLeftHandPos,true);
-        }
+        if (value) DoVerticalAttack(attackHand, attackPos, isAttackHandLeft);
         else
         {
-            int2 leftHandPos = new int2(currLeftHandPos.x, yPos);
-            DoMove(leftHandObj,leftHandPos);
-            currLeftHandPos = leftHandPos;
-            DoVerticalAttack(rightHandObj,currRightHandPos,false);
+            // 移动另一只手并攻击
+            MoveHand(moveHand, movePos.x, attack1yPos, ref movePos);
+            DoVerticalAttack(attackHand, attackPos, isAttackHandLeft);
         }
     }
+    #endregion
     
-    public void DoAttack1StepRight(bool value)
-    {
-        if (value)
-        {
-            int2 newPos = new int2(currRightHandPos.x, yPos);
-            DoMove(rightHandObj,newPos);
-            currRightHandPos = newPos;
-            DoVerticalAttack(leftHandObj, currLeftHandPos,true);
-            
-        }
-        else
-        {
-            DoVerticalAttack(rightHandObj, currRightHandPos,false);
-        }
-    }
-
+    #region attack2-左右双掌 
     public void DoAttack2Pre()
     {
-        int2 leftPos = new int2(1,GameManagerSingleton.Instance.Height-2);
-        DoMove(leftHandObj,leftPos);
-        currLeftHandPos = leftPos;
-        int2 rightPos = new int2(GameManagerSingleton.Instance.Width-2,GameManagerSingleton.Instance.Height-2);
-        DoMove(rightHandObj,rightPos);
-        currRightHandPos = rightPos;
-        int2 headPos = new int2(GameManagerSingleton.Instance.Width/2,GameManagerSingleton.Instance.Height-1);
-        DoMove(headObj,headPos);
-        currHeadPos = headPos;
+        MoveHand(leftHandObj, 1, GameManagerSingleton.Instance.Height - 2, ref currLeftHandPos);
+        MoveHand(rightHandObj,GameManagerSingleton.Instance.Width-2,GameManagerSingleton.Instance.Height-2,ref currRightHandPos);
+        MoveHand(headObj,GameManagerSingleton.Instance.Width/2,GameManagerSingleton.Instance.Height-1,ref currHeadPos);
     }
-
     public void DoAttack2Step(int step)
     {
         switch (step)
@@ -207,7 +171,8 @@ public class BossComponent : MonoBehaviour
                 break;
         }
     }
-
+    #endregion
+    
     private void PerformAttack(GameObject handObj, int2 handPos, bool isLeft)
     {
         DoAOEAttack(handObj, handPos, isLeft);
@@ -220,7 +185,6 @@ public class BossComponent : MonoBehaviour
         currentHandPos = newPos;
     }
     
-
     private void DoMove(GameObject obj, int2 pos)
     {
         TileManagerSingleton.Instance.MoveObjectToTile(pos,obj);
@@ -308,6 +272,22 @@ public class BossComponent : MonoBehaviour
     private bool CheckLimit(int2 targetPos)
     {
         return targetPos.x >= 0 && targetPos.x < GameManagerSingleton.Instance.Width && targetPos.y >= 0 && targetPos.y < GameManagerSingleton.Instance.Height;
+    }
+    
+    public void CheckForDamage(int value, List<int2> attackList)
+    {
+        foreach (int2 pos in attackList)
+        {
+            if(TileManagerSingleton.Instance.CheckPos(currHeadPos, pos))
+            {
+                GameManagerSingleton.Instance.BossHp_UI.OnTakeDamage(value*2);
+            }
+            else if (TileManagerSingleton.Instance.CheckPos(currLeftHandPos, pos) ||
+                     TileManagerSingleton.Instance.CheckPos(currRightHandPos, pos))
+            {
+                GameManagerSingleton.Instance.BossHp_UI.OnTakeDamage(value);
+            }
+        }
     }
     
 }
