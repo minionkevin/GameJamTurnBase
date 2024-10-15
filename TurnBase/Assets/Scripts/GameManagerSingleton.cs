@@ -35,12 +35,13 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     public PlayerComponent Player;
     public BossComponent Boss;
-
-    // public Action PlayerActionList;
-
     public List<int> PlayerInputList = new List<int>();
+    public List<int> BossInputList = new List<int>();
+
+    private List<int> inputLists = new List<int>();
     
     public PlayerInputComponent PlayerInput;
+    
     
 
     void Start()
@@ -101,11 +102,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // 计时器暂停（等到下一回合重置）
         CountDown.Instance.SetTimerPause();
 
-        // 根据Player的指令队列和Boss当前要使用的指令队列，交替重排行动
-        // 双数是player，单数是boss（data）
-        // PlayerActionList应该包含所有的指令
-
-
         // 进入对战
         StartCoroutine(BattleCoroutine());
     }
@@ -113,17 +109,57 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     /// <summary>
     /// 交替重排指令
     /// </summary>
-    private void ReOrder_PlayerBossAction()
+    private void ReorderInput()
     {
+        // todo read boss指令data
+        // BossInputList.Add(BossInputType.ATTACK1);
         
+        BossInputList.Add(BossInputType.ATTACK10);
+        BossInputList.Add(BossInputType.ATTACK11);
+        BossInputList.Add(BossInputType.ATTACK12);
+        BossInputList.Add(BossInputType.ATTACK13);
+        BossInputList.Add(BossInputType.ATTACK14);
+        BossInputList.Add(BossInputType.ATTACK15);
+        
+        for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
+        {
+            if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
+            if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
+        }
     }
 
-    private void HandlePlayerInput()
+    private void HandleBossInput(int value)
+    {
+        switch (value)
+        {
+            case BossInputType.ATTACK10:
+                Boss.DoAttack1Pre();
+                break;
+            case BossInputType.ATTACK11:
+                Boss.DoAttack1Step1();
+                break;
+            case BossInputType.ATTACK12:
+                Boss.HandleVerticalAttackAndMove(true);
+                break;
+            case BossInputType.ATTACK13:
+                Boss.HandleVerticalAttackAndMove(false);
+                break;
+            case BossInputType.ATTACK14:
+                Boss.HandleVerticalMove(true);
+                break;
+            case BossInputType.ATTACK15:
+                Boss.HandleVerticalMove(false);
+                break;
+            default:
+                Debug.LogError("wrong boss attack type");
+                break;
+        }
+    }
+
+    private void HandlePlayerInput(int value)
     {
         // todo 跳跃攻击
-        foreach (int input in PlayerInputList)
-        {
-            switch (input)
+            switch (value)
             {
                 case PlayerInputType.MOVEA: 
                     Player.DoMove(new int2(-1,0));
@@ -153,7 +189,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                     Debug.LogError("wrong player attack type");
                     break;
             }
-        }
     }
 
     /// <summary>
@@ -163,8 +198,25 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     IEnumerator BattleCoroutine()
     {
         // 每做完一个指令，等待所有动画完成，再开始下一个指令
-        // HandlePlayerInput();
-        Boss.DoAttack1Pre();
+
+        ReorderInput();
+        
+        // todo safety check
+        for (int i = 0; i < inputLists.Count; i++)
+        {
+            if(i%2 == 0)HandlePlayerInput(inputLists[i]);
+            else HandleBossInput(inputLists[i]);
+        
+            yield return new WaitForSecondsRealtime(3);
+        }
+
+        // boss测试
+        // for (int i = 0; i < BossInputList.Count; i++)
+        // {
+        //     HandleBossInput(BossInputList[i]);   
+        //     yield return new WaitForSecondsRealtime(3);
+        // }
+        
         
         yield return new WaitForFixedUpdate();
         

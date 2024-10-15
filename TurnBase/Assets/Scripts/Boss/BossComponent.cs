@@ -70,73 +70,55 @@ public class BossComponent : MonoBehaviour
             currLeftHandPos = leftHandPos;
             yPos = currRightHandPos.y;
         }
-
-        // 从左往右
-        // Debug.Log("prev");
-        // await Task.Delay(3000);
-        //
-        // Debug.Log("1");
-        // // 第一次劈，玩家在左边，左手先劈
-        // DoAttack1Step1(isPlayerOnLeft);
-        // await Task.Delay(3000);
-        //
-        // Debug.Log("2");
-        // // 第二次劈，左手移动，右手劈
-        // DoAttack1Step2(true);
-        //
-        // await Task.Delay(3000);
-        // Debug.Log("3");
-        // // 第三次劈，右手移动，左手劈
-        // DoAttack1Step2(false);
-        //
-        // await Task.Delay(3000);
-        // Debug.Log("4");
-        // // 第四次劈，右手劈
-        // DoAttack1Step3(false);
-        //
-        // await Task.Delay(3000);
-        // Debug.Log("5");
-        // // 第五次劈，左手劈
-        // DoAttack1Step3(true);
-        
-        
-        // 从右往左
-        // Debug.Log("prev");
-        // await Task.Delay(3000);
-        //
-        // Debug.Log("1");
-        // // 第一次劈，玩家在左边，左手先劈
-        // DoAttack1Step1(isPlayerOnLeft);
-        // await Task.Delay(3000);
-        //
-        // Debug.Log("2");
-        // // 第二次劈，左手移动，右手劈
-        // DoAttack1Step2(false);
-        //
-        // await Task.Delay(3000);
-        // Debug.Log("3");
-        // // 第三次劈，右手移动，左手劈
-        // DoAttack1Step2(true);
-        //
-        // await Task.Delay(3000);
-        // Debug.Log("4");
-        // // 第四次劈，右手劈
-        // DoAttack1StepRight(true);
-        //
-        // await Task.Delay(3000);
-        // Debug.Log("5");
-        //
-        // // 第五次劈，左手劈
-        // DoAttack1StepRight(false);
     }
 
-    public void DoAttack1Step1(bool value)
+    public void DoAttack1Step1()
     {
-        if(value) DoVerticalAttack(leftHandObj, currLeftHandPos,true);
+        if(isPlayerOnLeft) DoVerticalAttack(leftHandObj, currLeftHandPos,true);
         else DoVerticalAttack(rightHandObj,currRightHandPos,false);
     }
 
-    public void DoAttack1Step2(bool value)
+    public void HandleVerticalAttackAndMove(bool isFirstTime)
+    {
+        bool tmp = false;
+        switch (isPlayerOnLeft)
+        {
+            case true when isFirstTime:
+                tmp = true;
+                break;
+            case true when !isFirstTime:
+            case false when isFirstTime:
+                tmp = false;
+                break;
+            case false when !isFirstTime:
+                tmp = true;
+                break;
+        }
+        
+        DoAttack1Step2(tmp);
+    }
+
+    public void HandleVerticalMove(bool isFirstTime)
+    {
+        bool tmp = false;
+        switch (isFirstTime)
+        {
+            case true when isPlayerOnLeft:
+                tmp = false;
+                break;
+            case false when isPlayerOnLeft:
+            case true when !isPlayerOnLeft:
+                tmp = true;
+                break;
+            case false when !isPlayerOnLeft:
+                tmp = false;
+                break;
+        }
+        if (isPlayerOnLeft) DoAttack1StepLeft(tmp);
+        else DoAttack1StepRight(tmp);
+    }
+
+    private void DoAttack1Step2(bool value)
     {
         if (value)
         {
@@ -231,4 +213,11 @@ public class BossInputType
     public const int ATTACK4 = 3;
     // 范围拍击
     public const int ATTACK5 = 4;
+
+    public const int ATTACK10 = 10;
+    public const int ATTACK11 = 11;
+    public const int ATTACK12 = 12;
+    public const int ATTACK13 = 13;
+    public const int ATTACK14 = 14;
+    public const int ATTACK15 = 15;
 }

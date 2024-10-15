@@ -2163,7 +2163,7 @@ MonoBehaviour:
   playerStartHp: 4
   countdownTime: 40
   PlayerStartPos:
-    x: 2
+    x: 0
     y: 0
   PlayerPrefab: {fileID: 8487742318341802092, guid: 19b39d30dd96eee4598d394c848a5c4b, type: 3}
   BossPrefab: {fileID: 8487742318341802092, guid: 7d3d73c376134ca48876b57e2a131d97, type: 3}
@@ -2176,6 +2176,7 @@ MonoBehaviour:
   Player: {fileID: 0}
   Boss: {fileID: 0}
   PlayerInputList: 
+  BossInputList: 
   PlayerInput: {fileID: 447450013}
 --- !u!4 &1720132322
 Transform:
