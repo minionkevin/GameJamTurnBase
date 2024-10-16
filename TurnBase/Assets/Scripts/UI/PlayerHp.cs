@@ -49,7 +49,7 @@ public class PlayerHp : MonoBehaviour
             if (i < curHp / 2)
             {
                 HeartsList[i].SetDisplay(1);
-                return;
+                // return;
             }
             else if (i > curHp / 2)
             {

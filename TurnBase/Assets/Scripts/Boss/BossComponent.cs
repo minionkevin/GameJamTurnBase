@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class BossComponent : MonoBehaviour
 {
@@ -299,18 +300,32 @@ public class BossComponent : MonoBehaviour
         MoveHand(rightHandObj,currHeadPos.x+2,GameManagerSingleton.Instance.Height-2,ref currRightHandPos);
     }
     #endregion
+
+    /// <summary>
+    /// 轮次实际动作做完后，在队尾默认添加的一个指令
+    /// </summary>
+    public void DoActionEnd()
+    {
+        // Do Nothing now.
+        // 先让Boss手回归原位吧！
+        MoveHand(leftHandObj, GameManagerSingleton.Instance.bossLeftHandPos.x, GameManagerSingleton.Instance.bossLeftHandPos.y, ref currLeftHandPos);
+        MoveHand(rightHandObj, GameManagerSingleton.Instance.bossRightHandPos.x, GameManagerSingleton.Instance.bossRightHandPos.y, ref currRightHandPos);
+    }
     
+    /// <summary>
+    /// 移动某只手到指定位置
+    /// </summary>
+    /// <param name="handObj">要移动的手</param>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="currentHandPos"></param>
     private void MoveHand(GameObject handObj, int x, int y, ref int2 currentHandPos)
     {
         int2 newPos = new int2(x, y);
-        DoMove(handObj, newPos);
+        if (!CheckLimit(newPos)) return;        
         currentHandPos = newPos;
-    }
-    
-    private void DoMove(GameObject obj, int2 pos)
-    {
-        TileManagerSingleton.Instance.MoveObjectToTile(pos,obj);
-    }
+        TileManagerSingleton.Instance.MoveObjectToTile(currentHandPos, handObj);
+    }   
 
     private async void DoHeadVerticalAttack()
     {
@@ -497,4 +512,6 @@ public class BossInputType
     public const int ATTACK43 = 43;
     public const int ATTACK44 = 44;
     public const int ATTACK45 = 45;
+
+    public const int END = 101;         // 结束指令，在Boss本轮此动作队列后默认添加，目前啥都不干（之后可能在这里面重置Boss的位置或状态）
 }

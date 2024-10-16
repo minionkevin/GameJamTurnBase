@@ -97,6 +97,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     /// </summary>
     public void EnterBattle()
     {
+
         // 禁用一切输入
         PlayerInputComponent.InputEnabled = false;
         // 计时器暂停（等到下一回合重置）
@@ -114,18 +115,39 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // todo read boss指令data
         // BossInputList.Add(BossInputType.ATTACK1);
         
+        // 摆Poss环节，移动到
         BossInputList.Add(BossInputType.ATTACK10);
+
+
         BossInputList.Add(BossInputType.ATTACK11);
         BossInputList.Add(BossInputType.ATTACK12);
         BossInputList.Add(BossInputType.ATTACK13);
         BossInputList.Add(BossInputType.ATTACK14);
-        BossInputList.Add(BossInputType.ATTACK15);
-        
-        for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
-        {
-            if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
-            if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
+        BossInputList.Add(BossInputType.ATTACK15);        
+
+        // 让Player指令和Boss指令对其
+        PlayerInputList.Insert(0, PlayerInputType.NULL);       // 目前临时添加，为了和Boss摆Pose环节对齐
+
+        for (int i = 0; i < BossInputList.Count; i++)
+        {            
+            if (i < PlayerInputList.Count) 
+                inputLists.Add(PlayerInputList[i]);
+            else 
+                inputLists.Add(PlayerInputType.NULL);
+
+            inputLists.Add(BossInputList[i]);
         }
+
+        inputLists.Add(PlayerInputType.END);
+        inputLists.Add(BossInputType.END);
+        
+
+        
+        //for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
+        //{
+        //    if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
+        //    if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
+        //}
     }
 
     private async void HandleBossInput(int value)
@@ -204,6 +226,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             case BossInputType.ATTACK45:
                 Boss.DoAttack4Step(5);
                 break;
+            case BossInputType.END:
+                Boss.DoActionEnd(); 
+                break;
             
             default:
                 Debug.LogError("wrong boss attack type");
@@ -238,7 +263,13 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                     Player.DoJump();
                     break;
                 case PlayerInputType.JUMPATTACK:
-                    Player.DoJump();
+                    // Player.DoJumpAttack();
+                    break;
+                case PlayerInputType.NULL:
+                    Player.DoNothing();
+                    break;
+                case PlayerInputType.END:
+                    Player.DoActionEnd();
                     break;
                 default:
                     Debug.LogError("wrong player attack type");
@@ -260,9 +291,38 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // switch back to i%2==0 for player after boss pose finish
         for (int i = 0; i < inputLists.Count; i++)
         {
-            if(i%2 != 0)HandlePlayerInput(inputLists[i]);
-            else HandleBossInput(inputLists[i]);
-        
+            // 玩家回合
+            if (i % 2 == 0)
+            {
+                if (i - 2 >= 0 && inputLists[i - 2].Equals(PlayerInputType.JUMP))
+                {
+                    // 跳跃攻击
+                    if (inputLists[i].Equals(PlayerInputType.ATTACK1) || inputLists[i].Equals(PlayerInputType.ATTACK2))
+                    {
+                        Player.DoJumpAttack(inputLists[i]);
+                        Player.DoMove(new int2(0, -1));
+                        Player.isJumping = false;
+                        // HandlePlayerInput(PlayerInputType.JUMPATTACK);
+                    }
+                    // 普通跳跃
+                    else
+                    {
+                        HandlePlayerInput(inputLists[i]);
+                        Player.DoMove(new int2(0, -1));
+                        Player.isJumping = false;
+                    }                    
+                }
+                else 
+                {
+                    HandlePlayerInput(inputLists[i]);
+                }                
+            }
+            // Boss回合
+            else 
+            { 
+                HandleBossInput(inputLists[i]); 
+            }
+
             yield return new WaitForSecondsRealtime(1f);
         }
 
@@ -276,8 +336,13 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         
         yield return new WaitForFixedUpdate();
         
+        // UI清空
         PlayerInput.ClearMemoryList();
-        
+        // 把指令都清一下，先放在这
+        BossInputList.Clear();
+        PlayerInputList.Clear();
+        inputLists.Clear(); 
+
         yield return null;
 
         // 重新开始下一轮
