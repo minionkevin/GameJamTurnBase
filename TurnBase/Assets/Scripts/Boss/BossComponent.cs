@@ -221,10 +221,10 @@ public class BossComponent : MonoBehaviour
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
     }
 
-    private void DoAttack3MoveHand()
+    private async void DoAttack3MoveHand()
     {
-        MoveHand(rightHandObj,currRightHandPos.x-1,currHeadPos.y+1,ref currRightHandPos);
-        MoveHand(leftHandObj,currLeftHandPos.x+1,currHeadPos.y+1,ref currLeftHandPos);
+        await MoveHand(rightHandObj,currRightHandPos.x-1,currHeadPos.y+1,ref currRightHandPos);
+        await MoveHand(leftHandObj,currLeftHandPos.x+1,currHeadPos.y+1,ref currLeftHandPos);
     }
 
     private void DoAttack3HandAttack()
@@ -300,16 +300,16 @@ public class BossComponent : MonoBehaviour
     }
     #endregion
     
-    private void MoveHand(GameObject handObj, int x, int y, ref int2 currentHandPos)
+    private Task MoveHand(GameObject handObj, int x, int y, ref int2 currentHandPos)
     {
         int2 newPos = new int2(x, y);
-        DoMove(handObj, newPos);
         currentHandPos = newPos;
+        return DoMove(handObj, newPos);
     }
     
-    private void DoMove(GameObject obj, int2 pos)
+    private Task DoMove(GameObject obj, int2 pos)
     {
-        TileManagerSingleton.Instance.MoveObjectToTile(pos,obj);
+        return TileManagerSingleton.Instance.MoveObjectToTile(pos,obj);
     }
 
     private async void DoHeadVerticalAttack()
@@ -453,48 +453,6 @@ public class BossComponent : MonoBehaviour
             }
         }
     }
-    
 }
 
-
-public class BossInputType
-{
-    // 连续下劈
-    public const int ATTACK1 = 0;
-    // 左右双掌
-    public const int ATTACK2 = 1;
-    // 全屏激光
-    public const int ATTACK3 = 2;
-    // 地面清扫
-    public const int ATTACK4 = 3;
-    // 范围拍击
-    public const int ATTACK5 = 4;
-
-    public const int ATTACK10 = 10;
-    public const int ATTACK11 = 11;
-    public const int ATTACK12 = 12;
-    public const int ATTACK13 = 13;
-    public const int ATTACK14 = 14;
-    public const int ATTACK15 = 15;
-
-    public const int ATTACK20 = 20;
-    public const int ATTACK21 = 21;
-    public const int ATTACK22 = 22;
-    public const int ATTACK23 = 23;
-    public const int ATTACK24 = 24;
-    public const int ATTACK25 = 25;
-
-    public const int ATTACK30 = 30;
-    public const int ATTACK31 = 31;
-    public const int ATTACK32 = 32;
-    public const int ATTACK33 = 33;
-    public const int ATTACK34 = 34;
-    public const int ATTACK35 = 35;
-    
-    public const int ATTACK40 = 40;
-    public const int ATTACK41 = 41;
-    public const int ATTACK42 = 42;
-    public const int ATTACK43 = 43;
-    public const int ATTACK44 = 44;
-    public const int ATTACK45 = 45;
-}
+// 所有攻击都是，先攻击再移动，反正肯定不是同时发生

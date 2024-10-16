@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -30,12 +31,12 @@ public class PlayerComponent : MonoBehaviour
     /// 移动
     /// </summary>
     /// <param name="dir"></param>
-    public void DoMove(int2 dir)
+    public Task DoMove(int2 dir)
     {
         int2 newPos = dir + currPlayerPos;
-        if (!CheckLimit(newPos)) return;
+        if (!CheckLimit(newPos)) return null;
         currPlayerPos = newPos;
-        TileManagerSingleton.Instance.MoveObjectToTile(currPlayerPos, gameObject);
+        return TileManagerSingleton.Instance.MoveObjectToTile(currPlayerPos, gameObject);
     }
     
 
@@ -50,10 +51,19 @@ public class PlayerComponent : MonoBehaviour
     /// <summary>
     /// 跳跃
     /// </summary>
+    /// todo remake
     public void DoJump()
     {
         isJumping = true;
-        // 跳跃动画
+        // domoveup
+        
+        
+        // 1.开始之前记录当前位置到变量
+        // 2.DoMove把玩家移到y-1位置
+        // 3.处理下一个指令
+        
+        // 4.每次处理指令之前检查上一个是不是跳跃
+        // 5.是的话就等当前指令做完用DoMove（y-1）
     }
 
     /// <summary>
@@ -68,6 +78,8 @@ public class PlayerComponent : MonoBehaviour
             attackList.Add(new int2(currPlayerPos.x + i,currPlayerPos.y));
         }
         GameManagerSingleton.Instance.Boss.CheckForDamage(2, attackList);
+        
+        // 没有动画，触发粒子特效
     }
 
     /// <summary>

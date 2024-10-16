@@ -56,9 +56,9 @@ public class TileManagerSingleton : BaseSingleton<TileManagerSingleton>
     
     // 这个函数之后可以在加一个bool为 isPlayer
     // 方便做动画，boss和player的移动动画应该是不一样的
-    public async void MoveObjectToTile(int2 pos,GameObject objectPrefab)
+    public Task MoveObjectToTile(int2 pos,GameObject objectPrefab)
     {
-        await TileList[GetIndexPos(pos)].AddObjectToTile(objectPrefab);
+        return TileList[GetIndexPos(pos)].AddObjectToTile(objectPrefab);
     }
 
     private int2 GetIntPos(int index)

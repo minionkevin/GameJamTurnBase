@@ -3,6 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 
 public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 {
@@ -10,6 +11,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     // 写成public只是为了测试方便
     public int Width = 7;
     public int Height = 6;
+
+    public List<int> BossActionList = new List<int>();
+    public BossActionScriptableObject BossData;
 
     public int2 bossHeadPos;
     public int2 bossLeftHandPos;
@@ -35,17 +39,19 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     public PlayerComponent Player;
     public BossComponent Boss;
+    
     public List<int> PlayerInputList = new List<int>();
     public List<int> BossInputList = new List<int>();
 
     private List<int> inputLists = new List<int>();
     
     public PlayerInputComponent PlayerInput;
-    
-    
+
+    private int currTurnNum;
 
     void Start()
     {
+        currTurnNum = 0;
         // tile spawn
         TileManagerSingleton.Instance.Setup(Width, Height);
         
@@ -79,6 +85,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         EnterGame();
     }
 
+    
+    // todo timer check
     /// <summary>
     /// 开启游戏计时，启用玩家输入，正式进入游戏
     /// </summary>
@@ -102,8 +110,17 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // 计时器暂停（等到下一回合重置）
         CountDown.Instance.SetTimerPause();
 
+        HandleBossActions();
         // 进入对战
         StartCoroutine(BattleCoroutine());
+    }
+
+    private void HandleBossActions()
+    {
+        foreach (var data in BossData.BossActions[BossActionList[currTurnNum]].BossActions)
+        {
+            BossInputList.Add(data);
+        }
     }
 
     /// <summary>
@@ -111,16 +128,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     /// </summary>
     private void ReorderInput()
     {
-        // todo read boss指令data
-        // BossInputList.Add(BossInputType.ATTACK1);
-        
-        BossInputList.Add(BossInputType.ATTACK10);
-        BossInputList.Add(BossInputType.ATTACK11);
-        BossInputList.Add(BossInputType.ATTACK12);
-        BossInputList.Add(BossInputType.ATTACK13);
-        BossInputList.Add(BossInputType.ATTACK14);
-        BossInputList.Add(BossInputType.ATTACK15);
-        
         for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
         {
             if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
@@ -211,17 +218,15 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         }
     }
 
-    private void HandlePlayerInput(int value)
+    private Task HandlePlayerInput(int value)
     {
         // todo 跳跃攻击
             switch (value)
             {
                 case PlayerInputType.MOVEA: 
-                    Player.DoMove(new int2(-1,0));
-                    break;
+                    return Player.DoMove(new int2(-1,0));
                 case PlayerInputType.MOVED: 
-                    Player.DoMove(new int2(1,0));
-                    break;
+                    return Player.DoMove(new int2(1,0));
                 case PlayerInputType.ATTACK1: 
                     Player.DoHorizontalAttack();
                     break;
@@ -244,6 +249,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                     Debug.LogError("wrong player attack type");
                     break;
             }
+            return null;
     }
 
     /// <summary>
@@ -260,26 +266,19 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // switch back to i%2==0 for player after boss pose finish
         for (int i = 0; i < inputLists.Count; i++)
         {
-            if(i%2 != 0)HandlePlayerInput(inputLists[i]);
+            if (i % 2 != 0) yield return HandlePlayerInput(inputLists[i]);
             else HandleBossInput(inputLists[i]);
         
             yield return new WaitForSecondsRealtime(1f);
         }
-
-        // boss测试
-        // for (int i = 0; i < BossInputList.Count; i++)
-        // {
-        //     HandleBossInput(BossInputList[i]);   
-        //     yield return new WaitForSecondsRealtime(1);
-        // }
-        
-        
-        yield return new WaitForFixedUpdate();
         
         PlayerInput.ClearMemoryList();
+        BossInputList.Clear();
+        PlayerInputList.Clear();
         
         yield return null;
-
+        
+        currTurnNum++;
         // 重新开始下一轮
         EnterGame();
     }

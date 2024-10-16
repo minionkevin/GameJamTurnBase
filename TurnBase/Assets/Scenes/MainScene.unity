@@ -2150,6 +2150,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Width: 7
   Height: 6
+  BossActionList: 00000000
+  BossInputList: 
+  BossData: {fileID: 11400000, guid: b8583f42c5881f84d8865c991b14f09d, type: 2}
   bossHeadPos:
     x: 1
     y: 0
@@ -2176,7 +2179,6 @@ MonoBehaviour:
   Player: {fileID: 0}
   Boss: {fileID: 0}
   PlayerInputList: 
-  BossInputList: 
   PlayerInput: {fileID: 447450013}
 --- !u!4 &1720132322
 Transform:

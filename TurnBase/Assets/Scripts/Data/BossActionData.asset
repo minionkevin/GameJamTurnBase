@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a9a3447a6afc14449342ba12b2d978b, type: 3}
+  m_Name: BossActionData
+  m_EditorClassIdentifier: 
+  BossActions:
+  - BossActions: 0a0000000b0000000c0000000d0000000e0000000f000000
+  - BossActions: 140000001500000016000000170000001800000019000000
+  - BossActions: 1e0000001f00000020000000210000002200000023000000
+  - BossActions: 28000000290000002a0000002b0000002c0000002d000000
