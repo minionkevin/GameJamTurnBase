@@ -80,9 +80,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // player hp & boss hp spawn
         BossHp_UI.Setup(bossStartHp);
         PlayerHp_UI.Setup(playerStartHp);
-
         
-        EnterGame();
+        HandlePlayerTurn();
     }
 
     
@@ -90,27 +89,27 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     /// <summary>
     /// 开启游戏计时，启用玩家输入，正式进入游戏
     /// </summary>
-    public void EnterGame()
+    private void HandlePlayerTurn()
     {
-        // Boss 摆出Pose
-
         // 开启游戏计时
         CountDown_UI.Setup(countdownTime);
         // 启用玩家输入
         PlayerInputComponent.InputEnabled = true;
+        
+        // todo 检测玩家血量并决定下一个boss指令
+        HandleBossActions();
     }
 
     /// <summary>
     /// 进入对战（计时结束或者直接确认）
     /// </summary>
-    public void EnterBattle()
+    public void StartBattle()
     {
         // 禁用一切输入
         PlayerInputComponent.InputEnabled = false;
         // 计时器暂停（等到下一回合重置）
         CountDown.Instance.SetTimerPause();
-
-        HandleBossActions();
+        
         // 进入对战
         StartCoroutine(BattleCoroutine());
     }
@@ -279,10 +278,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     /// <returns></returns>
     IEnumerator BattleCoroutine()
     {
-        // 每做完一个指令，等待所有动画完成，再开始下一个指令
-
         ReorderInput();
-        //
+        
         // // todo safety check
         // switch back to i%2==0 for player after boss pose finish
         for (int i = 0; i < inputLists.Count; i++)
@@ -294,14 +291,15 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         }
         
         PlayerInput.ClearMemoryList();
+        
         BossInputList.Clear();
         PlayerInputList.Clear();
+        inputLists.Clear();
         
-        yield return null;
-        
+        Player.ResetPlayerState();
         currTurnNum++;
         // 重新开始下一轮
-        EnterGame();
+        HandlePlayerTurn();
     }
 
 

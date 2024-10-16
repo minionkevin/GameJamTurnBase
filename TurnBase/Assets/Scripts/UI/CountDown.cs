@@ -7,19 +7,19 @@ public class CountDown : BaseSingleton<CountDown>
     [SerializeField]
     TMP_Text CountDown_Text;
 
-    // ¼ÆÊ±Ñ­»·
+    // è®¡æ—¶å¾ªç¯
     [HideInInspector]
     public int CountDownCycle = 60;
 
-    // ¼ÆÊ±¼°×´Ì¬
+    // è®¡æ—¶åŠçŠ¶æ€
     int curTime = 0;
     float timer = 0;
     bool isTiming = false;
 
-    public Action OnTimerEnd;   // ¼ÆÊ±½áÊøºóµÄÊÂ¼ş
+    public Action OnTimerEnd;   // è®¡æ—¶ç»“æŸåçš„äº‹ä»¶
 
     /// <summary>
-    /// ³õÊ¼»¯¼ÆÊ±Æ÷
+    /// åˆå§‹åŒ–è®¡æ—¶å™¨
     /// </summary>
     public void Setup(int cycleTime)
     {
@@ -37,14 +37,14 @@ public class CountDown : BaseSingleton<CountDown>
         if (curTime <= 0)
         {
             isTiming = false;
-            // ¼ÆÊ±½áÊø£¬£¨Ö´ĞĞ¶ÔÕ½£©
+            // è®¡æ—¶ç»“æŸï¼Œï¼ˆæ‰§è¡Œå¯¹æˆ˜ï¼‰
             OnTimerEnd?.Invoke();
         }
     }
 
 
     /// <summary>
-    /// ÔİÍ£¼ÆÊ±Æ÷
+    /// æš‚åœè®¡æ—¶å™¨
     /// </summary>
     public void SetTimerPause()
     {
@@ -59,7 +59,7 @@ public class CountDown : BaseSingleton<CountDown>
         }
 
         timer += Time.deltaTime;
-        // todo:Ê¹ÓÃ¼ÙµÄ¼ÆÊ±¼ä¸ô
+        // todo:ä½¿ç”¨å‡çš„è®¡æ—¶é—´éš”
         if (timer > 1)
         {
             timer = 0;

@@ -106,7 +106,7 @@ public class PlayerInputComponent : MonoBehaviour
     public void HandleConfirm()
     {
         if (!InputEnabled ) return;
-        GameManagerSingleton.Instance.EnterBattle();
+        GameManagerSingleton.Instance.StartBattle();
     }
 
     #endregion
