@@ -15,12 +15,12 @@ public class PlayerHp : MonoBehaviour
     int curHp;
     List<Heart> HeartsList;
 
-    // 测试用
-    // 之后删此调用，在GameManager中调用
-    private void OnEnable()
-    {
-        Setup(4);
-    }
+    //// 测试用
+    //// 之后删此调用，在GameManager中调用
+    //private void OnEnable()
+    //{
+    //    Setup(4);
+    //}
 
     /// <summary>
     /// 初始化
@@ -44,19 +44,23 @@ public class PlayerHp : MonoBehaviour
     /// </summary>
     public void Update_HpDisplay()
     {
+        // Debug.Log("curHp" + curHp);
+        // Debug.Log("maxHp" + maxHp);
         for (int i = 0; i < maxHp/2; i++)
         {
             if (i < curHp / 2)
             {
+                // Debug.Log("full heart");
                 HeartsList[i].SetDisplay(1);
-                return;
             }
             else if (i > curHp / 2)
             {
+                // Debug.Log("null heart");
                 HeartsList[i].SetDisplay(0);
             }
             else
             {
+                // Debug.Log("half heart");
                 HeartsList[i].SetDisplay(curHp % 2 == 1 ? -1 : 0);
             }
         }

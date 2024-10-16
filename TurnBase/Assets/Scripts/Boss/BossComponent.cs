@@ -185,7 +185,7 @@ public class BossComponent : MonoBehaviour
             }
             else break;
         }
-        GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
+        GameManagerSingleton.Instance.Player.CheckForDamage(attackList, 2);
         
         if (value) currLeftHandPos = attackList[^1];
         else currRightHandPos = attackList[^1];
