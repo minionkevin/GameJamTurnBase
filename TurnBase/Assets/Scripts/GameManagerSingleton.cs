@@ -127,6 +127,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     /// </summary>
     private void ReorderInput()
     {
+        while(PlayerInputList.Count < 5) PlayerInputList.Add(-1);
         for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
         {
             if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
@@ -240,6 +241,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     private Task HandlePlayerInput(int value)
     {
+        if (value == -1) return null;
         // todo 跳跃攻击
             switch (value)
             {
