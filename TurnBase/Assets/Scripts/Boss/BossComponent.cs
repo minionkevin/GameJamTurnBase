@@ -57,10 +57,10 @@ public class BossComponent : MonoBehaviour
         MoveHandToPlayerTop();
     }
 
-    private void DoAttackSingleHand()
+    private async void DoAttackSingleHand()
     {
-        if(isPlayerOnLeft) DoVerticalAttack(leftHandObj, currLeftHandPos,true);
-        else DoVerticalAttack(rightHandObj,currRightHandPos,false);
+        if(isPlayerOnLeft) await DoVerticalAttack(leftHandObj, currLeftHandPos,true);
+        else await DoVerticalAttack(rightHandObj,currRightHandPos,false);
     }
     
     private bool Attack1StepCheck(bool isFirstTime)
@@ -95,17 +95,17 @@ public class BossComponent : MonoBehaviour
         }
     }
 
-    private void DoAttackAndMoveHand(bool value)
+    private async void DoAttackAndMoveHand(bool value)
     {
         if (value)
         {
-            DoVerticalAttack(rightHandObj,currRightHandPos,false);
-            MoveHand(leftHandObj, isPlayerOnLeft ? currRightHandPos.x + 1 : currRightHandPos.x - 1, attack1yPos, ref currLeftHandPos);
+            await DoVerticalAttack(rightHandObj,currRightHandPos,false);
+            MoveObject(leftHandObj, isPlayerOnLeft ? currRightHandPos.x + 1 : currRightHandPos.x - 1, attack1yPos, ref currLeftHandPos);
         }
         else
         {
-            DoVerticalAttack(leftHandObj, currLeftHandPos,true);
-            MoveHand(rightHandObj,isPlayerOnLeft?currLeftHandPos.x + 1:currLeftHandPos.x - 1,attack1yPos,ref currRightHandPos);
+            await DoVerticalAttack(leftHandObj, currLeftHandPos,true);
+            MoveObject(rightHandObj,isPlayerOnLeft?currLeftHandPos.x + 1:currLeftHandPos.x - 1,attack1yPos,ref currRightHandPos);
         }
     }
 
@@ -114,9 +114,8 @@ public class BossComponent : MonoBehaviour
         if (value) DoVerticalAttack(attackHand, attackPos, isAttackHandLeft);
         else
         {
-            // 移动另一只手并攻击
-            MoveHand(moveHand, movePos.x, attack1yPos, ref movePos);
             DoVerticalAttack(attackHand, attackPos, isAttackHandLeft);
+            MoveObject(moveHand, movePos.x, attack1yPos, ref movePos);
         }
     }
     #endregion
@@ -124,33 +123,33 @@ public class BossComponent : MonoBehaviour
     #region attack2-左右双掌 
     public void DoAttack2Pre()
     {
-        MoveHand(leftHandObj, 1, GameManagerSingleton.Instance.Height - 2, ref currLeftHandPos);
-        MoveHand(rightHandObj,GameManagerSingleton.Instance.Width-2,GameManagerSingleton.Instance.Height-2,ref currRightHandPos);
-        MoveHand(headObj,GameManagerSingleton.Instance.Width/2,GameManagerSingleton.Instance.Height-1,ref currHeadPos);
+        MoveObject(leftHandObj, 1, GameManagerSingleton.Instance.Height - 2, ref currLeftHandPos);
+        MoveObject(rightHandObj,GameManagerSingleton.Instance.Width-2,GameManagerSingleton.Instance.Height-2,ref currRightHandPos);
+        MoveObject(headObj,GameManagerSingleton.Instance.Width/2,GameManagerSingleton.Instance.Height-1,ref currHeadPos);
     }
-    public void DoAttack2Step(int step)
+    public async void DoAttack2Step(int step)
     {
         switch (step)
         {
             case 1:
-                DoAOEAttack(leftHandObj, currLeftHandPos, true);
+                await DoAOEAttackBack(leftHandObj, currLeftHandPos, true,false);
                 break;
             case 2:
-                DoAOEAttack(rightHandObj, currRightHandPos, false);
-                MoveHand(leftHandObj, 2, GameManagerSingleton.Instance.Height - 2, ref currLeftHandPos);
+                await DoAOEAttackBack(rightHandObj, currRightHandPos, false,false);
+                MoveObject(leftHandObj, 2, GameManagerSingleton.Instance.Height - 2, ref currLeftHandPos);
                 break;
             case 3:
-                DoAOEAttack(leftHandObj, currLeftHandPos, true);
-                MoveHand(rightHandObj, GameManagerSingleton.Instance.Width - 3, GameManagerSingleton.Instance.Height - 2, ref currRightHandPos);
+                await DoAOEAttackBack(leftHandObj, currLeftHandPos, true,false);
+                MoveObject(rightHandObj, GameManagerSingleton.Instance.Width - 3, GameManagerSingleton.Instance.Height - 2, ref currRightHandPos);
                 break;
             case 4:
-                DoAOEAttack(rightHandObj, currRightHandPos, false);
-                MoveHand(leftHandObj, 1, GameManagerSingleton.Instance.Height - 2, ref currLeftHandPos);
+                await DoAOEAttackBack(rightHandObj, currRightHandPos, false,false);
+                MoveObject(leftHandObj, 1, GameManagerSingleton.Instance.Height - 2, ref currLeftHandPos);
                 break;
             case 5:
-                MoveHand(rightHandObj, GameManagerSingleton.Instance.Width - 2, GameManagerSingleton.Instance.Height - 2, ref currRightHandPos);
-                DoHeadVerticalAttack(); 
-                MoveHand(headObj, currHeadPos.x, 1, ref currHeadPos);
+                MoveObject(rightHandObj, GameManagerSingleton.Instance.Width - 2, GameManagerSingleton.Instance.Height - 2, ref currRightHandPos);
+                await DoHeadVerticalAttack(); 
+                await MoveObject(headObj, currHeadPos.x, 1, ref currHeadPos);
                 break;
         }
     }
@@ -178,17 +177,11 @@ public class BossComponent : MonoBehaviour
         }
     }
     
-    public async Task DoAttack3Pre()
+    public void DoAttack3Pre()
     {
-        // 检查玩家血量
-        // todo 放置真的前摇动作
-        MoveHand(headObj, GameManagerSingleton.Instance.Width/2, 1, ref currHeadPos);
-        MoveHand(leftHandObj, 1, GameManagerSingleton.Instance.Height - 2, ref currLeftHandPos);
-        MoveHand(rightHandObj,GameManagerSingleton.Instance.Width-2,GameManagerSingleton.Instance.Height-2,ref currRightHandPos);
-        
-        var bossHeadSprite = headObj.GetComponent<SpriteRenderer>();
-        await bossHeadSprite.DOColor(Color.white, 0.1f).SetLoops(3).AsyncWaitForCompletion();
-        bossHeadSprite.color = Color.red;
+        SetupBossStartPos(new int2(1, GameManagerSingleton.Instance.Height - 2),
+            new int2(GameManagerSingleton.Instance.Width-2,GameManagerSingleton.Instance.Height-2),
+            new int2(GameManagerSingleton.Instance.Width/2, 1));
     }
 
     private void DoAttack3Step1()
@@ -207,32 +200,25 @@ public class BossComponent : MonoBehaviour
 
     private async void DoAttack3MoveHand()
     {
-        await MoveHand(rightHandObj,currRightHandPos.x-1,currHeadPos.y+1,ref currRightHandPos);
-        await MoveHand(leftHandObj,currLeftHandPos.x+1,currHeadPos.y+1,ref currLeftHandPos);
+        await Task.WhenAll(MoveObject(rightHandObj, currRightHandPos.x - 1, currHeadPos.y + 1, ref currRightHandPos),
+            MoveObject(leftHandObj, currLeftHandPos.x + 1, currHeadPos.y + 1, ref currLeftHandPos));
     }
 
-    private void DoAttack3HandAttack()
+    private async void DoAttack3HandAttack()
     {
-        DoAOEAttackBack(leftHandObj, currLeftHandPos, true);
-        DoAOEAttackBack(rightHandObj, currRightHandPos, false);
+        await Task.WhenAll(DoAOEAttackBack(leftHandObj, currLeftHandPos, true), DoAOEAttackBack(rightHandObj, currRightHandPos, false));
     }
     #endregion
     
     # region attack4-地面清扫
-    public async Task DoAttack4Pre()
+    public void DoAttack4Pre()
     {
-        // 检查玩家血量
-        // todo 放置真的前摇动作
-        MoveHand(headObj, GameManagerSingleton.Instance.Width/2, GameManagerSingleton.Instance.Height - 1, ref currHeadPos);
-        MoveHand(leftHandObj, 1, GameManagerSingleton.Instance.Height - 1, ref currLeftHandPos);
-        MoveHand(rightHandObj,GameManagerSingleton.Instance.Width-2,GameManagerSingleton.Instance.Height-1,ref currRightHandPos);
-        
-        var bossHeadSprite = headObj.GetComponent<SpriteRenderer>();
-        await bossHeadSprite.DOColor(Color.blue, 0.1f).SetLoops(3).AsyncWaitForCompletion();
-        bossHeadSprite.color = Color.red;
+        SetupBossStartPos(new int2(1, GameManagerSingleton.Instance.Height - 2),
+            new int2(GameManagerSingleton.Instance.Width-2,GameManagerSingleton.Instance.Height-2),
+               new int2(GameManagerSingleton.Instance.Width/2, GameManagerSingleton.Instance.Height - 2));
     }
 
-    public void DoAttack4Step(int step)
+    public async void DoAttack4Step(int step)
     {
         switch (step)
         {
@@ -240,18 +226,17 @@ public class BossComponent : MonoBehaviour
                 DoAttack4Step1();
                 break;
             case 2:
-                MoveHand(headObj,currHeadPos.x,currHeadPos.y-1,ref currHeadPos);
+                await MoveObject(headObj,currHeadPos.x,currHeadPos.y-1,ref currHeadPos);
                 DoAttack4Step1();
-                
-                // hand pos?
-                MoveHand(leftHandObj,currHeadPos.x-2,0,ref currLeftHandPos);
-                MoveHand(rightHandObj,currHeadPos.x+2,0,ref currRightHandPos);
                 break;
             case 3:
-                DoHorizontalAttack(leftHandObj, currLeftHandPos, true);
+                await MoveObject(leftHandObj, currLeftHandPos.x, 0, ref currLeftHandPos);
+                await DoHorizontalAttack(leftHandObj, currLeftHandPos, true);
+                MoveObject(leftHandObj, GameManagerSingleton.Instance.Width - 1, GameManagerSingleton.Instance.Height - 1, ref currLeftHandPos);
                 break;
             case 4:
-                DoHorizontalAttack(rightHandObj, currRightHandPos, false);
+                await MoveObject(rightHandObj, currRightHandPos.x, 0, ref currRightHandPos);
+                await DoHorizontalAttack(rightHandObj, currRightHandPos, false);
                 break;
             case 5:
                 DoAttack4Step3();
@@ -278,14 +263,16 @@ public class BossComponent : MonoBehaviour
     
     private void DoAttack4Step3()
     {
-        MoveHand(headObj, GameManagerSingleton.Instance.Width/2, GameManagerSingleton.Instance.Height - 1, ref currHeadPos);
-        MoveHand(leftHandObj, currHeadPos.x-2, GameManagerSingleton.Instance.Height - 2, ref currLeftHandPos);
-        MoveHand(rightHandObj,currHeadPos.x+2,GameManagerSingleton.Instance.Height-2,ref currRightHandPos);
+        MoveObject(headObj, GameManagerSingleton.Instance.Width/2, GameManagerSingleton.Instance.Height - 1, ref currHeadPos);
+        MoveObject(leftHandObj, currHeadPos.x-2, GameManagerSingleton.Instance.Height - 2, ref currLeftHandPos);
+        MoveObject(rightHandObj,currHeadPos.x+2,GameManagerSingleton.Instance.Height-2,ref currRightHandPos);
     }
     #endregion
 
+    #region attack5-范围拍击
     public void DoAttack5Pre()
     {
+        MoveObject(headObj, GameManagerSingleton.Instance.Width / 2, 0, ref currHeadPos);
         MoveHandToPlayerTop();
     }
 
@@ -295,79 +282,87 @@ public class BossComponent : MonoBehaviour
         {
             int2 newPos = new int2(currRightHandPos.x + 1, currRightHandPos.y);
             if (!CheckLimit(newPos)) return;
-            if (!newPos.Equals(currRightHandPos)) await MoveHand(rightHandObj, newPos.x, newPos.y, ref currRightHandPos);
+            if (!newPos.Equals(currRightHandPos)) await MoveObject(rightHandObj, newPos.x, newPos.y, ref currRightHandPos);
         }
         else
         {
             int2 newPos = new int2(currLeftHandPos.x - 1, currLeftHandPos.y);
             if (!CheckLimit(newPos)) return;
-            if (!newPos.Equals(currLeftHandPos)) await MoveHand(leftHandObj, newPos.x, newPos.y, ref currLeftHandPos);
+            if (!newPos.Equals(currLeftHandPos)) await MoveObject(leftHandObj, newPos.x, newPos.y, ref currLeftHandPos);
         }
-        
-        DoAOEAttackBack(leftHandObj, currLeftHandPos, true);
-        DoAOEAttackBack(rightHandObj, currRightHandPos, false);
+        await Task.WhenAll(DoAOEAttackBack(leftHandObj, currLeftHandPos, true), DoAOEAttackBack(rightHandObj, currRightHandPos, false));
     }
 
-    public void DoAttack5Step2()
+    public async void DoAttack5Step2()
     {
-        MoveHand(rightHandObj, GameManagerSingleton.Instance.Width - 2, GameManagerSingleton.Instance.Height - 2, ref currRightHandPos);
-        DoHeadVerticalAttack(); 
-        MoveHand(headObj, currHeadPos.x, 1, ref currHeadPos);
+        MoveObject(rightHandObj, GameManagerSingleton.Instance.Width - 2, GameManagerSingleton.Instance.Height - 2, ref currRightHandPos);
+        
+        await DoHeadVerticalAttack(); 
+        await MoveObject(headObj, currHeadPos.x, 1, ref currHeadPos);
     }
 
+    #endregion
+
+    private void SetupBossStartPos(int2 leftHandPos,int2 rightHandPos, int2 headPos)
+    {
+        MoveObject(headObj, headPos, ref currHeadPos);
+        MoveObject(leftHandObj, leftHandPos, ref currLeftHandPos);
+        MoveObject(rightHandObj, rightHandPos, ref currRightHandPos);
+    }
+    
+    // dynamic移动手到玩家上方
     private void MoveHandToPlayerTop()
     {
         int2 playerPos = GameManagerSingleton.Instance.Player.GetPlayerPos(); 
         
         if (playerPos.x < GameManagerSingleton.Instance.Width / 2)
         {
-            MoveHand(leftHandObj, playerPos.x, currLeftHandPos.y,ref currLeftHandPos);
-            MoveHand(rightHandObj,playerPos.x+1,currLeftHandPos.y,ref currRightHandPos);
+            MoveObject(leftHandObj, playerPos.x, currLeftHandPos.y,ref currLeftHandPos);
+            MoveObject(rightHandObj,playerPos.x+1,currLeftHandPos.y,ref currRightHandPos);
             
             isPlayerOnLeft = true;
             attack1yPos = currLeftHandPos.y;
         }
         else
         {
-            MoveHand(rightHandObj,playerPos.x, currRightHandPos.y,ref currRightHandPos);
-            MoveHand(leftHandObj, currRightHandPos.x-1, currRightHandPos.y,ref currLeftHandPos);
+            MoveObject(rightHandObj,playerPos.x, currRightHandPos.y,ref currRightHandPos);
+            MoveObject(leftHandObj, currRightHandPos.x-1, currRightHandPos.y,ref currLeftHandPos);
             
             attack1yPos = currRightHandPos.y;
         }
     }
     
-    private Task MoveHand(GameObject handObj, int x, int y, ref int2 currentHandPos)
+    // 移动物体位置
+    private Task MoveObject(GameObject handObj, int x, int y, ref int2 currentHandPos)
     {
+        if (!CheckLimit(x, y)) return null;
         int2 newPos = new int2(x, y);
         currentHandPos = newPos;
-        return DoMove(handObj, newPos);
+        return TileManagerSingleton.Instance.MoveObjectToTile(new int2(x,y),handObj);
+    }
+    private Task MoveObject(GameObject handObj, int2 pos, ref int2 currentHandPos)
+    {
+        if (!CheckLimit(pos)) return null;
+        currentHandPos = pos;
+        return TileManagerSingleton.Instance.MoveObjectToTile(pos,handObj);
     }
     
-    private Task DoMove(GameObject obj, int2 pos)
-    {
-        return TileManagerSingleton.Instance.MoveObjectToTile(pos,obj);
-    }
-
-    private async void DoHeadVerticalAttack()
+    // 头部垂直攻击
+    private Task DoHeadVerticalAttack()
     {
         List<int2> attackList = new List<int2>();
-
         while (currHeadPos.y >= 0)
         {
             int2 targetPos = new int2(currHeadPos.x, currHeadPos.y--);
-            if (CheckLimit(targetPos))
-            {
-                attackList.Add(targetPos);
-            }
+            if (CheckLimit(targetPos)) attackList.Add(targetPos);
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
-
         currHeadPos = attackList[^1];
-        
-        await TriggerVerticalAttackAnimation(attackList[^1],headObj);
+        return TriggerVerticalAttackAnimation(attackList[^1],headObj);
     }
 
-    private async void DoVerticalAttack(GameObject obj, int2 pos,bool value)
+    // 手部垂直攻击
+    private Task DoVerticalAttack(GameObject obj, int2 pos,bool value)
     {
         List<int2> attackList = new List<int2>();
         for (int i = 0; i < 3; i++)
@@ -384,10 +379,11 @@ public class BossComponent : MonoBehaviour
         if (value) currLeftHandPos = attackList[^1];
         else currRightHandPos = attackList[^1];
         
-        await TriggerVerticalAttackAnimation(attackList[^1],obj);
+        return TriggerVerticalAttackAnimation(attackList[^1],obj);
     }
 
-    private async void DoHorizontalAttack(GameObject obj, int2 pos,bool isLeft)
+    // 手部水平攻击
+    private Task DoHorizontalAttack(GameObject obj, int2 pos,bool isLeft)
     {
         List<int2> attackList = new List<int2>();
         int direction = isLeft ? 1 : -1;
@@ -402,10 +398,11 @@ public class BossComponent : MonoBehaviour
         if (isLeft) currLeftHandPos = attackList[^1];
         else currRightHandPos = attackList[^1];
         
-        await TriggerVerticalAttackAnimation(attackList[^1],obj);
+        return TriggerVerticalAttackAnimation(attackList[^1],obj);
     }
 
-    private void DoAOEAttackBack(GameObject obj, int2 pos, bool isLeft)
+    // 手部拍击
+    private async Task DoAOEAttackBack(GameObject obj, int2 pos, bool isLeft,bool isBack = true)
     {
         int2 tmp = new int2();
         List<int2> attackList = new List<int2>();
@@ -426,39 +423,17 @@ public class BossComponent : MonoBehaviour
         else currRightHandPos = tmp;
 
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
-        TileManagerSingleton.Instance.AddObjectToTile(tmp,obj);
-        
-        if (isLeft) currLeftHandPos = pos;
-        else currRightHandPos = pos;
-        TileManagerSingleton.Instance.AddObjectToTile(pos,obj);
+        await TileManagerSingleton.Instance.AddObjectToTile(tmp,obj);
+
+        if (isBack)
+        {
+            if (isLeft) currLeftHandPos = pos;
+            else currRightHandPos = pos;
+            await TileManagerSingleton.Instance.AddObjectToTile(pos,obj);   
+        }
     }
     
-    private void DoAOEAttack(GameObject obj, int2 pos,bool isLeft)
-    {
-        int2 tmp = new int2();
-        List<int2> attackList = new List<int2>();
-        for (int i = 0; i < 3; i++)
-        {
-            int2 targetPos = new int2(pos.x, pos.y - i);
-            if (CheckLimit(targetPos)) attackList.Add(targetPos);
-        }
-        
-        tmp = attackList[^1];
-        
-        int2 sidePos = new int2(tmp.x - 1, tmp.y);
-        if(CheckLimit(sidePos)) attackList.Add(sidePos);
-        sidePos = new int2(tmp.x + 1 , tmp.y);
-        if(CheckLimit(sidePos)) attackList.Add(sidePos);
-        
-        if (isLeft) currLeftHandPos = tmp;
-        else currRightHandPos = tmp;
-        
-        GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
-        
-        // add animation
-        TileManagerSingleton.Instance.AddObjectToTile(tmp,obj);
-    }
-
+    // placeholder animation
     private Task TriggerVerticalAttackAnimation(int2 targetPos, GameObject obj)
     {
         var TileManager = TileManagerSingleton.Instance;
@@ -475,6 +450,10 @@ public class BossComponent : MonoBehaviour
     private bool CheckLimit(int2 targetPos)
     {
         return targetPos.x >= 0 && targetPos.x < GameManagerSingleton.Instance.Width && targetPos.y >= 0 && targetPos.y < GameManagerSingleton.Instance.Height;
+    }
+    private bool CheckLimit(int x, int y)
+    {
+        return x >= 0 && x < GameManagerSingleton.Instance.Width && y >= 0 && y < GameManagerSingleton.Instance.Height;
     }
     
     public void CheckForDamage(int value, List<int2> attackList)

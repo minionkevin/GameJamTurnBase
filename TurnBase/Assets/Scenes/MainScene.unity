@@ -2150,7 +2150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Width: 7
   Height: 4
-  BossActionList: 04000000
+  BossActionList: 01000000
   BossData: {fileID: 11400000, guid: b8583f42c5881f84d8865c991b14f09d, type: 2}
   bossHeadPos:
     x: 3

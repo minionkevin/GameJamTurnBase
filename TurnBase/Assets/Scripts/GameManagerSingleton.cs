@@ -176,7 +176,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 Boss.DoAttack2Step(5);
                 break;
             case BossInputType.ATTACK30:
-                await Boss.DoAttack3Pre();
+                Boss.DoAttack3Pre();
                 break;
             case BossInputType.ATTACK31:
                 Boss.DoAttack3Step(1);
@@ -194,7 +194,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 Boss.DoAttack3Step(5);
                 break;
             case BossInputType.ATTACK40:
-                await Boss.DoAttack4Pre();
+                Boss.DoAttack4Pre();
                 break;
             case BossInputType.ATTACK41:
                 Boss.DoAttack4Step(1);
@@ -214,6 +214,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             case BossInputType.ATTACK50:
                 Boss.DoAttack5Pre();
                 break;
+            
+            
+            ////
             case BossInputType.ATTACK51:
                 Boss.DoAttack5Step1();
                 break;
