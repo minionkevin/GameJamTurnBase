@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -15,9 +16,13 @@ public class PlayerComponent : MonoBehaviour
     [HideInInspector]
     public bool isUnderProtected;   // 护盾开启的状态
 
+    public SpriteRenderer PlayerSprite;
 
     private PlayerInputType preInputType;
     private int healMax;
+
+    private int damageAmount;
+    private bool shouldDamage;
     
     public void Setup(int2 playerPos)
     {
@@ -139,8 +144,8 @@ public class PlayerComponent : MonoBehaviour
         // VFX
 
         // Audio
-
-        GameManagerSingleton.Instance.PlayerHp_UI.OnTakeDamage(_damage);
+        shouldDamage = true;
+        damageAmount = _damage;
     }
 
     /// <summary>
@@ -155,6 +160,28 @@ public class PlayerComponent : MonoBehaviour
 
     // ------------------------------------------
 
+    // placeholder animation
+    private async void TakeDamageAnimation()
+    {
+        Color tmp = PlayerSprite.color;
+        Sequence timeline = DOTween.Sequence();
+        timeline.Insert(0, PlayerSprite.DOColor(Color.red, 0.15f));
+        timeline.Insert(0.15f, PlayerSprite.DOColor(Color.white, 0.15f));
+        await timeline.SetLoops(3).Play().AsyncWaitForCompletion();
+        PlayerSprite.color = tmp;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Boss" && shouldDamage)
+        {
+            GameManagerSingleton.Instance.PlayerHp_UI.OnTakeDamage(damageAmount);
+            TakeDamageAnimation();
+        }
+        shouldDamage = false;
+        damageAmount = 0;
+    }
+    
 
     private bool CheckLimit(int2 targetPos)
     {
