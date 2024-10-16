@@ -136,6 +136,19 @@ public class PlayerInputComponent : MonoBehaviour
         memoryList.Clear();
     }
 
+    public void SetBackInputButton(int index)
+    {
+        var btn = memoryList[index];
+        btn.GetComponent<Image>().color = Color.white;
+    }
+
+    public void HighlightInputButton(int index)
+    {
+        var btn = memoryList[index];
+        btn.GetComponent<Image>().color = Color.yellow;
+    }
+
+
     // -----------------------------------------------------------
 
     [Obsolete]

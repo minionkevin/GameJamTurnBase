@@ -286,8 +286,16 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // switch back to i%2==0 for player after boss pose finish
         for (int i = 0; i < inputLists.Count; i++)
         {
-            if (i % 2 != 0) yield return HandlePlayerInput(inputLists[i]);
-            else HandleBossInput(inputLists[i]);
+            if (i % 2 != 0)
+            {
+                PlayerInput.HighlightInputButton(i/2);
+                yield return HandlePlayerInput(inputLists[i]);
+            }
+            else
+            {
+                if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
+                HandleBossInput(inputLists[i]);
+            }
         
             yield return new WaitForSecondsRealtime(1f);
         }
