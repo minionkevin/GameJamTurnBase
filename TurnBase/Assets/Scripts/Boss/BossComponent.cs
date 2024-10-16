@@ -54,23 +54,7 @@ public class BossComponent : MonoBehaviour
     
     public void DoAttack1Pre()
     {
-        int2 playerPos = GameManagerSingleton.Instance.Player.GetPlayerPos(); 
-        
-        if (playerPos.x < GameManagerSingleton.Instance.Width / 2)
-        {
-            MoveHand(leftHandObj, playerPos.x, currLeftHandPos.y,ref currLeftHandPos);
-            MoveHand(rightHandObj,playerPos.x+1,currLeftHandPos.y,ref currRightHandPos);
-            
-            isPlayerOnLeft = true;
-            attack1yPos = currLeftHandPos.y;
-        }
-        else
-        {
-            MoveHand(rightHandObj,playerPos.x, currRightHandPos.y,ref currRightHandPos);
-            MoveHand(leftHandObj, currRightHandPos.x-1, currRightHandPos.y,ref currLeftHandPos);
-            
-            attack1yPos = currRightHandPos.y;
-        }
+        MoveHandToPlayerTop();
     }
 
     private void DoAttackSingleHand()
@@ -299,6 +283,58 @@ public class BossComponent : MonoBehaviour
         MoveHand(rightHandObj,currHeadPos.x+2,GameManagerSingleton.Instance.Height-2,ref currRightHandPos);
     }
     #endregion
+
+    public void DoAttack5Pre()
+    {
+        MoveHandToPlayerTop();
+    }
+
+    public async void DoAttack5Step1()
+    {
+        if (isPlayerOnLeft)
+        {
+            int2 newPos = new int2(currRightHandPos.x + 1, currRightHandPos.y);
+            if (!CheckLimit(newPos)) return;
+            if (!newPos.Equals(currRightHandPos)) await MoveHand(rightHandObj, newPos.x, newPos.y, ref currRightHandPos);
+        }
+        else
+        {
+            int2 newPos = new int2(currLeftHandPos.x - 1, currLeftHandPos.y);
+            if (!CheckLimit(newPos)) return;
+            if (!newPos.Equals(currLeftHandPos)) await MoveHand(leftHandObj, newPos.x, newPos.y, ref currLeftHandPos);
+        }
+        
+        DoAOEAttackBack(leftHandObj, currLeftHandPos, true);
+        DoAOEAttackBack(rightHandObj, currRightHandPos, false);
+    }
+
+    public void DoAttack5Step2()
+    {
+        MoveHand(rightHandObj, GameManagerSingleton.Instance.Width - 2, GameManagerSingleton.Instance.Height - 2, ref currRightHandPos);
+        DoHeadVerticalAttack(); 
+        MoveHand(headObj, currHeadPos.x, 1, ref currHeadPos);
+    }
+
+    private void MoveHandToPlayerTop()
+    {
+        int2 playerPos = GameManagerSingleton.Instance.Player.GetPlayerPos(); 
+        
+        if (playerPos.x < GameManagerSingleton.Instance.Width / 2)
+        {
+            MoveHand(leftHandObj, playerPos.x, currLeftHandPos.y,ref currLeftHandPos);
+            MoveHand(rightHandObj,playerPos.x+1,currLeftHandPos.y,ref currRightHandPos);
+            
+            isPlayerOnLeft = true;
+            attack1yPos = currLeftHandPos.y;
+        }
+        else
+        {
+            MoveHand(rightHandObj,playerPos.x, currRightHandPos.y,ref currRightHandPos);
+            MoveHand(leftHandObj, currRightHandPos.x-1, currRightHandPos.y,ref currLeftHandPos);
+            
+            attack1yPos = currRightHandPos.y;
+        }
+    }
     
     private Task MoveHand(GameObject handObj, int x, int y, ref int2 currentHandPos)
     {
@@ -369,7 +405,7 @@ public class BossComponent : MonoBehaviour
         await TriggerVerticalAttackAnimation(attackList[^1],obj);
     }
 
-    private async void DoAOEAttackBack(GameObject obj, int2 pos, bool isLeft)
+    private void DoAOEAttackBack(GameObject obj, int2 pos, bool isLeft)
     {
         int2 tmp = new int2();
         List<int2> attackList = new List<int2>();
@@ -390,8 +426,11 @@ public class BossComponent : MonoBehaviour
         else currRightHandPos = tmp;
 
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
-        await TileManagerSingleton.Instance.AddObjectToTile(tmp,obj);
-        await TileManagerSingleton.Instance.AddObjectToTile(pos,obj);
+        TileManagerSingleton.Instance.AddObjectToTile(tmp,obj);
+        
+        if (isLeft) currLeftHandPos = pos;
+        else currRightHandPos = pos;
+        TileManagerSingleton.Instance.AddObjectToTile(pos,obj);
     }
     
     private void DoAOEAttack(GameObject obj, int2 pos,bool isLeft)

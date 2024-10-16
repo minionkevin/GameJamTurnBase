@@ -48,4 +48,12 @@ public class BossInputType
     public const int ATTACK43 = 43;
     public const int ATTACK44 = 44;
     public const int ATTACK45 = 45;
+    
+    public const int ATTACK50 = 50;
+    public const int ATTACK51 = 51;
+    public const int ATTACK52 = 52;
+    public const int ATTACK53 = 53;
+    public const int ATTACK54 = 54;
+    public const int ATTACK55 = 55;
+
 }

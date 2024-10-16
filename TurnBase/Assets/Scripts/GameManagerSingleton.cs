@@ -211,6 +211,24 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             case BossInputType.ATTACK45:
                 Boss.DoAttack4Step(5);
                 break;
+            case BossInputType.ATTACK50:
+                Boss.DoAttack5Pre();
+                break;
+            case BossInputType.ATTACK51:
+                Boss.DoAttack5Step1();
+                break;
+            case BossInputType.ATTACK52:
+                Boss.DoAttack5Step1();
+                break;
+            case BossInputType.ATTACK53:
+                Boss.DoAttack5Step1();
+                break;
+            case BossInputType.ATTACK54:
+                Boss.DoAttack5Step1();
+                break;
+            case BossInputType.ATTACK55:
+                Boss.DoAttack5Step2();
+                break;
             
             default:
                 Debug.LogError("wrong boss attack type");
