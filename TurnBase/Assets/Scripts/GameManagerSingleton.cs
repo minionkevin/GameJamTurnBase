@@ -105,6 +105,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     /// </summary>
     public void StartBattle()
     {
+
         // 禁用一切输入
         PlayerInputComponent.InputEnabled = false;
         // 计时器暂停（等到下一回合重置）
@@ -133,6 +134,30 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
             if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
         }
+        
+        // PlayerInputList.Insert(0, PlayerInputType.NULL); // 目前临时添加，为了和Boss摆Pose环节对齐
+        //
+        // for (int i = 0; i < BossInputList.Count; i++)
+        // {            
+        //     if (i < PlayerInputList.Count) 
+        //         inputLists.Add(PlayerInputList[i]);
+        //     else 
+        //         inputLists.Add(PlayerInputType.NULL);
+        //
+        //     inputLists.Add(BossInputList[i]);
+        // }
+        //
+        //
+        // inputLists.Add(PlayerInputType.END);
+        // inputLists.Add(BossInputType.END);
+        
+
+        
+        //for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
+        //{
+        //    if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
+        //    if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
+        //}
     }
 
     private async void HandleBossInput(int value)
@@ -214,6 +239,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             case BossInputType.ATTACK50:
                 Boss.DoAttack5Pre();
                 break;
+            case BossInputType.END:
+                Boss.DoActionEnd(); 
+                break;
             
             
             ////
@@ -265,7 +293,13 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                     Player.DoJump();
                     break;
                 case PlayerInputType.JUMPATTACK:
-                    Player.DoJump();
+                    // Player.DoJumpAttack();
+                    break;
+                case PlayerInputType.NULL:
+                    Player.DoNothing();
+                    break;
+                case PlayerInputType.END:
+                    Player.DoActionEnd();
                     break;
                 default:
                     Debug.LogError("wrong player attack type");
@@ -286,17 +320,38 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // switch back to i%2==0 for player after boss pose finish
         for (int i = 0; i < inputLists.Count; i++)
         {
+            // 玩家回合
             if (i % 2 != 0)
             {
-                PlayerInput.HighlightInputButton(i/2);
-                yield return HandlePlayerInput(inputLists[i]);
+                if (i - 2 >= 0 && inputLists[i - 2].Equals(PlayerInputType.JUMP))
+                {
+                    // 跳跃攻击
+                    if (inputLists[i].Equals(PlayerInputType.ATTACK1) || inputLists[i].Equals(PlayerInputType.ATTACK2))
+                    {
+                        Player.DoJumpAttack(inputLists[i]);
+                        Player.DoMove(new int2(0, -1));
+                        Player.isJumping = false;
+                        // HandlePlayerInput(PlayerInputType.JUMPATTACK);
+                    }
+                    // 普通跳跃
+                    else
+                    {
+                        HandlePlayerInput(inputLists[i]);
+                        Player.DoMove(new int2(0, -1));
+                        Player.isJumping = false;
+                    }                    
+                }
+                else 
+                {
+                    HandlePlayerInput(inputLists[i]);
+                }                
             }
-            else
-            {
-                if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
-                HandleBossInput(inputLists[i]);
+            // Boss回合
+            else 
+            { 
+                HandleBossInput(inputLists[i]); 
             }
-        
+
             yield return new WaitForSecondsRealtime(1f);
         }
         
