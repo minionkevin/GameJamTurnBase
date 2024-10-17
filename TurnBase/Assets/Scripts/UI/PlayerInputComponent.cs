@@ -182,6 +182,7 @@ public class PlayerInputComponent : MonoBehaviour
             Destroy(item);
         }
         memoryList.Clear();
+        GameManagerSingleton.Instance.PlayerInputList.Clear();
     }
 
     // todo fix this logic
