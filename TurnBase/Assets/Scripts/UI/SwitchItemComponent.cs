@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -54,6 +55,12 @@ public class SwitchItemComponent : MonoBehaviour
     public void SendItem(int id)
     {
         deleteId = id;
+        StringBuilder sb = new StringBuilder();
+        sb.Append(id);
+        sb.Append(id);
+        sb.Append(id);
+        sb.Append(id);
+        
         // placeholder password
         PasswordLabel.text = id.ToString();
         PasswordLabel.gameObject.SetActive(true);

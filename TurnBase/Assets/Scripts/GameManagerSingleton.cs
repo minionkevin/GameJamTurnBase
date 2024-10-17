@@ -40,6 +40,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     public GameObject GamePanel;
     public GameObject SwitchPanel;
+    public GameObject TakeItemPanel;
 
     public PlayerComponent Player;
     public BossComponent Boss;
@@ -100,6 +101,26 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             ItemDic.Add(item.Id,item.Amount);
         }
         PlayerInput.UpdateButton(ItemDic);
+    }
+
+    public void SetupTakeItemPanel()
+    {
+        TakeItemPanel.GetComponent<TakeItemComponent>().Setup();
+    }
+    
+    public void UpdateAddItems()
+    {
+        PlayerInput.UpdateButton(ItemDic);
+        
+        // 取东西成功添加空指令占位置
+        if (PlayerInputList.Count == 5)
+        {
+            PlayerInputList.RemoveAt(4);
+            PlayerInput.RemoveBtnFromMemoryList(4);
+        }
+        PlayerInput.AddBtnToMemoryList(PlayerInput.buttonList[7]);
+        if (PlayerInputList.Count > 0) PlayerInputList[^1] = -1;
+        else PlayerInputList.Add(-1);
     }
 
     public void UpdateItems(int deleteID)

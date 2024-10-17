@@ -26,7 +26,8 @@ public class PlayerInputComponent : MonoBehaviour
         // 四个物品按钮
         for (int i = 3; i < 7; i++)
         {
-            if(itemData[i-3] <=0) buttonList[i].interactable = false;
+            if (itemData[i - 3] <= 0) buttonList[i].interactable = false;
+            else buttonList[i].interactable = true;
         }
     }
 
@@ -38,6 +39,11 @@ public class PlayerInputComponent : MonoBehaviour
     
     #region ------按钮事件------
 
+    public void ShowTakeItemPanel()
+    {
+        GameManagerSingleton.Instance.SetupTakeItemPanel();
+    }
+    
     public void ShowSwitchPanel()
     {
         GameManagerSingleton.Instance.GamePanel.SetActive(false);
@@ -153,11 +159,17 @@ public class PlayerInputComponent : MonoBehaviour
     /// 更新UI
     /// </summary>
     /// <param name="button"></param>
-    private void AddBtnToMemoryList(Button button)
+    public void AddBtnToMemoryList(Button button)
     {
         var tmpButton = Instantiate(button, memoryContainerRect);
         tmpButton.interactable = false;
         memoryList.Add(tmpButton.gameObject);
+    }
+
+    public void RemoveBtnFromMemoryList(int index)
+    {
+        Destroy(memoryList[index]);
+        memoryList.RemoveAt(index);
     }
 
     /// <summary>
