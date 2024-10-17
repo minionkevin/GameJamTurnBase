@@ -264,6 +264,9 @@ public class BossComponent : MonoBehaviour
             if(index != targetPos1 || index != targetPos2||index!=targetPos3||index!=targetPos4) attackList.Add(index);
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
+        
+        // 播放动画
+        // 播放音效
     }
     
     private void DoAttack4Step3()
