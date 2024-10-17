@@ -1,0 +1,66 @@
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class SwitchItemComponent : MonoBehaviour
+{
+    public RectTransform HaveItemRect;
+    public RectTransform MissingItemRect;
+    public TextMeshProUGUI PasswordLabel;
+
+    public List<GameObject> ItemList = new List<GameObject>();
+
+
+    private GameManagerSingleton GameManager;
+    private int deleteId;
+    
+    public void Setup()
+    {
+            for (int i = HaveItemRect.childCount-1; i >=0 ; i--)
+            {
+                Destroy(HaveItemRect.GetChild(i).gameObject);
+            }            
+        
+            for (int i = MissingItemRect.childCount-1; i >=0 ; i--)
+            {
+                Destroy(MissingItemRect.GetChild(i).gameObject);
+            }   
+        GameManager = GameManagerSingleton.Instance;
+        PasswordLabel.gameObject.SetActive(false); 
+        ShowItems();
+        deleteId = -1;
+    }
+
+    private void ShowItems()
+    {
+        foreach (var data in GameManager.ItemDic)
+        {
+            GameObject item;
+            if (data.Value > 0)
+            {
+                item = Instantiate(ItemList[data.Key], HaveItemRect);
+                item.GetComponent<ItemComponent>().Setup(data.Key,this);
+            }
+            else
+            {
+                item = Instantiate(ItemList[data.Key], MissingItemRect);
+                item.GetComponent<Button>().interactable = false;
+            }
+            item.GetComponent<ItemComponent>().Setup(data.Key,this);
+        }
+    }
+    
+    public void SendItem(int id)
+    {
+        deleteId = id;
+        // placeholder password
+        PasswordLabel.text = id.ToString();
+        PasswordLabel.gameObject.SetActive(true);
+    }
+
+    public void UpdateInputAction()
+    {
+        if(deleteId!=-1)   GameManager.UpdateItems(deleteId);
+    }
+}

@@ -38,6 +38,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public BossHp BossHp_UI;
     public PlayerHp PlayerHp_UI;
 
+    public GameObject GamePanel;
+    public GameObject SwitchPanel;
+
     public PlayerComponent Player;
     public BossComponent Boss;
     
@@ -99,10 +102,45 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         PlayerInput.UpdateButton(ItemDic);
     }
 
-    private void UpdateItems()
+    public void UpdateItems(int deleteID)
     {
-        // 更新dic
-        // PlayerInput.UpdateButton(ItemDic);
+        PlayerInput.UpdateButton(ItemDic);
+        
+        // 如果没有到0就不用考虑删指令
+        if(ItemDic[deleteID] >0) return;
+
+        int deleteType = -1;
+        switch (deleteID)
+        {
+            case 0:
+                deleteType = PlayerInputType.ATTACK1;
+                break;
+            case 1:
+                deleteType = PlayerInputType.ATTACK2;
+                break;
+            case 2:
+                deleteType = PlayerInputType.DEFENSE;
+                break;
+            case 3:
+                deleteType = PlayerInputType.HEAL;
+                break;
+        }
+        
+        if(deleteType==-1) return;
+        
+        for (int i = PlayerInputList.Count - 1; i >= 0; i--)
+        {
+            if (PlayerInputList[i] != deleteType) continue;
+            PlayerInputList.RemoveAt(i);
+            // 更新视觉
+            PlayerInput.UpdateCurrMemory(i);
+        }
+
+    }
+
+    public void SetupSwitchPanel()
+    {
+        SwitchPanel.GetComponent<SwitchItemComponent>().Setup();
     }
 
     
@@ -309,12 +347,12 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         {
             if (i % 2 != 0)
             {
-                PlayerInput.HighlightInputButton(i/2);
+                // PlayerInput.HighlightInputButton(i/2);
                 yield return HandlePlayerInput(inputLists[i]);
             }
             else
             {
-                if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
+                // if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
                 HandleBossInput(inputLists[i]);
             }
         

@@ -19,24 +19,32 @@ public class PlayerInputComponent : MonoBehaviour
 
     // 控制是否输入可用（地图生成前/对战中，所有输入都不可用）
     public static bool InputEnabled = false;
-
+    
 
     public void UpdateButton(Dictionary<int,int> itemData)
     {
         // 四个物品按钮
         for (int i = 3; i < 7; i++)
         {
-            if (itemData[i-3]==0) buttonList[i].interactable = false;
+            if(itemData[i-3] <=0) buttonList[i].interactable = false;
         }
     }
 
-    public void UpdateCurrMemory()
+    public void UpdateCurrMemory(int index)
     {
-        
+        Destroy(memoryList[index]);
+        memoryList.RemoveAt(index);
     }
     
     #region ------按钮事件------
 
+    public void ShowSwitchPanel()
+    {
+        GameManagerSingleton.Instance.GamePanel.SetActive(false);
+        GameManagerSingleton.Instance.SwitchPanel.SetActive(true);
+        GameManagerSingleton.Instance.SetupSwitchPanel();
+    }
+    
     /// <summary>
     /// 左移
     /// </summary>
@@ -164,17 +172,20 @@ public class PlayerInputComponent : MonoBehaviour
         memoryList.Clear();
     }
 
-    public void SetBackInputButton(int index)
-    {
-        var btn = memoryList[index];
-        btn.GetComponent<Image>().color = Color.white;
-    }
-
-    public void HighlightInputButton(int index)
-    {
-        var btn = memoryList[index];
-        btn.GetComponent<Image>().color = Color.yellow;
-    }
+    // todo fix this logic
+    // public void SetBackInputButton(int index)
+    // {
+    //     if (memoryList.Count < index-1) return;
+    //     var btn = memoryList[index];
+    //     btn.GetComponent<Image>().color = Color.white;
+    // }
+    //
+    // public void HighlightInputButton(int index)
+    // {
+    //     if (memoryList.Count < index-1) return;
+    //     var btn = memoryList[index];
+    //     btn.GetComponent<Image>().color = Color.yellow;
+    // }
 
 
     // -----------------------------------------------------------

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: ItemsData
   m_EditorClassIdentifier: 
   ItemDatas:
+  - Id: 0
+    Amount: 1
   - Id: 1
     Amount: 1
   - Id: 2
-    Amount: 0
+    Amount: 1
   - Id: 3
-    Amount: 0
-  - Id: 4
     Amount: 0
