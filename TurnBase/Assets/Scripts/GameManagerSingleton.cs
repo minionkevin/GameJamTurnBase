@@ -14,6 +14,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     public List<int> BossActionList = new List<int>();
     public BossActionScriptableObject BossData;
+    public ItemScriptableObject ItemData;
 
     public int2 bossHeadPos;
     public int2 bossLeftHandPos;
@@ -47,6 +48,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     
     public PlayerInputComponent PlayerInput;
 
+    public Dictionary<int, int> ItemDic = new Dictionary<int, int>();
+    
     private int currTurnNum;
 
     void Start()
@@ -82,6 +85,24 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         PlayerHp_UI.Setup(playerStartHp);
         
         HandlePlayerTurn();
+
+        SetupItems();
+    }
+
+    private void SetupItems()
+    {
+        // 更新dic,本身的数据就不重要了
+        foreach (var item in ItemData.ItemDatas)
+        {
+            ItemDic.Add(item.Id,item.Amount);
+        }
+        PlayerInput.UpdateButton(ItemDic);
+    }
+
+    private void UpdateItems()
+    {
+        // 更新dic
+        // PlayerInput.UpdateButton(ItemDic);
     }
 
     

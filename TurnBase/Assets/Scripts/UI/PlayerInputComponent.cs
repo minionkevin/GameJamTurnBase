@@ -20,6 +20,21 @@ public class PlayerInputComponent : MonoBehaviour
     // 控制是否输入可用（地图生成前/对战中，所有输入都不可用）
     public static bool InputEnabled = false;
 
+
+    public void UpdateButton(Dictionary<int,int> itemData)
+    {
+        // 四个物品按钮
+        for (int i = 3; i < 7; i++)
+        {
+            if (itemData[i-3]==0) buttonList[i].interactable = false;
+        }
+    }
+
+    public void UpdateCurrMemory()
+    {
+        
+    }
+    
     #region ------按钮事件------
 
     /// <summary>
@@ -85,8 +100,10 @@ public class PlayerInputComponent : MonoBehaviour
     public void HandleHeal(Button button)
     {
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
+        GameManagerSingleton.Instance.ItemDic[3]--;
         AddBtnToMemoryList(button);
         GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.HEAL);
+        if (GameManagerSingleton.Instance.ItemDic[3] <= 0) button.interactable = false;
     }
 
     /// <summary>
