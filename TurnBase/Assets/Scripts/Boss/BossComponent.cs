@@ -447,8 +447,6 @@ public class BossComponent : MonoBehaviour
 
         Sequence timeline = DOTween.Sequence();
         timeline.Insert(0, currTrans.DOLocalMove(Vector3.zero, 0.5f).SetEase(Ease.Linear));
-        timeline.Insert(0, currTrans.DOScale(0.75f, 0.15f));
-        timeline.Insert(0.3f, currTrans.DOScale(1f, 0.15f));
         return timeline.Play().AsyncWaitForCompletion();
     }
     

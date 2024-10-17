@@ -100,6 +100,17 @@ public class PlayerInputComponent : MonoBehaviour
         GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.DEFENSE);
     }
 
+    public void HandleSwitchItem()
+    {
+        if (!InputEnabled) return;
+        
+        // 1.打开新ui界面
+        // 2.生成 拥有/未拥有物品
+        // 3.拥有物品可以传送
+        // 4.密码？
+        // 5.取出=指令=
+    }
+
     /// <summary>
     /// 进入对战
     /// </summary>
