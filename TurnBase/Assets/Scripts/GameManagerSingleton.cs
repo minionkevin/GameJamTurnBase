@@ -323,6 +323,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             // 玩家回合
             if (i % 2 != 0)
             {
+                PlayerInput.HighlightInputButton(i/2);
                 if (i - 2 >= 0 && inputLists[i - 2].Equals(PlayerInputType.JUMP))
                 {
                     // 跳跃攻击
@@ -343,6 +344,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 }
                 else 
                 {
+                    if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
                     HandlePlayerInput(inputLists[i]);
                 }                
             }
