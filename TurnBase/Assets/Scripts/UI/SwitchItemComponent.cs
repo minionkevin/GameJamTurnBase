@@ -62,7 +62,7 @@ public class SwitchItemComponent : MonoBehaviour
         sb.Append(id);
         
         // placeholder password
-        PasswordLabel.text = id.ToString();
+        PasswordLabel.text = sb.ToString();
         PasswordLabel.gameObject.SetActive(true);
     }
 
