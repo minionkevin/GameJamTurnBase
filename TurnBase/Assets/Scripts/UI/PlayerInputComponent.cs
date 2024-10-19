@@ -31,10 +31,18 @@ public class PlayerInputComponent : MonoBehaviour
         }
     }
 
-    public void UpdateCurrMemory(int index)
+    public void UpdateCurrMemory(List<int> index)
     {
-        Destroy(memoryList[index]);
-        memoryList.RemoveAt(index);
+        index.Sort((a,b)=>b.CompareTo(a));
+
+        foreach (var i in index)
+        {
+            if (i >= 0 && i < memoryList.Count)
+            {
+                Destroy(memoryList[i]);
+                memoryList.RemoveAt(i);
+            }
+        }
     }
     
     #region ------按钮事件------

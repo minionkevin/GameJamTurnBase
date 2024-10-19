@@ -149,12 +149,21 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         
         if(deleteType==-1) return;
         
-        for (int i = PlayerInputList.Count - 1; i >= 0; i--)
+        List<int> itemsToRemove = new List<int>();
+        List<int> memoryRemoveList = new List<int>();
+        for (int i = 0; i < PlayerInputList.Count; i++)
         {
-            if (PlayerInputList[i] != deleteType) continue;
-            PlayerInputList.RemoveAt(i);
-            // 更新视觉
-            PlayerInput.UpdateCurrMemory(i);
+            if (PlayerInputList[i] == deleteType)
+            {
+                itemsToRemove.Add(PlayerInputList[i]);
+                memoryRemoveList.Add(i);
+            }
+        }
+        PlayerInput.UpdateCurrMemory(memoryRemoveList);
+        
+        foreach (var item in itemsToRemove)
+        {
+            PlayerInputList.Remove(item);
         }
 
     }
