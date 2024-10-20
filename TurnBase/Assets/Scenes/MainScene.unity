@@ -1203,6 +1203,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TakeItemPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 7440202845694860987, guid: 13d934cbdd03e0346a814640dc975e96, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
