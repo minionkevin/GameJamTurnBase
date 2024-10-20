@@ -14,6 +14,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     public List<int> BossActionList = new List<int>();
     public BossActionScriptableObject BossData;
+    public ItemScriptableObject ItemData;
 
     public int2 bossHeadPos;
     public int2 bossLeftHandPos;
@@ -37,6 +38,10 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public BossHp BossHp_UI;
     public PlayerHp PlayerHp_UI;
 
+    public GameObject GamePanel;
+    public GameObject SwitchPanel;
+    public GameObject TakeItemPanel;
+
     public PlayerComponent Player;
     public BossComponent Boss;
     
@@ -47,6 +52,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     
     public PlayerInputComponent PlayerInput;
 
+    public Dictionary<int, int> ItemDic = new Dictionary<int, int>();
+    
     private int currTurnNum;
 
     void Start()
@@ -82,6 +89,88 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         PlayerHp_UI.Setup(playerStartHp);
         
         HandlePlayerTurn();
+
+        SetupItems();
+    }
+
+    private void SetupItems()
+    {
+        // 更新dic,本身的数据就不重要了
+        foreach (var item in ItemData.ItemDatas)
+        {
+            ItemDic.Add(item.Id,item.Amount);
+        }
+        PlayerInput.UpdateButton(ItemDic);
+    }
+
+    public void SetupTakeItemPanel()
+    {
+        TakeItemPanel.GetComponent<TakeItemComponent>().Setup();
+    }
+    
+    public void UpdateAddItems()
+    {
+        PlayerInput.UpdateButton(ItemDic);
+        
+        // 取东西成功添加空指令占位置
+        if (PlayerInputList.Count == 5)
+        {
+            PlayerInputList.RemoveAt(4);
+            PlayerInput.RemoveBtnFromMemoryList(4);
+        }
+        PlayerInput.AddBtnToMemoryList(PlayerInput.buttonList[7]);
+        if (PlayerInputList.Count > 0) PlayerInputList[^1] = -1;
+        else PlayerInputList.Add(-1);
+    }
+
+    public void UpdateItems(int deleteID)
+    {
+        PlayerInput.UpdateButton(ItemDic);
+        
+        // 如果没有到0就不用考虑删指令
+        if(ItemDic[deleteID] >0) return;
+
+        int deleteType = -1;
+        switch (deleteID)
+        {
+            case 0:
+                deleteType = PlayerInputType.ATTACK1;
+                break;
+            case 1:
+                deleteType = PlayerInputType.ATTACK2;
+                break;
+            case 2:
+                deleteType = PlayerInputType.DEFENSE;
+                break;
+            case 3:
+                deleteType = PlayerInputType.HEAL;
+                break;
+        }
+        
+        if(deleteType==-1) return;
+        
+        List<int> itemsToRemove = new List<int>();
+        List<int> memoryRemoveList = new List<int>();
+        for (int i = 0; i < PlayerInputList.Count; i++)
+        {
+            if (PlayerInputList[i] == deleteType)
+            {
+                itemsToRemove.Add(PlayerInputList[i]);
+                memoryRemoveList.Add(i);
+            }
+        }
+        PlayerInput.UpdateCurrMemory(memoryRemoveList);
+        
+        foreach (var item in itemsToRemove)
+        {
+            PlayerInputList.Remove(item);
+        }
+
+    }
+
+    public void SetupSwitchPanel()
+    {
+        SwitchPanel.GetComponent<SwitchItemComponent>().Setup();
     }
 
     
@@ -105,7 +194,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     /// </summary>
     public void StartBattle()
     {
-
         // 禁用一切输入
         PlayerInputComponent.InputEnabled = false;
         // 计时器暂停（等到下一回合重置）
@@ -134,30 +222,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
             if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
         }
-        
-        // PlayerInputList.Insert(0, PlayerInputType.NULL); // 目前临时添加，为了和Boss摆Pose环节对齐
-        //
-        // for (int i = 0; i < BossInputList.Count; i++)
-        // {            
-        //     if (i < PlayerInputList.Count) 
-        //         inputLists.Add(PlayerInputList[i]);
-        //     else 
-        //         inputLists.Add(PlayerInputType.NULL);
-        //
-        //     inputLists.Add(BossInputList[i]);
-        // }
-        //
-        //
-        // inputLists.Add(PlayerInputType.END);
-        // inputLists.Add(BossInputType.END);
-        
-
-        
-        //for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
-        //{
-        //    if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
-        //    if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
-        //}
     }
 
     private async void HandleBossInput(int value)
@@ -239,9 +303,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             case BossInputType.ATTACK50:
                 Boss.DoAttack5Pre();
                 break;
-            case BossInputType.END:
-                Boss.DoActionEnd(); 
-                break;
             
             
             ////
@@ -293,13 +354,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                     Player.DoJump();
                     break;
                 case PlayerInputType.JUMPATTACK:
-                    // Player.DoJumpAttack();
-                    break;
-                case PlayerInputType.NULL:
-                    Player.DoNothing();
-                    break;
-                case PlayerInputType.END:
-                    Player.DoActionEnd();
+                    Player.DoJump();
                     break;
                 default:
                     Debug.LogError("wrong player attack type");
@@ -320,40 +375,17 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // switch back to i%2==0 for player after boss pose finish
         for (int i = 0; i < inputLists.Count; i++)
         {
-            // 玩家回合
             if (i % 2 != 0)
             {
-                PlayerInput.HighlightInputButton(i/2);
-                if (i - 2 >= 0 && inputLists[i - 2].Equals(PlayerInputType.JUMP))
-                {
-                    // 跳跃攻击
-                    if (inputLists[i].Equals(PlayerInputType.ATTACK1) || inputLists[i].Equals(PlayerInputType.ATTACK2))
-                    {
-                        Player.DoJumpAttack(inputLists[i]);
-                        Player.DoMove(new int2(0, -1));
-                        Player.isJumping = false;
-                        // HandlePlayerInput(PlayerInputType.JUMPATTACK);
-                    }
-                    // 普通跳跃
-                    else
-                    {
-                        HandlePlayerInput(inputLists[i]);
-                        Player.DoMove(new int2(0, -1));
-                        Player.isJumping = false;
-                    }                    
-                }
-                else 
-                {
-                    if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
-                    HandlePlayerInput(inputLists[i]);
-                }                
+                // PlayerInput.HighlightInputButton(i/2);
+                yield return HandlePlayerInput(inputLists[i]);
             }
-            // Boss回合
-            else 
-            { 
-                HandleBossInput(inputLists[i]); 
+            else
+            {
+                // if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
+                HandleBossInput(inputLists[i]);
             }
-
+        
             yield return new WaitForSecondsRealtime(1f);
         }
         

@@ -265,6 +265,9 @@ public class BossComponent : MonoBehaviour
             if(index != targetPos1 || index != targetPos2||index!=targetPos3||index!=targetPos4) attackList.Add(index);
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
+        
+        // 播放动画
+        // 播放音效
     }
     
     private void DoAttack4Step3()
@@ -460,8 +463,6 @@ public class BossComponent : MonoBehaviour
 
         Sequence timeline = DOTween.Sequence();
         timeline.Insert(0, currTrans.DOLocalMove(Vector3.zero, 0.5f).SetEase(Ease.Linear));
-        timeline.Insert(0, currTrans.DOScale(0.75f, 0.15f));
-        timeline.Insert(0.3f, currTrans.DOScale(1f, 0.15f));
         return timeline.Play().AsyncWaitForCompletion();
     }
     
