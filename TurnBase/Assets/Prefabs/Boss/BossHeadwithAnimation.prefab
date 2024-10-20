@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 8819466995442151838}
   m_Layer: 0
   m_Name: BossHeadwithAnimation
-  m_TagString: Untagged
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
