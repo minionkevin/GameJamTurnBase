@@ -12,9 +12,11 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public int Width = 7;
     public int Height = 6;
 
-    public List<int> BossActionList = new List<int>();
     public BossActionScriptableObject BossData;
-    public ItemScriptableObject ItemData;
+    public ItemScriptableObject AItemData;
+    public ItemScriptableObject BItemData;
+    public BossInputScriptableObject ABossInputData;
+    public BossInputScriptableObject BBossInputData;
 
     public int2 bossHeadPos;
     public int2 bossLeftHandPos;
@@ -54,8 +56,12 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public PlayerInputComponent PlayerInput;
 
     public Dictionary<int, int> ItemDic = new Dictionary<int, int>();
+
+    public bool IsPlayerA;
     
     private int currTurnNum;
+    private List<int> BossActionList = new List<int>();
+
 
     void Start()
     {
@@ -86,6 +92,12 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         BossAnimator = bossHead.GetComponent<Animator>();
         PlayerAnimator = player.GetComponent<Animator>();
 
+        // TODO setup isplayerA bool when load into this scene
+        foreach (var data in IsPlayerA ? ABossInputData.InputList : BBossInputData.InputList)
+        {
+            BossActionList.Add(data);
+        }
+        
         // player hp & boss hp spawn
         BossHp_UI.Setup(bossStartHp);
         PlayerHp_UI.Setup(playerStartHp);
@@ -98,7 +110,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     private void SetupItems()
     {
         // 更新dic,本身的数据就不重要了
-        foreach (var item in ItemData.ItemDatas)
+        foreach (var item in IsPlayerA ? AItemData.ItemDatas: BItemData.ItemDatas)
         {
             ItemDic.Add(item.Id,item.Amount);
         }

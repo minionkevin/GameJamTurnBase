@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f2b440a17146ee458b18d4dadc8f7bb, type: 3}
+  m_Name: B-BossInput
+  m_EditorClassIdentifier: 
+  InputList: 0100000002000000000000000000000000000000010000000200000004000000040000000300000004000000040000000100000003000000040000000100000003000000040000000300000001000000

@@ -63,6 +63,7 @@ public class BossComponent : MonoBehaviour
     public void DoAttack1Pre()
     {
         MoveHandToPlayerTop();
+        MoveObject(headObj,width/2,height-1,ref currHeadPos);
     }
 
     private async void DoAttackSingleHand()
