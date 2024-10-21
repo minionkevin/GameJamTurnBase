@@ -188,11 +188,11 @@ public class BossComponent : MonoBehaviour
     public Task DoAttack3Step1(bool isLeft)
     {
         List<int2> attackList = new List<int2>();
-        int targetPos = TileManagerSingleton.Instance.GetIndexPos(new int2(width / 2, 0));
+        int2 targetPos = new int2(width / 2, 0);
         foreach (var tile in TileManagerSingleton.Instance.TileList)
         {
-            int index = tile.GetTileIndex();
-            if(index != targetPos) attackList.Add(index);
+            int2 pos = tile.GetTilePos();
+            if(!pos.Equals(targetPos)) attackList.Add(pos);
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
     
@@ -260,15 +260,18 @@ public class BossComponent : MonoBehaviour
     {
         // 激光
         List<int2> attackList = new List<int2>();
-        int targetPos1 = TileManagerSingleton.Instance.GetIndexPos(new int2(width / 2, 0));
-        int targetPos2 = TileManagerSingleton.Instance.GetIndexPos(new int2(width / 2, 1));
-        int targetPos3 = TileManagerSingleton.Instance.GetIndexPos(new int2(width / 2-1, 0));
-        int targetPos4 = TileManagerSingleton.Instance.GetIndexPos(new int2(width / 2+1, 0));
+        int2 targetPos1 = new int2(width / 2, 0);
+        int2 targetPos2 = new int2(width / 2, 1);
+        int2 targetPos3 = new int2(width / 2-1, 0);
+        int2 targetPos4 = new int2(width / 2+1, 0);
         
         foreach (var tile in TileManagerSingleton.Instance.TileList)
         {
-            int index = tile.GetTileIndex();
-            if(index != targetPos1 || index != targetPos2||index!=targetPos3||index!=targetPos4) attackList.Add(index);
+            int2 pos = tile.GetTilePos();
+            if (!pos.Equals(targetPos1) && !pos.Equals(targetPos2) && !pos.Equals(targetPos3) && !pos.Equals(targetPos4))
+            {
+                attackList.Add(pos);
+            }
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
         

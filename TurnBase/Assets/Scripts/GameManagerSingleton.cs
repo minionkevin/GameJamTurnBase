@@ -49,7 +49,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public List<int> PlayerInputList = new List<int>();
     public List<int> BossInputList = new List<int>();
 
-    private List<int> inputLists = new List<int>();
+    public List<int> inputLists = new List<int>();
     
     public PlayerInputComponent PlayerInput;
 
@@ -207,27 +207,47 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     private void HandleBossActions()
     {
-        foreach (var data in BossData.BossActions[BossActionList[currTurnNum]].BossActions)
+        for (int i = 0; i < BossData.BossActions[BossActionList[currTurnNum]].BossActions.Count; i++)
         {
-            BossInputList.Add(data);
+            if (currTurnNum != 0 && i == 0) continue;
+            BossInputList.Add(BossData.BossActions[BossActionList[currTurnNum]].BossActions[i]);
         }
     }
+    
+    
+    // player-boss-player-boss
+    
+    //第一个回合就是纯随机
 
     /// <summary>
     /// 交替重排指令
     /// </summary>
     private void ReorderInput()
     {
-        while(PlayerInputList.Count < 5) PlayerInputList.Add(-1);
-        for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
+        while(PlayerInputList.Count < 6) PlayerInputList.Add(-1);
+        
+        if (currTurnNum == 0)
         {
-            if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
-            if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
+            for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
+            {
+                if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
+                if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
+            }
         }
+        else
+        {
+            for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
+            {
+                if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
+                if (i < BossInputList.Count)  inputLists.Add(BossInputList[i]);
+            }
+        }
+        if(currTurnNum < BossActionList.Count-1)inputLists.Add(BossData.BossActions[BossActionList[currTurnNum+1]].BossActions[0]);
     }
 
     private IEnumerator HandleBossInput(int value)
     {
+        if (value == -1) yield break;
         switch (value)
         {
             case BossInputType.ATTACK10:
@@ -387,16 +407,34 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // switch back to i%2==0 for player after boss pose finish
         for (int i = 0; i < inputLists.Count; i++)
         {
-            if (i % 2 != 0)
+            if (currTurnNum == 0)
             {
-                // PlayerInput.HighlightInputButton(i/2);
-                yield return HandlePlayerInput(inputLists[i]);
+                if (i % 2 != 0)
+                {
+                    // PlayerInput.HighlightInputButton(i/2);
+                    yield return HandlePlayerInput(inputLists[i]);
+                }
+                else
+                {
+                    // if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
+                    yield return StartCoroutine(HandleBossInput(inputLists[i]));
+                }    
             }
             else
             {
-                // if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
-                yield return StartCoroutine(HandleBossInput(inputLists[i]));
+                if (i % 2 == 0)
+                {
+                    // PlayerInput.HighlightInputButton(i/2);
+                    yield return HandlePlayerInput(inputLists[i]);
+                }
+                else
+                {
+                    // if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
+                    yield return StartCoroutine(HandleBossInput(inputLists[i]));
+                }   
+                
             }
+            
         
             yield return new WaitForSecondsRealtime(1f);
         }

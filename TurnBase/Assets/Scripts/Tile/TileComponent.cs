@@ -29,6 +29,11 @@ public class TileComponent : MonoBehaviour
         return tileIndex;
     }
 
+    public int2 GetTilePos()
+    {
+        return tilePos;
+    }
+
     //[Obsolete]
     //public Task AddObjectToTile(GameObject objPrefab)
     //{
@@ -65,6 +70,7 @@ public class TileComponent : MonoBehaviour
         timeline.Insert(0, CircleSprite.DOColor(Color.red, 0.45f));
         timeline.Insert(0.45f, CircleSprite.DOColor(tmp, 0.15f));
         await timeline.Play().AsyncWaitForCompletion();
+        CircleSprite.color = Color.white;
     }
     
     public async void ChangeColorBossDamage()
