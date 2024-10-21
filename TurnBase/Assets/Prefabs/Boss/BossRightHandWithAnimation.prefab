@@ -5125,8 +5125,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2949081938614875454}
-  - component: {fileID: 1405377009144346305}
-  - component: {fileID: 2068140445379357992}
+  - component: {fileID: 8127192022768897991}
+  - component: {fileID: 4827004816427547195}
   m_Layer: 0
   m_Name: BossRightHandWithAnimation
   m_TagString: Boss
@@ -5144,7 +5144,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: -0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8274419947127261617}
@@ -5153,7 +5153,7 @@ Transform:
   - {fileID: 2171262933714940147}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1405377009144346305
+--- !u!61 &8127192022768897991
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5198,7 +5198,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!212 &2068140445379357992
+--- !u!212 &4827004816427547195
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -575,8 +575,8 @@ MonoBehaviour:
   PlayerPrefab: {fileID: 8487742318341802092, guid: 19b39d30dd96eee4598d394c848a5c4b, type: 3}
   BossPrefab: {fileID: 8487742318341802092, guid: 7d3d73c376134ca48876b57e2a131d97, type: 3}
   BossHeadPrefab: {fileID: 8487742318341802092, guid: 2dd8f65a33a6e7049ab70cef93da1a5f, type: 3}
-  BossLeftHandPrefab: {fileID: 8797368194897994597, guid: f69ded4acaaa8d7409508cb6c357f63a, type: 3}
-  BossRightHandPrefab: {fileID: 8797368194897994597, guid: 38d27722ee37bc64083cbd15edb2dcd0, type: 3}
+  BossLeftHandPrefab: {fileID: 8797368194897994597, guid: 38d27722ee37bc64083cbd15edb2dcd0, type: 3}
+  BossRightHandPrefab: {fileID: 8797368194897994597, guid: f69ded4acaaa8d7409508cb6c357f63a, type: 3}
   CountDown_UI: {fileID: 2101842512}
   BossHp_UI: {fileID: 1610089460}
   PlayerHp_UI: {fileID: 1333744986}
