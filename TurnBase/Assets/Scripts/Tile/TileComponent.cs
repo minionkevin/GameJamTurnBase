@@ -9,6 +9,7 @@ public class TileComponent : MonoBehaviour
 {
     // 注意：alpha=0，用之前需要先调整
     public GameObject EffectLayer;
+    public SpriteRenderer CircleSprite;
     public Transform ObjectLayerRect;
     // Debug only
     public TextMeshProUGUI PosLabel;
@@ -55,5 +56,23 @@ public class TileComponent : MonoBehaviour
     public void SetObjectToTile(GameObject objPrefab)
     {
         objPrefab.GetComponent<Transform>().SetParent(ObjectLayerRect);
+    }
+
+    public async void ChangeColoPlayerDamage()
+    {
+        Color tmp = CircleSprite.color;
+        Sequence timeline = DOTween.Sequence();
+        timeline.Insert(0, CircleSprite.DOColor(Color.red, 0.45f));
+        timeline.Insert(0.45f, CircleSprite.DOColor(tmp, 0.15f));
+        await timeline.Play().AsyncWaitForCompletion();
+    }
+    
+    public async void ChangeColorBossDamage()
+    {
+        Color tmp = CircleSprite.color;
+        Sequence timeline = DOTween.Sequence();
+        timeline.Insert(0, CircleSprite.DOColor(Color.yellow, 0.45f));
+        timeline.Insert(0.45f, CircleSprite.DOColor(tmp, 0.15f));
+        await timeline.Play().AsyncWaitForCompletion();
     }
 }

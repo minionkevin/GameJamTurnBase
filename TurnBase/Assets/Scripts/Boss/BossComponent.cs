@@ -498,6 +498,7 @@ public class BossComponent : MonoBehaviour
             {
                 GameManagerSingleton.Instance.BossHp_UI.OnTakeDamage(value);
             }
+            TileManagerSingleton.Instance.ChangeTileColorBoss(pos);
         }
         
         GameManagerSingleton.Instance.BossAnimator.SetTrigger("DamageTrigger");

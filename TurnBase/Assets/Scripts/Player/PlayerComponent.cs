@@ -77,7 +77,9 @@ public class PlayerComponent : MonoBehaviour
         List<int2> attackList = new List<int2>();
         for (int i = -2; i < 3; i++)
         {
-            attackList.Add(new int2(currPlayerPos.x + i, currPlayerPos.y));
+            int2 newPos = new int2(currPlayerPos.x + i, currPlayerPos.y);
+            if (!CheckLimit(newPos)) continue;
+            attackList.Add(newPos);
         }
         GameManagerSingleton.Instance.Boss.CheckForDamage(2, attackList);
         GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("SwordTrigger");
@@ -89,7 +91,16 @@ public class PlayerComponent : MonoBehaviour
     /// <param name="attackPosList"></param>
     public void DoCrossAttack(int damage = 4)
     {
-        List<int2> attackList = new List<int2>() { new int2(currPlayerPos.x, currPlayerPos.y + 1), new int2(currPlayerPos.x -1, currPlayerPos.y), currPlayerPos, new int2(currPlayerPos.x+1, currPlayerPos.y) };
+        List<int2> attackList = new List<int2>();
+        
+        int2 pos = new int2(currPlayerPos.x, currPlayerPos.y + 1);
+        if (CheckLimit(pos)) attackList.Add(pos);
+        pos = new int2(currPlayerPos.x - 1, currPlayerPos.y);
+        if (CheckLimit(pos)) attackList.Add(pos);
+        pos = new int2(currPlayerPos.x + 1, currPlayerPos.y);
+        if (CheckLimit(pos)) attackList.Add(pos);
+        attackList.Add(currPlayerPos);
+        
         GameManagerSingleton.Instance.Boss.CheckForDamage(damage, attackList);
         GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("HammerTrigger");
     }
@@ -167,6 +178,7 @@ public class PlayerComponent : MonoBehaviour
     {
         foreach (var pos in attackList)
         {
+            TileManagerSingleton.Instance.ChangeTileColorPlayer(pos);
             if (currPlayerPos.Equals(pos)) OnTakeDamage(value);
         }
     }
