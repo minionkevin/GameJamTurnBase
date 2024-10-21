@@ -9,8 +9,6 @@ using static UnityEditor.PlayerSettings;
 
 public class BossComponent : MonoBehaviour
 {
-    public SpriteRenderer BossSprite;
-    
     private int2 currHeadPos;
     private int2 currLeftHandPos;
     private int2 currRightHandPos;
@@ -189,9 +187,6 @@ public class BossComponent : MonoBehaviour
 
     public Task DoAttack3Step1(bool isLeft)
     {
-        // 激光
-        // 第一步和第二步只是视觉上的区别，数据上都是一样的
-        
         List<int2> attackList = new List<int2>();
         int targetPos = TileManagerSingleton.Instance.GetIndexPos(new int2(width / 2, 0));
         foreach (var tile in TileManagerSingleton.Instance.TileList)
@@ -240,11 +235,11 @@ public class BossComponent : MonoBehaviour
         switch (step)
         {
             case 1:
-                DoAttack4Step1();
+                await DoAttack4Step1(true);
                 break;
             case 2:
                 await MoveObject(headObj,currHeadPos.x,currHeadPos.y-1,ref currHeadPos);
-                DoAttack4Step1();
+                await DoAttack4Step1(false);
                 break;
             case 3:
                 await MoveObject(leftHandObj, currLeftHandPos.x, 0, ref currLeftHandPos);
@@ -261,7 +256,7 @@ public class BossComponent : MonoBehaviour
         }
     }
     
-    private void DoAttack4Step1()
+    public Task DoAttack4Step1(bool isLeft)
     {
         // 激光
         List<int2> attackList = new List<int2>();
@@ -276,6 +271,10 @@ public class BossComponent : MonoBehaviour
             if(index != targetPos1 || index != targetPos2||index!=targetPos3||index!=targetPos4) attackList.Add(index);
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
+        
+        var tcs = new TaskCompletionSource<bool>();
+        StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
+        return tcs.Task;
         
         // 播放动画
         // 播放音效
@@ -500,7 +499,12 @@ public class BossComponent : MonoBehaviour
                 GameManagerSingleton.Instance.BossHp_UI.OnTakeDamage(value);
             }
         }
+        
+        GameManagerSingleton.Instance.BossAnimator.SetTrigger("DamageTrigger");
+    }
+
+    public void DieAnimation()
+    {
+        GameManagerSingleton.Instance.BossAnimator.SetTrigger("DieTrigger");
     }
 }
-
-// 所有攻击都是，先攻击再移动，反正肯定不是同时发生

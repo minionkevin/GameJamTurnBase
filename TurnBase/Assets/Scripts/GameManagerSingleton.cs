@@ -276,7 +276,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 yield return StartCoroutine(WaitForTask(Boss.DoAttack3Step1(false)));
                 break;
             case BossInputType.ATTACK33:
-                Debug.LogError("step3");
                 Boss.DoAttack3Step(3);
                 break;
             case BossInputType.ATTACK34:
@@ -289,10 +288,11 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 Boss.DoAttack4Pre();
                 break;
             case BossInputType.ATTACK41:
-                Boss.DoAttack4Step(1);
+                yield return StartCoroutine(WaitForTask(Boss.DoAttack4Step1(true)));
                 break;
             case BossInputType.ATTACK42:
                 Boss.DoAttack4Step(2);
+                yield return StartCoroutine(WaitForTask(Boss.DoAttack4Step1(false)));
                 break;
             case BossInputType.ATTACK43:
                 Boss.DoAttack4Step(3);
