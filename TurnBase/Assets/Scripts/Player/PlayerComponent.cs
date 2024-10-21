@@ -183,6 +183,16 @@ public class PlayerComponent : MonoBehaviour
         }
     }
 
+    public void CheckForDamageLaser(List<int2> attackList,int value)
+    {
+        foreach (var pos in attackList)
+        {
+            if (!currPlayerPos.Equals(pos)) continue;
+            GameManagerSingleton.Instance.PlayerHp_UI.OnTakeDamage(damageAmount);
+            TakeDamageAnimation();
+        }
+    }
+
     private void OnTakeDamage(int _damage)
     {
         if (isJumping) return;
