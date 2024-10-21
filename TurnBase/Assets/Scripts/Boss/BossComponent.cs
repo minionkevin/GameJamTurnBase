@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DG.Tweening;
 using Unity.Mathematics;
@@ -7,6 +9,8 @@ using static UnityEditor.PlayerSettings;
 
 public class BossComponent : MonoBehaviour
 {
+    public SpriteRenderer BossSprite;
+    
     private int2 currHeadPos;
     private int2 currLeftHandPos;
     private int2 currRightHandPos;
@@ -162,16 +166,10 @@ public class BossComponent : MonoBehaviour
     #endregion
 
     #region attack3-全屏激光
-    public void DoAttack3Step(int step)
+    public async void DoAttack3Step(int step)
     {
         switch (step)
         {
-            case 1:
-                DoAttack3Step1();
-                break;
-            case 2:
-                DoAttack3Step1();
-                break;
             case 3:
                 DoAttack3MoveHand();
                 break;
@@ -179,7 +177,6 @@ public class BossComponent : MonoBehaviour
             case 5:
                 DoAttack3HandAttack();
                 break;
-            
         }
     }
     
@@ -190,10 +187,11 @@ public class BossComponent : MonoBehaviour
             new int2(width/2, 1));
     }
 
-    private void DoAttack3Step1()
+    public Task DoAttack3Step1(bool isLeft)
     {
         // 激光
         // 第一步和第二步只是视觉上的区别，数据上都是一样的
+        
         List<int2> attackList = new List<int2>();
         int targetPos = TileManagerSingleton.Instance.GetIndexPos(new int2(width / 2, 0));
         foreach (var tile in TileManagerSingleton.Instance.TileList)
@@ -202,6 +200,19 @@ public class BossComponent : MonoBehaviour
             if(index != targetPos) attackList.Add(index);
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
+    
+        var tcs = new TaskCompletionSource<bool>();
+        StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
+        return tcs.Task;
+    }
+
+    IEnumerator PlayAnimationAndWait(string triggerName,string animationName, TaskCompletionSource<bool> tcs)
+    {
+        var animator = GameManagerSingleton.Instance.BossAnimator;
+        animator.SetTrigger(triggerName);
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(animationName));
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
+        tcs.SetResult(true);
     }
 
     private async void DoAttack3MoveHand()

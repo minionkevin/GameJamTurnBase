@@ -28,11 +28,12 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public int2 PlayerStartPos;
     
     public GameObject PlayerPrefab;
-    public GameObject BossPrefab;
 
     public GameObject BossHeadPrefab;
     public GameObject BossLeftHandPrefab;
     public GameObject BossRightHandPrefab;
+    public Animator BossAnimator;
+    public Animator PlayerAnimator;
 
     public CountDown CountDown_UI;
     public BossHp BossHp_UI;
@@ -71,18 +72,19 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
         // boss spawn
         // 这里的boss只是一个数据载体，剩余的三个boss prefab才是视觉上看到的
-        var boss = Instantiate(BossPrefab);
-        boss.GetComponent<Transform>().SetParent(transform);
-        var bossComponent = boss.GetComponent<BossComponent>();
-        Boss = bossComponent;
-
         var bossHead = Instantiate(BossHeadPrefab);
         TileManagerSingleton.Instance.AddObjectToTile(bossHeadPos,bossHead);
+        var bossComponent = bossHead.GetComponent<BossComponent>();
+        Boss = bossComponent;
+        
         var bossLeftHand = Instantiate(BossLeftHandPrefab);
         TileManagerSingleton.Instance.AddObjectToTile(bossLeftHandPos,bossLeftHand);
         var bossRightHand = Instantiate(BossRightHandPrefab);
         TileManagerSingleton.Instance.AddObjectToTile(bossRightHandPos,bossRightHand);
         bossComponent.Setup(bossHeadPos,bossLeftHandPos,bossRightHandPos,bossHead,bossLeftHand,bossRightHand);
+
+        BossAnimator = bossHead.GetComponent<Animator>();
+        PlayerAnimator = player.GetComponent<Animator>();
 
         // player hp & boss hp spawn
         BossHp_UI.Setup(bossStartHp);
@@ -224,7 +226,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         }
     }
 
-    private async void HandleBossInput(int value)
+    private IEnumerator HandleBossInput(int value)
     {
         switch (value)
         {
@@ -268,12 +270,13 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 Boss.DoAttack3Pre();
                 break;
             case BossInputType.ATTACK31:
-                Boss.DoAttack3Step(1);
+                yield return StartCoroutine(WaitForTask(Boss.DoAttack3Step1(true)));
                 break;
             case BossInputType.ATTACK32:
-                Boss.DoAttack3Step(2);
+                yield return StartCoroutine(WaitForTask(Boss.DoAttack3Step1(false)));
                 break;
             case BossInputType.ATTACK33:
+                Debug.LogError("step3");
                 Boss.DoAttack3Step(3);
                 break;
             case BossInputType.ATTACK34:
@@ -327,6 +330,15 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 break;
         }
     }
+    
+    private IEnumerator WaitForTask(Task task)
+    {
+        while (!task.IsCompleted)
+        {
+            yield return null; // 等待任务完成
+        }
+    }
+    
 
     private Task HandlePlayerInput(int value)
     {
@@ -383,7 +395,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             else
             {
                 // if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
-                HandleBossInput(inputLists[i]);
+                yield return StartCoroutine(HandleBossInput(inputLists[i]));
             }
         
             yield return new WaitForSecondsRealtime(1f);

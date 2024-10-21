@@ -554,7 +554,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Width: 7
   Height: 4
-  BossActionList: 0000000001000000020000000300000004000000
+  BossActionList: 0200000001000000020000000300000004000000
   BossData: {fileID: 11400000, guid: b8583f42c5881f84d8865c991b14f09d, type: 2}
   ItemData: {fileID: 11400000, guid: 6c96cd782392add4dbfe3713f1f6ab88, type: 2}
   bossHeadPos:
@@ -572,11 +572,12 @@ MonoBehaviour:
   PlayerStartPos:
     x: 5
     y: 0
-  PlayerPrefab: {fileID: 8487742318341802092, guid: 19b39d30dd96eee4598d394c848a5c4b, type: 3}
-  BossPrefab: {fileID: 8487742318341802092, guid: 7d3d73c376134ca48876b57e2a131d97, type: 3}
-  BossHeadPrefab: {fileID: 8487742318341802092, guid: 2dd8f65a33a6e7049ab70cef93da1a5f, type: 3}
+  PlayerPrefab: {fileID: 5314458107093943298, guid: a398c8b6a1ab49540bbeb19066d9f925, type: 3}
+  BossHeadPrefab: {fileID: 1510822449852835474, guid: 14fbe81c02f3aeb4fbcce0e93fcdaf65, type: 3}
   BossLeftHandPrefab: {fileID: 8797368194897994597, guid: 38d27722ee37bc64083cbd15edb2dcd0, type: 3}
   BossRightHandPrefab: {fileID: 8797368194897994597, guid: f69ded4acaaa8d7409508cb6c357f63a, type: 3}
+  BossAnimator: {fileID: 0}
+  PlayerAnimator: {fileID: 0}
   CountDown_UI: {fileID: 2101842512}
   BossHp_UI: {fileID: 1610089460}
   PlayerHp_UI: {fileID: 1333744986}
@@ -1226,7 +1227,7 @@ PrefabInstance:
       objectReference: {fileID: 1191930787}
     - target: {fileID: 7974277580299378264, guid: 622bc510e8bcba443b36d7ec3acfdfe6, type: 3}
       propertyPath: m_Name
-      value: SengItemPanel
+      value: SendItemPanel
       objectReference: {fileID: 0}
     - target: {fileID: 7974277580299378264, guid: 622bc510e8bcba443b36d7ec3acfdfe6, type: 3}
       propertyPath: m_IsActive

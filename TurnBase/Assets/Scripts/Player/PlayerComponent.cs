@@ -41,6 +41,7 @@ public class PlayerComponent : MonoBehaviour
         int2 newPos = dir + currPlayerPos;
         if (!CheckLimit(newPos)) return null;
         currPlayerPos = newPos;
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger(dir.Equals(new int2(-1, 0)) ? "MoveLeftTrigger" : "MoveRightTrigger");
         return TileManagerSingleton.Instance.MoveObjectToTile(currPlayerPos, gameObject);
     }
     
@@ -61,7 +62,7 @@ public class PlayerComponent : MonoBehaviour
     {
         isJumping = true;
         // 跳跃动画
-
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("JumpTrigger");
         DoMove(new int2(0, 1));
 
     }
@@ -79,8 +80,7 @@ public class PlayerComponent : MonoBehaviour
             attackList.Add(new int2(currPlayerPos.x + i, currPlayerPos.y));
         }
         GameManagerSingleton.Instance.Boss.CheckForDamage(2, attackList);
-        
-        // 没有动画，触发粒子特效
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("SwordTrigger");
     }
 
     /// <summary>
@@ -91,6 +91,7 @@ public class PlayerComponent : MonoBehaviour
     {
         List<int2> attackList = new List<int2>() { new int2(currPlayerPos.x, currPlayerPos.y + 1), new int2(currPlayerPos.x -1, currPlayerPos.y), currPlayerPos, new int2(currPlayerPos.x+1, currPlayerPos.y) };
         GameManagerSingleton.Instance.Boss.CheckForDamage(damage, attackList);
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("HammerTrigger");
     }
 
     /// <summary>
@@ -101,6 +102,7 @@ public class PlayerComponent : MonoBehaviour
         healMax--;
         if (healMax <= 0) return;
         GameManagerSingleton.Instance.PlayerHp_UI.OnGetRecovery(2);
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("HealTrigger");
         // Anim
 
         // VFX
@@ -114,6 +116,7 @@ public class PlayerComponent : MonoBehaviour
     public void DoProtected()
     {
         isUnderProtected = true;
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("ShieldTrigger");
         // Anim
 
         // VFX
@@ -182,25 +185,15 @@ public class PlayerComponent : MonoBehaviour
         shouldDamage = true;
         damageAmount = _damage;
     }
-
-
-
-    // ------------------------------------------
-
-    // placeholder animation
-    private async void TakeDamageAnimation()
+    
+    private void TakeDamageAnimation()
     {
-        Color tmp = PlayerSprite.color;
-        Sequence timeline = DOTween.Sequence();
-        timeline.Insert(0, PlayerSprite.DOColor(Color.red, 0.15f));
-        timeline.Insert(0.15f, PlayerSprite.DOColor(Color.white, 0.15f));
-        await timeline.SetLoops(3).Play().AsyncWaitForCompletion();
-        PlayerSprite.color = tmp;
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("DamageTrigger");
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.tag == "Boss" && shouldDamage)
+        if (other.gameObject.CompareTag("Boss") && shouldDamage)
         {
             GameManagerSingleton.Instance.PlayerHp_UI.OnTakeDamage(damageAmount);
             TakeDamageAnimation();
