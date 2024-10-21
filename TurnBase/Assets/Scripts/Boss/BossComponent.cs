@@ -178,11 +178,15 @@ public class BossComponent : MonoBehaviour
         }
     }
     
-    public void DoAttack3Pre()
+    public Task DoAttack3Pre()
     {
+        var tcs = new TaskCompletionSource<bool>();
+        StartCoroutine(PlayAnimationAndWait("WarningTrigger", "bossWarning", tcs));
         SetupBossStartPos(new int2(1, height - 2),
             new int2(width-2,height-2),
             new int2(width/2, 1));
+        return tcs.Task;
+
     }
 
     public Task DoAttack3Step1(bool isLeft)
@@ -224,11 +228,14 @@ public class BossComponent : MonoBehaviour
     #endregion
     
     # region attack4-地面清扫
-    public void DoAttack4Pre()
+    public Task DoAttack4Pre()
     {
+        var tcs = new TaskCompletionSource<bool>();
+        StartCoroutine(PlayAnimationAndWait("WarningTrigger", "bossWarning", tcs));
         SetupBossStartPos(new int2(1, height - 2),
             new int2(width-2,height-2),
                new int2(width/2, height - 2));
+        return tcs.Task;
     }
 
     public async void DoAttack4Step(int step)
