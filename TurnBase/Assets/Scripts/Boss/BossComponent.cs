@@ -465,8 +465,11 @@ public class BossComponent : MonoBehaviour
         
         if (isLeft) currLeftHandPos = tmp;
         else currRightHandPos = tmp;
-
+        
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
+        //todo try better way on this
+        GameManagerSingleton.Instance.Player.CheckForDamageLaser(attackList,1);
+        
         await TileManagerSingleton.Instance.AddObjectToTile(tmp,obj);
 
         if (isBack)
