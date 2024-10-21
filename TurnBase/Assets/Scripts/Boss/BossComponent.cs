@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class BossComponent : MonoBehaviour
 {
@@ -311,6 +312,18 @@ public class BossComponent : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// 轮次实际动作做完后，在队尾默认添加的一个指令
+    /// </summary>
+    public void DoActionEnd()
+    {
+        // Do Nothing now.
+        // 先让Boss手回归原位吧！
+        MoveObject(leftHandObj, GameManagerSingleton.Instance.bossLeftHandPos.x, GameManagerSingleton.Instance.bossLeftHandPos.y, ref currLeftHandPos);
+        MoveObject(rightHandObj, GameManagerSingleton.Instance.bossRightHandPos.x, GameManagerSingleton.Instance.bossRightHandPos.y, ref currRightHandPos);
+    }
+    
+    
     private void SetupBossStartPos(int2 leftHandPos,int2 rightHandPos, int2 headPos)
     {
         MoveObject(headObj, headPos, ref currHeadPos);

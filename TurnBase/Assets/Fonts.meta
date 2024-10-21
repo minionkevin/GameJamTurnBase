@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:TurnBase/Assets/Images/UI.meta
+guid: 1dbcf72d788e61c429f3c94a3478c1ac
+========
 guid: 22b39cb151732f341b3a234d02b3a7c6
+>>>>>>>> main:TurnBase/Assets/Fonts.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

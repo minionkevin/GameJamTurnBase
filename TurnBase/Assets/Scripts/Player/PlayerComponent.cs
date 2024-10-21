@@ -9,8 +9,7 @@ public class PlayerComponent : MonoBehaviour
     // 每次玩家移动需更新
     [HideInInspector]
     public int2 currPlayerPos;
-
-    
+  
     [HideInInspector]
     public bool isJumping;          // 玩家跳跃的状态
     [HideInInspector]
@@ -29,7 +28,8 @@ public class PlayerComponent : MonoBehaviour
         healMax = 4;
         currPlayerPos = playerPos;
         // 初始化时，重置到默认状态
-        ResetPlayerState();
+        isJumping = false;
+        isUnderProtected = false;
     }
 
     /// <summary>
@@ -60,27 +60,23 @@ public class PlayerComponent : MonoBehaviour
     public void DoJump()
     {
         isJumping = true;
-        // domoveup
-        
-        
-        // 1.开始之前记录当前位置到变量
-        // 2.DoMove把玩家移到y-1位置
-        // 3.处理下一个指令
-        
-        // 4.每次处理指令之前检查上一个是不是跳跃
-        // 5.是的话就等当前指令做完用DoMove（y-1）
+        // 跳跃动画
+
+        DoMove(new int2(0, 1));
+
     }
 
     /// <summary>
     /// 处理横向轻攻击
     /// </summary>
     /// <param name="attackPosList"></param>
-    public void DoHorizontalAttack()
+    public void DoHorizontalAttack(int damage = 2)
     {
+        // 正常攻击
         List<int2> attackList = new List<int2>();
         for (int i = -2; i < 3; i++)
         {
-            attackList.Add(new int2(currPlayerPos.x + i,currPlayerPos.y));
+            attackList.Add(new int2(currPlayerPos.x + i, currPlayerPos.y));
         }
         GameManagerSingleton.Instance.Boss.CheckForDamage(2, attackList);
         
@@ -91,10 +87,10 @@ public class PlayerComponent : MonoBehaviour
     /// 处理十字重攻击
     /// </summary>
     /// <param name="attackPosList"></param>
-    public void DoCrossAttack()
+    public void DoCrossAttack(int damage = 4)
     {
         List<int2> attackList = new List<int2>() { new int2(currPlayerPos.x, currPlayerPos.y + 1), new int2(currPlayerPos.x -1, currPlayerPos.y), currPlayerPos, new int2(currPlayerPos.x+1, currPlayerPos.y) };
-        GameManagerSingleton.Instance.Boss.CheckForDamage(4, attackList);
+        GameManagerSingleton.Instance.Boss.CheckForDamage(damage, attackList);
     }
 
     /// <summary>
@@ -124,6 +120,45 @@ public class PlayerComponent : MonoBehaviour
 
         // Audio
     }
+    
+    public void ResetPlayerState()
+    {
+        isJumping = false;
+        isUnderProtected = false;
+        // (状态对应的动画，也一并重置)
+    }
+
+    /// <summary>
+    /// 跳跃攻击
+    /// </summary>
+    public void DoJumpAttack(int attackType)
+    {
+        if (attackType.Equals(PlayerInputType.ATTACK1))
+        {
+            DoHorizontalAttack();
+        }
+        else if (attackType.Equals(PlayerInputType.ATTACK2))
+        {
+            DoCrossAttack();
+        }
+    }
+
+    /// <summary>
+    /// 玩家轮次结束后，默认添加的一个状态
+    /// </summary>
+    public void DoActionEnd()
+    {
+        isUnderProtected = false;
+    }
+
+    /// <summary>
+    /// 没有输入指令时，执行的一条指令（占位符，为了指令和Boss对齐）
+    /// </summary>
+    public void DoNothing()
+    {
+        // 
+        Debug.Log("没输入指令，跳过回合");
+    }
 
     public void CheckForDamage(List<int2> attackList,int value)
     {
@@ -148,15 +183,7 @@ public class PlayerComponent : MonoBehaviour
         damageAmount = _damage;
     }
 
-    /// <summary>
-    /// 重置状态
-    /// </summary>
-    public void ResetPlayerState()
-    {
-        isJumping = false;
-        isUnderProtected = false;
-        // (状态对应的动画，也一并重置)
-    }
+
 
     // ------------------------------------------
 
@@ -200,4 +227,7 @@ public class PlayerInputType
     public const int HEAL = 5;
     public const int JUMP = 6;
     public const int JUMPATTACK = 7;
+
+    public const int NULL = 100;     // 空指令,用于补全玩家未输入指令。 
+    public const int END = 101;      // 结束指令，在玩家指令队列的最后，默认添加此指令。
 }
