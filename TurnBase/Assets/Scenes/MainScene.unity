@@ -574,7 +574,8 @@ MonoBehaviour:
   PlayerStartPos:
     x: 3
     y: 0
-  PlayerPrefab: {fileID: 5314458107093943298, guid: a398c8b6a1ab49540bbeb19066d9f925, type: 3}
+  APlayerPrefab: {fileID: 5314458107093943298, guid: a398c8b6a1ab49540bbeb19066d9f925, type: 3}
+  BPlayerPrefab: {fileID: 5314458107093943298, guid: 6e1fc0566858c4e4c97072f0b06e7a96, type: 3}
   BossHeadPrefab: {fileID: 1510822449852835474, guid: 14fbe81c02f3aeb4fbcce0e93fcdaf65, type: 3}
   BossLeftHandPrefab: {fileID: 8797368194897994597, guid: 38d27722ee37bc64083cbd15edb2dcd0, type: 3}
   BossRightHandPrefab: {fileID: 8797368194897994597, guid: f69ded4acaaa8d7409508cb6c357f63a, type: 3}

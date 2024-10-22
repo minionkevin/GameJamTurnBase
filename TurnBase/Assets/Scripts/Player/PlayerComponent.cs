@@ -210,7 +210,4 @@ public class PlayerInputType
     public const int HEAL = 5;
     public const int JUMP = 6;
     public const int JUMPATTACK = 7;
-
-    public const int NULL = 100;     // 空指令,用于补全玩家未输入指令。 
-    public const int END = 101;      // 结束指令，在玩家指令队列的最后，默认添加此指令。
 }

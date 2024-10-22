@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using UnityEngine.Serialization;
 
 public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 {
@@ -29,7 +30,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     // 有了config之后从scriptableobject read
     public int2 PlayerStartPos;
     
-    public GameObject PlayerPrefab;
+    public GameObject APlayerPrefab;
+    public GameObject BPlayerPrefab;
 
     public GameObject BossHeadPrefab;
     public GameObject BossLeftHandPrefab;
@@ -65,34 +67,35 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     void Start()
     {
+        // Setup
         currTurnNum = 0;
         IsPlayerA = PlayerData.IsPlayerA;
-        //todo change this back
-        IsPlayerA = true;
-        
-        // tile spawn
+        // todo change this back
+        IsPlayerA = false;
         TileManagerSingleton.Instance.Setup(Width, Height);
         
-        // player spawn
-        var player = Instantiate(PlayerPrefab);
+        // Player spawn
+        var player = Instantiate(IsPlayerA? APlayerPrefab:BPlayerPrefab);
         var playerComponent = player.GetComponent<PlayerComponent>();
         Player = playerComponent;
         playerComponent.Setup(PlayerStartPos);
         TileManagerSingleton.Instance.AddObjectToTile(PlayerStartPos,player);
 
-        // boss spawn
+        // Boss spawn
         // 这里的boss只是一个数据载体，剩余的三个boss prefab才是视觉上看到的
         var bossHead = Instantiate(BossHeadPrefab);
         TileManagerSingleton.Instance.AddObjectToTile(bossHeadPos,bossHead);
         var bossComponent = bossHead.GetComponent<BossComponent>();
         Boss = bossComponent;
         
+        // Boss hand spawn
         var bossLeftHand = Instantiate(BossLeftHandPrefab);
         TileManagerSingleton.Instance.AddObjectToTile(bossLeftHandPos,bossLeftHand);
         var bossRightHand = Instantiate(BossRightHandPrefab);
         TileManagerSingleton.Instance.AddObjectToTile(bossRightHandPos,bossRightHand);
         bossComponent.Setup(bossHeadPos,bossLeftHandPos,bossRightHandPos,bossHead,bossLeftHand,bossRightHand);
 
+        // Animator
         BossAnimator = bossHead.GetComponent<Animator>();
         PlayerAnimator = player.GetComponent<Animator>();
 
@@ -101,14 +104,13 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             BossActionList.Add(data);
         }
         
-        // player hp & boss hp spawn
+        // UI spawn
         BossHp_UI.Setup(bossStartHp);
         PlayerHp_UI.Setup(playerStartHp);
         
+        // Start game
         HandlePlayerTurn();
-
         SetupItems();
-
         StartCoroutine(BattleCoroutine());
     }
 
