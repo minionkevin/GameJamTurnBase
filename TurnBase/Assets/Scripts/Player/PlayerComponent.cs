@@ -24,6 +24,7 @@ public class PlayerComponent : MonoBehaviour
 
     private int damageAmount;
     private bool shouldDamage;
+    private bool isPlayerA;
     
     public void Setup(int2 playerPos)
     {
@@ -32,6 +33,7 @@ public class PlayerComponent : MonoBehaviour
         // 初始化时，重置到默认状态
         isJumping = false;
         isUnderProtected = false;
+        isPlayerA = GameManagerSingleton.Instance.IsPlayerA;
     }
 
     public void Reset()
@@ -93,7 +95,7 @@ public class PlayerComponent : MonoBehaviour
     /// 处理横向轻攻击
     /// </summary>
     /// <param name="attackPosList"></param>
-    public void DoHorizontalAttack(int damage = 2)
+    public Task DoHorizontalAttack(int damage = 2)
     {
         // 正常攻击
         List<int2> attackList = new List<int2>();
@@ -104,7 +106,24 @@ public class PlayerComponent : MonoBehaviour
             attackList.Add(newPos);
         }
         GameManagerSingleton.Instance.Boss.CheckForDamage(2, attackList);
-        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("SwordTrigger");
+        
+        return HandleAnimation( "SwordTrigger","playerASword","playerBSword");
+    }
+
+    private Task HandleAnimation(string triggerName, string animationNameA, string animationNameB)
+    {
+        var tcs = new TaskCompletionSource<bool>();
+        StartCoroutine( PlayAnimationAndWait(triggerName,isPlayerA?animationNameA:animationNameB, tcs) );
+        return tcs.Task;
+    }
+    
+    IEnumerator PlayAnimationAndWait(string triggerName,string animationName, TaskCompletionSource<bool> tcs)
+    {
+        var animator = GameManagerSingleton.Instance.PlayerAnimator;
+        animator.SetTrigger(triggerName);
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(animationName));
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
+        tcs.SetResult(true);
     }
     
 
@@ -112,7 +131,7 @@ public class PlayerComponent : MonoBehaviour
     /// 处理十字重攻击
     /// </summary>
     /// <param name="attackPosList"></param>
-    public void DoCrossAttack(int damage = 4)
+    public Task DoCrossAttack(int damage = 4)
     {
         List<int2> attackList = new List<int2>();
         
@@ -125,37 +144,28 @@ public class PlayerComponent : MonoBehaviour
         attackList.Add(currPlayerPos);
         
         GameManagerSingleton.Instance.Boss.CheckForDamage(damage, attackList);
-        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("HammerTrigger");
+
+        return HandleAnimation("HammerTrigger", "playerAHammer", "playerBHammer");
     }
 
     /// <summary>
     /// 加血
     /// </summary>
-    public void DoHeal()
+    public Task DoHeal()
     {
         healMax--;
-        if (healMax <= 0) return;
+        if (healMax <= 0) return null;
         GameManagerSingleton.Instance.PlayerHp_UI.OnGetRecovery(2);
-        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("HealTrigger");
-        // Anim
-
-        // VFX
-
-        // Audio
+        return HandleAnimation("HealTrigger", "playerAHeal", "playerBHeal");
     }
 
     /// <summary>
     /// 护盾
     /// </summary>
-    public void DoProtected()
+    public Task DoProtected()
     {
         isUnderProtected = true;
-        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("ShieldTrigger");
-        // Anim
-
-        // VFX
-
-        // Audio
+        return HandleAnimation("ShieldTrigger", "playerAShield", "playerBShield");
     }
     
     public void ResetPlayerState()
@@ -233,5 +243,4 @@ public class PlayerInputType
     public const int DEFENSE = 4;
     public const int HEAL = 5;
     public const int JUMP = 6;
-    public const int JUMPATTACK = 7;
 }

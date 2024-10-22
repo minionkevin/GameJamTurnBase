@@ -388,21 +388,14 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 case PlayerInputType.MOVED: 
                     return Player.DoMove(new int2(1,0));
                 case PlayerInputType.ATTACK1: 
-                    Player.DoHorizontalAttack();
-                    return null;
+                    return Player.DoHorizontalAttack();
                 case PlayerInputType.ATTACK2: 
-                    Player.DoCrossAttack();
-                    return null;
+                    return Player.DoCrossAttack();
                 case PlayerInputType.DEFENSE:
-                    Player.DoProtected();
-                    return null;
+                    return Player.DoProtected();
                 case PlayerInputType.HEAL:
-                    Player.DoHeal();
-                    return null;
+                    return Player.DoHeal();
                 case PlayerInputType.JUMP:
-                    Player.DoJump();
-                    return null;
-                case PlayerInputType.JUMPATTACK:
                     Player.DoJump();
                     return null;
                 default:
@@ -433,8 +426,10 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 {
                     // PlayerInput.HighlightInputButton(i/2);
                     yield return StartCoroutine(WaitForTask(HandlePlayerInput(inputLists[i])));
-                    // yield return HandlePlayerInput(inputLists[i]);
+                    // 检查上个回合是否是跳跃
                     Player.HandleLastJump();
+                    // 跳跃是最后一个指令则落下
+                    if(i+2 < inputLists.Count && inputLists[i+2]== -1) Player.HandleLastJump();
                 }
                 else
                 {
