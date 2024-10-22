@@ -11,7 +11,6 @@ public class StartGame : MonoBehaviour
     public void OnExitGame()
     {
         Application.Quit();
-        UnityEditor.EditorApplication.isPlaying = false;
     }
 
 }

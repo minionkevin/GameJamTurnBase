@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class BossComponent : MonoBehaviour
 {
