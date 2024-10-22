@@ -116,8 +116,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.4
-      minScalar: 0.3
+      scalar: 1
+      minScalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5125,8 +5125,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2949081938614875454}
+<<<<<<< Updated upstream
   - component: {fileID: 8127192022768897991}
   - component: {fileID: 4827004816427547195}
+=======
+  - component: {fileID: 1405377009144346305}
+  - component: {fileID: 2068140445379357992}
+  - component: {fileID: 3309403515916206072}
+>>>>>>> Stashed changes
   m_Layer: 0
   m_Name: BossLeftHandWithAnimation
   m_TagString: Untagged
@@ -5250,3 +5256,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &3309403515916206072
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8797368194897994597}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 68de2b4f0f734a742a3aeae03641ed10, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
