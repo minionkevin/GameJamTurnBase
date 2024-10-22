@@ -209,6 +209,12 @@ public class BossComponent : MonoBehaviour
     {
         var animator = GameManagerSingleton.Instance.BossAnimator;
         animator.SetTrigger(triggerName);
+        if (GameManagerSingleton.Instance.IsPlayerDie)
+        {
+            Debug.Log("CHECK");
+            tcs.SetResult(true);
+            yield break;
+        }
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(animationName));
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
         tcs.SetResult(true);

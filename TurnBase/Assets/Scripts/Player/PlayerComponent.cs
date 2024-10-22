@@ -32,6 +32,16 @@ public class PlayerComponent : MonoBehaviour
         isUnderProtected = false;
     }
 
+    public void Reset()
+    {
+        int2 startPos = GameManagerSingleton.Instance.PlayerStartPos;
+        if (!currPlayerPos.Equals(startPos))
+        {
+            TileManagerSingleton.Instance.MoveObjectToTile(startPos, gameObject);
+        }
+        Setup(startPos);
+    }
+
     /// <summary>
     /// 移动
     /// </summary>
@@ -141,6 +151,7 @@ public class PlayerComponent : MonoBehaviour
         isUnderProtected = false;
         // (状态对应的动画，也一并重置)
     }
+    
 
     public void CheckForDamage(List<int2> attackList,int value)
     {

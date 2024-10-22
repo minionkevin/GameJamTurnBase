@@ -46,6 +46,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public GameObject GamePanel;
     public GameObject SwitchPanel;
     public GameObject TakeItemPanel;
+    public GameObject PlayerDeathPanel;
 
     public PlayerComponent Player;
     public BossComponent Boss;
@@ -60,6 +61,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public Dictionary<int, int> ItemDic = new Dictionary<int, int>();
 
     public bool IsPlayerA;
+    public bool IsPlayerDie;
     
     private int currTurnNum;
     private List<int> BossActionList = new List<int>();
@@ -255,6 +257,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     private IEnumerator HandleBossInput(int value)
     {
+        if(IsPlayerDie) yield break;
         if (value == -1) yield break;
         switch (value)
         {
@@ -361,7 +364,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     
     private IEnumerator WaitForTask(Task task)
     {
-        while (!task.IsCompleted)
+        while (!task.IsCompleted && !IsPlayerDie)
         {
             yield return null; // 等待任务完成
         }
@@ -370,6 +373,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     private Task HandlePlayerInput(int value)
     {
+        if (IsPlayerDie) return null;
         if (value == -1) return null;
         // todo 跳跃攻击
             switch (value)
@@ -409,7 +413,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     /// <returns></returns>
     IEnumerator BattleCoroutine()
     {
-
+        if (IsPlayerDie) yield break;
         if (currTurnNum == 0)
         {
             BossStartPoss();
@@ -447,5 +451,34 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         HandlePlayerTurn();
     }
 
+    public void Restart()
+    {
+        BossAnimator.Play("bossIdle");
+        // BossAnimator.CrossFade("bossIdle",0.1f);
+        
+        PlayerInput.ClearMemoryList();
+        BossInputList.Clear();
+        PlayerInputList.Clear();
+        inputLists.Clear();
+        Player.Reset();
 
+        PlayerHp_UI.Clear();
+        
+        BossHp_UI.Setup(bossStartHp);
+        PlayerHp_UI.Setup(playerStartHp);
+        currTurnNum = 0;
+        
+        HandlePlayerTurn();
+        StartCoroutine(BattleCoroutine());
+
+        HandlePlayerDie(false);
+    }
+
+    public void HandlePlayerDie(bool value)
+    {
+        PlayerDeathPanel.SetActive(value);
+        GamePanel.SetActive(!value);
+        IsPlayerDie = value;
+    }
+    
 }
