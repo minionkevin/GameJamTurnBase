@@ -71,6 +71,14 @@ MonoBehaviour:
   - {fileID: 5091822024586874498}
   memoryContainerRect: {fileID: 5472720475089568396}
   MaxActionCount: 5
+  memoryPrefabList:
+  - {fileID: 2840829039058086372, guid: e7cc52458c7b3b54ebb10be91824d4d0, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &2170192863092441372
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -133,7 +133,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             PlayerInputList.RemoveAt(4);
             PlayerInput.RemoveBtnFromMemoryList(4);
         }
-        PlayerInput.AddBtnToMemoryList(PlayerInput.buttonList[7]);
+        PlayerInput.AddBtnToMemoryList(7);
         if (PlayerInputList.Count > 0) PlayerInputList[^1] = -1;
         else PlayerInputList.Add(-1);
     }

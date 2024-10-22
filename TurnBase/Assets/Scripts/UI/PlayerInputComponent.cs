@@ -17,6 +17,8 @@ public class PlayerInputComponent : MonoBehaviour
     private List<GameObject> memoryList = new List<GameObject>();
     public int MaxActionCount = 5;  // 最大指令数
 
+    public List<GameObject> memoryPrefabList = new List<GameObject>();
+
     // 控制是否输入可用（地图生成前/对战中，所有输入都不可用）
     public static bool InputEnabled = false;
     
@@ -66,7 +68,7 @@ public class PlayerInputComponent : MonoBehaviour
     public void HandleAButton(Button button)
     {
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
-        AddBtnToMemoryList(button);
+        AddBtnToMemoryList(1);
         GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.MOVEA);
     }
     
@@ -77,7 +79,7 @@ public class PlayerInputComponent : MonoBehaviour
     public void HandleDButton(Button button)
     {
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
-        AddBtnToMemoryList(button);
+        AddBtnToMemoryList(2);
         GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.MOVED);
     }
 
@@ -89,7 +91,7 @@ public class PlayerInputComponent : MonoBehaviour
     {
         if (GameManagerSingleton.Instance.PlayerInputList.Count>0 && GameManagerSingleton.Instance.PlayerInputList[^1] == PlayerInputType.JUMP) return;
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
-        AddBtnToMemoryList(button);
+        AddBtnToMemoryList(0);
         GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.JUMP);
     }
 
@@ -100,7 +102,7 @@ public class PlayerInputComponent : MonoBehaviour
     public void HandleHorizontalAtk(Button button)
     {
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
-        AddBtnToMemoryList(button);
+        AddBtnToMemoryList(3);
         GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.ATTACK1);
     }
 
@@ -111,7 +113,7 @@ public class PlayerInputComponent : MonoBehaviour
     public void HandleCrossAtk(Button button)
     {
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
-        AddBtnToMemoryList(button);
+        AddBtnToMemoryList(4);
         GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.ATTACK2);
     }
 
@@ -123,7 +125,7 @@ public class PlayerInputComponent : MonoBehaviour
     {
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         GameManagerSingleton.Instance.ItemDic[3]--;
-        AddBtnToMemoryList(button);
+        AddBtnToMemoryList(5);
         GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.HEAL);
         if (GameManagerSingleton.Instance.ItemDic[3] <= 0) button.interactable = false;
     }
@@ -135,7 +137,7 @@ public class PlayerInputComponent : MonoBehaviour
     public void HandleProtected(Button button)
     {
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
-        AddBtnToMemoryList(button);
+        AddBtnToMemoryList(6);
         GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.DEFENSE);
     }
 
@@ -167,11 +169,10 @@ public class PlayerInputComponent : MonoBehaviour
     /// 更新UI
     /// </summary>
     /// <param name="button"></param>
-    public void AddBtnToMemoryList(Button button)
+    public void AddBtnToMemoryList(int index)
     {
-        var tmpButton = Instantiate(button, memoryContainerRect);
-        tmpButton.interactable = false;
-        memoryList.Add(tmpButton.gameObject);
+        var memoryObject = Instantiate(memoryPrefabList[index], memoryContainerRect);
+        memoryList.Add(memoryObject.gameObject);
     }
 
     public void RemoveBtnFromMemoryList(int index)
