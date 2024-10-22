@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DG.Tweening;
@@ -16,6 +17,7 @@ public class PlayerComponent : MonoBehaviour
     public bool isUnderProtected;   // 护盾开启的状态
 
     public SpriteRenderer PlayerSprite;
+    public bool IsLastJump;
 
     private PlayerInputType preInputType;
     private int healMax;
@@ -68,13 +70,23 @@ public class PlayerComponent : MonoBehaviour
     /// 跳跃
     /// </summary>
     /// todo remake
-    public void DoJump()
+    public async void DoJump()
     {
-        isJumping = true;
         // 跳跃动画
+        isJumping = true;
         GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("JumpTrigger");
-        DoMove(new int2(0, 1));
+        await DoMove(new int2(0, 1));
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("JumpIdleTrigger");
 
+        IsLastJump = true;
+    }
+    
+
+    public void HandleLastJump()
+    {
+        if (!IsLastJump) return;
+        DoMove(new int2(0, -1));
+        IsLastJump = false;
     }
 
     /// <summary>
@@ -94,6 +106,7 @@ public class PlayerComponent : MonoBehaviour
         GameManagerSingleton.Instance.Boss.CheckForDamage(2, attackList);
         GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("SwordTrigger");
     }
+    
 
     /// <summary>
     /// 处理十字重攻击

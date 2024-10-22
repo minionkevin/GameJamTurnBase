@@ -76,7 +76,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         currTurnNum = 0;
         IsPlayerA = PlayerData.IsPlayerA;
         // todo change this back
-        IsPlayerA = false;
+        IsPlayerA = true;
         TileManagerSingleton.Instance.Setup(Width, Height);
         
         // Player spawn
@@ -369,6 +369,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     
     private IEnumerator WaitForTask(Task task)
     {
+        if(task==null) yield break;
         while (!task.IsCompleted && !IsPlayerDie)
         {
             yield return null; // 等待任务完成
@@ -378,8 +379,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     private Task HandlePlayerInput(int value)
     {
-        if (IsPlayerDie) return null;
-        if (value == -1) return null;
+        if (value == -1 || IsPlayerDie) return null;
         // todo 跳跃攻击
             switch (value)
             {
@@ -389,27 +389,26 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                     return Player.DoMove(new int2(1,0));
                 case PlayerInputType.ATTACK1: 
                     Player.DoHorizontalAttack();
-                    break;
+                    return null;
                 case PlayerInputType.ATTACK2: 
                     Player.DoCrossAttack();
-                    break;
+                    return null;
                 case PlayerInputType.DEFENSE:
                     Player.DoProtected();
-                    break;
+                    return null;
                 case PlayerInputType.HEAL:
                     Player.DoHeal();
-                    break;
+                    return null;
                 case PlayerInputType.JUMP:
                     Player.DoJump();
-                    break;
+                    return null;
                 case PlayerInputType.JUMPATTACK:
                     Player.DoJump();
-                    break;
+                    return null;
                 default:
                     Debug.LogError("wrong player attack type");
-                    break;
+                    return null;
             }
-            return null;
     }
 
     /// <summary>
@@ -433,7 +432,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 if (i % 2 == 0)
                 {
                     // PlayerInput.HighlightInputButton(i/2);
-                    yield return HandlePlayerInput(inputLists[i]);
+                    yield return StartCoroutine(WaitForTask(HandlePlayerInput(inputLists[i])));
+                    // yield return HandlePlayerInput(inputLists[i]);
+                    Player.HandleLastJump();
                 }
                 else
                 {
