@@ -39,6 +39,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public GameObject BossRightHandPrefab;
     public Animator BossAnimator;
     public Animator PlayerAnimator;
+    public Animator BossLeftAnimator;
+    public Animator BossRightAnimator;
 
     public CountDown CountDown_UI;
     public BossHp BossHp_UI;
@@ -104,6 +106,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // Animator
         BossAnimator = bossHead.GetComponent<Animator>();
         PlayerAnimator = player.GetComponent<Animator>();
+        BossLeftAnimator = bossLeftHand.GetComponent<Animator>();
+        BossRightAnimator = bossRightHand.GetComponent<Animator>();
 
         foreach (var data in IsPlayerA ? ABossInputData.InputList : BBossInputData.InputList)
         {
@@ -489,7 +493,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     public void HandleBossDie(bool value)
     {
-        PlayerDeathPanel.SetActive(value);
+        BossDeathPanel.SetActive(value);
         GamePanel.SetActive(!value);
     }
 }

@@ -40,6 +40,8 @@ public class BossComponent : MonoBehaviour
         switch (step)
         {
             case 1:
+                GameManagerSingleton.Instance.BossLeftAnimator.Play("bossChop");
+                GameManagerSingleton.Instance.BossRightAnimator.Play("bossChop");
                 DoAttackSingleHand();
                 break;
             case 2:
@@ -60,6 +62,8 @@ public class BossComponent : MonoBehaviour
     
     public void DoAttack1Pre()
     {
+        GameManagerSingleton.Instance.BossLeftAnimator.Play("bossChopWarning");
+        GameManagerSingleton.Instance.BossRightAnimator.Play("bossChopWarning");
         MoveHandToPlayerTop();
         MoveObject(headObj,width/2,height-1,ref currHeadPos);
     }
@@ -130,6 +134,9 @@ public class BossComponent : MonoBehaviour
     #region attack2-左右双掌 
     public void DoAttack2Pre()
     {
+        GameManagerSingleton.Instance.BossLeftAnimator.Play("bossPalmWarning");
+        GameManagerSingleton.Instance.BossRightAnimator.Play("bossPalmWarning");
+        
         MoveObject(leftHandObj, 1, height - 2, ref currLeftHandPos);
         MoveObject(rightHandObj,width-2,height-2,ref currRightHandPos);
         MoveObject(headObj,width/2,height-1,ref currHeadPos);
@@ -139,6 +146,9 @@ public class BossComponent : MonoBehaviour
         switch (step)
         {
             case 1:
+                GameManagerSingleton.Instance.BossLeftAnimator.Play("bossPalm");
+                GameManagerSingleton.Instance.BossRightAnimator.Play("bossPalm");
+                
                 await DoAOEAttackBack(leftHandObj, currLeftHandPos, true,false);
                 break;
             case 2:
@@ -179,6 +189,9 @@ public class BossComponent : MonoBehaviour
     
     public Task DoAttack3Pre()
     {
+        GameManagerSingleton.Instance.BossLeftAnimator.Play("bossFist");
+        GameManagerSingleton.Instance.BossRightAnimator.Play("bossFist");
+        
         var tcs = new TaskCompletionSource<bool>();
         StartCoroutine(PlayAnimationAndWait("WarningTrigger", "bossWarning", tcs));
         SetupBossStartPos(new int2(1, height - 2),
@@ -204,7 +217,7 @@ public class BossComponent : MonoBehaviour
         StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
         return tcs.Task;
     }
-
+    
     IEnumerator PlayAnimationAndWait(string triggerName,string animationName, TaskCompletionSource<bool> tcs)
     {
         var animator = GameManagerSingleton.Instance.BossAnimator;
@@ -235,6 +248,9 @@ public class BossComponent : MonoBehaviour
     # region attack4-地面清扫
     public Task DoAttack4Pre()
     {
+        GameManagerSingleton.Instance.BossLeftAnimator.Play("bossChopWarning");
+        GameManagerSingleton.Instance.BossRightAnimator.Play("bossChopWarning");
+        
         var tcs = new TaskCompletionSource<bool>();
         StartCoroutine(PlayAnimationAndWait("WarningTrigger", "bossWarning", tcs));
         SetupBossStartPos(new int2(1, height - 2),
@@ -248,6 +264,8 @@ public class BossComponent : MonoBehaviour
         switch (step)
         {
             case 1:
+                GameManagerSingleton.Instance.BossLeftAnimator.Play("bossChop");
+                GameManagerSingleton.Instance.BossRightAnimator.Play("bossChop");
                 await DoAttack4Step1(true);
                 break;
             case 2:
@@ -309,11 +327,14 @@ public class BossComponent : MonoBehaviour
     public void DoAttack5Pre()
     {
         MoveObject(headObj, width / 2, 0, ref currHeadPos);
-        MoveHandToPlayerTop();
+        MoveHandToPlayerTop(true);
     }
 
     public async void DoAttack5Step1()
     {
+        GameManagerSingleton.Instance.BossLeftAnimator.Play("bossChop");
+        GameManagerSingleton.Instance.BossLeftAnimator.Play("bossChop");
+        
         if (isPlayerOnLeft)
         {
             int2 newPos = new int2(currRightHandPos.x + 1, currRightHandPos.y);
@@ -338,17 +359,6 @@ public class BossComponent : MonoBehaviour
     }
 
     #endregion
-
-    /// <summary>
-    /// 轮次实际动作做完后，在队尾默认添加的一个指令
-    /// </summary>
-    public void DoActionEnd()
-    {
-        // Do Nothing now.
-        // 先让Boss手回归原位吧！
-        MoveObject(leftHandObj, GameManagerSingleton.Instance.bossLeftHandPos.x, GameManagerSingleton.Instance.bossLeftHandPos.y, ref currLeftHandPos);
-        MoveObject(rightHandObj, GameManagerSingleton.Instance.bossRightHandPos.x, GameManagerSingleton.Instance.bossRightHandPos.y, ref currRightHandPos);
-    }
     
     
     private void SetupBossStartPos(int2 leftHandPos,int2 rightHandPos, int2 headPos)
@@ -359,12 +369,14 @@ public class BossComponent : MonoBehaviour
     }
     
     // dynamic移动手到玩家上方
-    private void MoveHandToPlayerTop()
+    private void MoveHandToPlayerTop(bool needAnimate = false)
     {
         int2 playerPos = GameManagerSingleton.Instance.Player.GetPlayerPos(); 
         
         if (playerPos.x < width / 2)
         {
+            if(needAnimate)GameManagerSingleton.Instance.BossLeftAnimator.Play("bossChopWarning");
+            
             MoveObject(leftHandObj, playerPos.x, height-2,ref currLeftHandPos);
             MoveObject(rightHandObj,playerPos.x+1,height-2,ref currRightHandPos);
             
@@ -373,6 +385,8 @@ public class BossComponent : MonoBehaviour
         }
         else
         {
+            if(needAnimate)GameManagerSingleton.Instance.BossRightAnimator.Play("bossChopWarning");
+
             MoveObject(rightHandObj,playerPos.x, height-2,ref currRightHandPos);
             MoveObject(leftHandObj, currRightHandPos.x-1, height-2,ref currLeftHandPos);
             
