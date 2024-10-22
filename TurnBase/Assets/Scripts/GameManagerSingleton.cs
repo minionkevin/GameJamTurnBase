@@ -67,6 +67,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     {
         currTurnNum = 0;
         IsPlayerA = PlayerData.IsPlayerA;
+        //todo change this back
+        IsPlayerA = true;
+        
         // tile spawn
         TileManagerSingleton.Instance.Setup(Width, Height);
         
@@ -93,7 +96,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         BossAnimator = bossHead.GetComponent<Animator>();
         PlayerAnimator = player.GetComponent<Animator>();
 
-        // TODO setup isplayerA bool when load into this scene
         foreach (var data in IsPlayerA ? ABossInputData.InputList : BBossInputData.InputList)
         {
             BossActionList.Add(data);
@@ -106,6 +108,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         HandlePlayerTurn();
 
         SetupItems();
+
+        StartCoroutine(BattleCoroutine());
     }
 
     private void SetupItems()
@@ -224,13 +228,14 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         {
             if (currTurnNum != 0 && i == 0) continue;
             BossInputList.Add(BossData.BossActions[BossActionList[currTurnNum]].BossActions[i]);
-        }
+        }  
     }
     
-    
-    // player-boss-player-boss
-    
-    //第一个回合就是纯随机
+    // todo call this after boss start animation finish
+    private void BossStartPoss()
+    {
+        inputLists.Add(BossData.BossActions[BossActionList[0]].BossActions[0]);
+    }
 
     /// <summary>
     /// 交替重排指令
@@ -238,22 +243,10 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     private void ReorderInput()
     {
         while(PlayerInputList.Count < 6) PlayerInputList.Add(-1);
-        
-        if (currTurnNum == 0)
+        for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
         {
-            for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
-            {
-                if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
-                if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
-            {
-                if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
-                if (i < BossInputList.Count)  inputLists.Add(BossInputList[i]);
-            }
+            if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
+            if (i < BossInputList.Count)  inputLists.Add(BossInputList[i]);
         }
         if(currTurnNum < BossActionList.Count-1)inputLists.Add(BossData.BossActions[BossActionList[currTurnNum+1]].BossActions[0]);
     }
@@ -414,26 +407,17 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     /// <returns></returns>
     IEnumerator BattleCoroutine()
     {
-        ReorderInput();
-        
-        // // todo safety check
-        // switch back to i%2==0 for player after boss pose finish
-        for (int i = 0; i < inputLists.Count; i++)
+
+        if (currTurnNum == 0)
         {
-            if (currTurnNum == 0)
-            {
-                if (i % 2 != 0)
-                {
-                    // PlayerInput.HighlightInputButton(i/2);
-                    yield return HandlePlayerInput(inputLists[i]);
-                }
-                else
-                {
-                    // if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
-                    yield return StartCoroutine(HandleBossInput(inputLists[i]));
-                }    
-            }
-            else
+            BossStartPoss();
+            yield return StartCoroutine(HandleBossInput(inputLists[0]));
+        }
+        else
+        {
+            ReorderInput();
+            
+            for (int i = 0; i < inputLists.Count; i++)
             {
                 if (i % 2 == 0)
                 {
@@ -445,11 +429,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                     // if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
                     yield return StartCoroutine(HandleBossInput(inputLists[i]));
                 }   
-                
-            }
-            
-        
-            yield return new WaitForSecondsRealtime(1f);
+                yield return new WaitForSecondsRealtime(1f);
+            }   
         }
         
         PlayerInput.ClearMemoryList();
