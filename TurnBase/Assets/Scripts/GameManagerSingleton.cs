@@ -260,10 +260,10 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         if(currTurnNum < BossActionList.Count-1)inputLists.Add(BossData.BossActions[BossActionList[currTurnNum+1]].BossActions[0]);
     }
 
-    private IEnumerator HandleBossInput(int value)
+    private Task HandleBossInput(int value)
     {
-        if(IsPlayerDie) yield break;
-        if (value == -1) yield break;
+        if(IsPlayerDie) return null;
+        if (value == -1) return null;
         switch (value)
         {
             case BossInputType.ATTACK10:
@@ -303,13 +303,13 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 Boss.DoAttack2Step(5);
                 break;
             case BossInputType.ATTACK30:
-                yield return StartCoroutine(WaitForTask(Boss.DoAttack3Pre()));
+                return Boss.DoAttack3Pre();
                 break;
             case BossInputType.ATTACK31:
-                yield return StartCoroutine(WaitForTask(Boss.DoAttack3Step1(true)));
+                return Boss.DoAttack3Step1(true);
                 break;
             case BossInputType.ATTACK32:
-                yield return StartCoroutine(WaitForTask(Boss.DoAttack3Step1(false)));
+                return Boss.DoAttack3Step1(false);
                 break;
             case BossInputType.ATTACK33:
                 Boss.DoAttack3Step(3);
@@ -321,14 +321,14 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 Boss.DoAttack3Step(5);
                 break;
             case BossInputType.ATTACK40:
-                yield return StartCoroutine(WaitForTask(Boss.DoAttack4Pre()));
+                return Boss.DoAttack4Pre();
                 break;
             case BossInputType.ATTACK41:
-                yield return StartCoroutine(WaitForTask(Boss.DoAttack4Step1(true)));
+                return Boss.DoAttack4Step1(true);
                 break;
             case BossInputType.ATTACK42:
                 Boss.DoAttack4Step(2);
-                yield return StartCoroutine(WaitForTask(Boss.DoAttack4Step1(false)));
+                return Boss.DoAttack4Step1(false);
                 break;
             case BossInputType.ATTACK43:
                 Boss.DoAttack4Step(3);
@@ -365,6 +365,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 Debug.LogError("wrong boss attack type");
                 break;
         }
+        return null;
     }
     
     private IEnumerator WaitForTask(Task task)
@@ -414,7 +415,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         if (currTurnNum == 0)
         {
             BossStartPoss();
-            yield return StartCoroutine(HandleBossInput(inputLists[0]));
+            yield return StartCoroutine(WaitForTask(HandleBossInput(inputLists[0])));
         }
         else
         {
@@ -434,7 +435,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 else
                 {
                     // if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
-                    yield return StartCoroutine(HandleBossInput(inputLists[i]));
+                    yield return StartCoroutine(WaitForTask(HandleBossInput(inputLists[i])));
                 }   
                 yield return new WaitForSecondsRealtime(1f);
             }   
