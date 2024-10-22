@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine.Serialization;
 
 public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
@@ -62,6 +63,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     public bool IsPlayerA;
     public bool IsPlayerDie;
+
+    public TextMeshProUGUI CurrTurnLabel;
     
     private int currTurnNum;
     private List<int> BossActionList = new List<int>();
@@ -114,6 +117,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         HandlePlayerTurn();
         SetupItems();
         StartCoroutine(BattleCoroutine());
+        
+        CurrTurnLabel.text = currTurnNum.ToString();
     }
 
     private void SetupItems()
@@ -447,6 +452,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         
         Player.ResetPlayerState();
         currTurnNum++;
+        if (currTurnNum > 19) currTurnNum -= 10;
+
+        CurrTurnLabel.text = currTurnNum.ToString();
         // 重新开始下一轮
         HandlePlayerTurn();
     }
