@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,18 +41,14 @@ public class BossHp : MonoBehaviour
     /// 受击
     /// </summary>
     /// <param name="_damageValue">受到的伤害总为正值</param>
-    public void OnTakeDamage(int _damageValue)
+    public async void OnTakeDamage(int _damageValue)
     {
         curHp -= _damageValue;
         Update_HpDisplay();
 
-        if (curHp <= 0)
-        {
-            // todo:Boss死亡逻辑
-            Debug.Log("Boss Die!");
-            GameManagerSingleton.Instance.Boss.DieAnimation();
-            return;
-        }
+        if (curHp > 0) return;
+        await GameManagerSingleton.Instance.Boss.DieAnimation();
+        GameManagerSingleton.Instance.HandleBossDie(true);
     }
 
 }

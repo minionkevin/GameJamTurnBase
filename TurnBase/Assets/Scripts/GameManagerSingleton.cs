@@ -48,6 +48,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public GameObject SwitchPanel;
     public GameObject TakeItemPanel;
     public GameObject PlayerDeathPanel;
+    public GameObject BossDeathPanel;
 
     public PlayerComponent Player;
     public BossComponent Boss;
@@ -485,5 +486,10 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         GamePanel.SetActive(!value);
         IsPlayerDie = value;
     }
-    
+
+    public void HandleBossDie(bool value)
+    {
+        PlayerDeathPanel.SetActive(value);
+        GamePanel.SetActive(!value);
+    }
 }

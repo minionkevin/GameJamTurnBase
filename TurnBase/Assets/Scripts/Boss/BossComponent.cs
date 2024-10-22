@@ -524,8 +524,10 @@ public class BossComponent : MonoBehaviour
         GameManagerSingleton.Instance.BossAnimator.SetTrigger("DamageTrigger");
     }
 
-    public void DieAnimation()
+    public Task DieAnimation()
     {
-        GameManagerSingleton.Instance.BossAnimator.SetTrigger("DieTrigger");
+        var tcs = new TaskCompletionSource<bool>();
+        StartCoroutine(PlayAnimationAndWait("DieTrigger", "bossDie", tcs));
+        return tcs.Task;
     }
 }
