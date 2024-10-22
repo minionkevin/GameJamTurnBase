@@ -142,38 +142,6 @@ public class PlayerComponent : MonoBehaviour
         // (状态对应的动画，也一并重置)
     }
 
-    /// <summary>
-    /// 跳跃攻击
-    /// </summary>
-    public void DoJumpAttack(int attackType)
-    {
-        if (attackType.Equals(PlayerInputType.ATTACK1))
-        {
-            DoHorizontalAttack();
-        }
-        else if (attackType.Equals(PlayerInputType.ATTACK2))
-        {
-            DoCrossAttack();
-        }
-    }
-
-    /// <summary>
-    /// 玩家轮次结束后，默认添加的一个状态
-    /// </summary>
-    public void DoActionEnd()
-    {
-        isUnderProtected = false;
-    }
-
-    /// <summary>
-    /// 没有输入指令时，执行的一条指令（占位符，为了指令和Boss对齐）
-    /// </summary>
-    public void DoNothing()
-    {
-        // 
-        Debug.Log("没输入指令，跳过回合");
-    }
-
     public void CheckForDamage(List<int2> attackList,int value)
     {
         foreach (var pos in attackList)
@@ -188,7 +156,7 @@ public class PlayerComponent : MonoBehaviour
         foreach (var pos in attackList)
         {
             if (!currPlayerPos.Equals(pos)) continue;
-            GameManagerSingleton.Instance.PlayerHp_UI.OnTakeDamage(damageAmount);
+            GameManagerSingleton.Instance.PlayerHp_UI.OnTakeDamage(value);
             TakeDamageAnimation();
         }
     }
