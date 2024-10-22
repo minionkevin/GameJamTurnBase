@@ -192,6 +192,17 @@ public class PlayerInputComponent : MonoBehaviour
         memoryList.Clear();
         GameManagerSingleton.Instance.PlayerInputList.Clear();
     }
+    
+    public void HandleClearMemory()
+    {
+        if(!InputEnabled)return;
+        foreach (var item in memoryList)
+        {
+            Destroy(item);
+        }
+        memoryList.Clear();
+        GameManagerSingleton.Instance.PlayerInputList.Clear();
+    }
 
     // todo fix this logic
     // public void SetBackInputButton(int index)
