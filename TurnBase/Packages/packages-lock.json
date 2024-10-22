@@ -214,7 +214,7 @@
       }
     },
     "com.unity.render-pipelines.universal": {
-      "version": "14.0.9",
+      "version": "14.0.11",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
@@ -308,7 +308,7 @@
       }
     },
     "com.unity.visualscripting": {
-      "version": "1.9.1",
+      "version": "1.9.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {

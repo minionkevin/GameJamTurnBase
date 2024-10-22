@@ -66,6 +66,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     void Start()
     {
         currTurnNum = 0;
+        IsPlayerA = PlayerData.IsPlayerA;
         // tile spawn
         TileManagerSingleton.Instance.Setup(Width, Height);
         
