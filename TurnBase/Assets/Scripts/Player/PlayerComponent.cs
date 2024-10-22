@@ -9,8 +9,7 @@ public class PlayerComponent : MonoBehaviour
     // 每次玩家移动需更新
     [HideInInspector]
     public int2 currPlayerPos;
-
-    
+  
     [HideInInspector]
     public bool isJumping;          // 玩家跳跃的状态
     [HideInInspector]
@@ -29,7 +28,8 @@ public class PlayerComponent : MonoBehaviour
         healMax = 4;
         currPlayerPos = playerPos;
         // 初始化时，重置到默认状态
-        ResetPlayerState();
+        isJumping = false;
+        isUnderProtected = false;
     }
 
     /// <summary>
@@ -41,6 +41,7 @@ public class PlayerComponent : MonoBehaviour
         int2 newPos = dir + currPlayerPos;
         if (!CheckLimit(newPos)) return null;
         currPlayerPos = newPos;
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger(dir.Equals(new int2(-1, 0)) ? "MoveLeftTrigger" : "MoveRightTrigger");
         return TileManagerSingleton.Instance.MoveObjectToTile(currPlayerPos, gameObject);
     }
     
@@ -60,41 +61,48 @@ public class PlayerComponent : MonoBehaviour
     public void DoJump()
     {
         isJumping = true;
-        // domoveup
-        
-        
-        // 1.开始之前记录当前位置到变量
-        // 2.DoMove把玩家移到y-1位置
-        // 3.处理下一个指令
-        
-        // 4.每次处理指令之前检查上一个是不是跳跃
-        // 5.是的话就等当前指令做完用DoMove（y-1）
+        // 跳跃动画
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("JumpTrigger");
+        DoMove(new int2(0, 1));
+
     }
 
     /// <summary>
     /// 处理横向轻攻击
     /// </summary>
     /// <param name="attackPosList"></param>
-    public void DoHorizontalAttack()
+    public void DoHorizontalAttack(int damage = 2)
     {
+        // 正常攻击
         List<int2> attackList = new List<int2>();
         for (int i = -2; i < 3; i++)
         {
-            attackList.Add(new int2(currPlayerPos.x + i,currPlayerPos.y));
+            int2 newPos = new int2(currPlayerPos.x + i, currPlayerPos.y);
+            if (!CheckLimit(newPos)) continue;
+            attackList.Add(newPos);
         }
         GameManagerSingleton.Instance.Boss.CheckForDamage(2, attackList);
-        
-        // 没有动画，触发粒子特效
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("SwordTrigger");
     }
 
     /// <summary>
     /// 处理十字重攻击
     /// </summary>
     /// <param name="attackPosList"></param>
-    public void DoCrossAttack()
+    public void DoCrossAttack(int damage = 4)
     {
-        List<int2> attackList = new List<int2>() { new int2(currPlayerPos.x, currPlayerPos.y + 1), new int2(currPlayerPos.x -1, currPlayerPos.y), currPlayerPos, new int2(currPlayerPos.x+1, currPlayerPos.y) };
-        GameManagerSingleton.Instance.Boss.CheckForDamage(4, attackList);
+        List<int2> attackList = new List<int2>();
+        
+        int2 pos = new int2(currPlayerPos.x, currPlayerPos.y + 1);
+        if (CheckLimit(pos)) attackList.Add(pos);
+        pos = new int2(currPlayerPos.x - 1, currPlayerPos.y);
+        if (CheckLimit(pos)) attackList.Add(pos);
+        pos = new int2(currPlayerPos.x + 1, currPlayerPos.y);
+        if (CheckLimit(pos)) attackList.Add(pos);
+        attackList.Add(currPlayerPos);
+        
+        GameManagerSingleton.Instance.Boss.CheckForDamage(damage, attackList);
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("HammerTrigger");
     }
 
     /// <summary>
@@ -105,6 +113,7 @@ public class PlayerComponent : MonoBehaviour
         healMax--;
         if (healMax <= 0) return;
         GameManagerSingleton.Instance.PlayerHp_UI.OnGetRecovery(2);
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("HealTrigger");
         // Anim
 
         // VFX
@@ -118,18 +127,69 @@ public class PlayerComponent : MonoBehaviour
     public void DoProtected()
     {
         isUnderProtected = true;
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("ShieldTrigger");
         // Anim
 
         // VFX
 
         // Audio
     }
+    
+    public void ResetPlayerState()
+    {
+        isJumping = false;
+        isUnderProtected = false;
+        // (状态对应的动画，也一并重置)
+    }
+
+    /// <summary>
+    /// 跳跃攻击
+    /// </summary>
+    public void DoJumpAttack(int attackType)
+    {
+        if (attackType.Equals(PlayerInputType.ATTACK1))
+        {
+            DoHorizontalAttack();
+        }
+        else if (attackType.Equals(PlayerInputType.ATTACK2))
+        {
+            DoCrossAttack();
+        }
+    }
+
+    /// <summary>
+    /// 玩家轮次结束后，默认添加的一个状态
+    /// </summary>
+    public void DoActionEnd()
+    {
+        isUnderProtected = false;
+    }
+
+    /// <summary>
+    /// 没有输入指令时，执行的一条指令（占位符，为了指令和Boss对齐）
+    /// </summary>
+    public void DoNothing()
+    {
+        // 
+        Debug.Log("没输入指令，跳过回合");
+    }
 
     public void CheckForDamage(List<int2> attackList,int value)
     {
         foreach (var pos in attackList)
         {
+            TileManagerSingleton.Instance.ChangeTileColorPlayer(pos);
             if (currPlayerPos.Equals(pos)) OnTakeDamage(value);
+        }
+    }
+
+    public void CheckForDamageLaser(List<int2> attackList,int value)
+    {
+        foreach (var pos in attackList)
+        {
+            if (!currPlayerPos.Equals(pos)) continue;
+            GameManagerSingleton.Instance.PlayerHp_UI.OnTakeDamage(damageAmount);
+            TakeDamageAnimation();
         }
     }
 
@@ -147,33 +207,15 @@ public class PlayerComponent : MonoBehaviour
         shouldDamage = true;
         damageAmount = _damage;
     }
-
-    /// <summary>
-    /// 重置状态
-    /// </summary>
-    public void ResetPlayerState()
+    
+    private void TakeDamageAnimation()
     {
-        isJumping = false;
-        isUnderProtected = false;
-        // (状态对应的动画，也一并重置)
-    }
-
-    // ------------------------------------------
-
-    // placeholder animation
-    private async void TakeDamageAnimation()
-    {
-        Color tmp = PlayerSprite.color;
-        Sequence timeline = DOTween.Sequence();
-        timeline.Insert(0, PlayerSprite.DOColor(Color.red, 0.15f));
-        timeline.Insert(0.15f, PlayerSprite.DOColor(Color.white, 0.15f));
-        await timeline.SetLoops(3).Play().AsyncWaitForCompletion();
-        PlayerSprite.color = tmp;
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("DamageTrigger");
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.tag == "Boss" && shouldDamage)
+        if (other.gameObject.CompareTag("Boss") && shouldDamage)
         {
             GameManagerSingleton.Instance.PlayerHp_UI.OnTakeDamage(damageAmount);
             TakeDamageAnimation();
@@ -200,4 +242,7 @@ public class PlayerInputType
     public const int HEAL = 5;
     public const int JUMP = 6;
     public const int JUMPATTACK = 7;
+
+    public const int NULL = 100;     // 空指令,用于补全玩家未输入指令。 
+    public const int END = 101;      // 结束指令，在玩家指令队列的最后，默认添加此指令。
 }

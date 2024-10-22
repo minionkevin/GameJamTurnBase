@@ -12,9 +12,11 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public int Width = 7;
     public int Height = 6;
 
-    public List<int> BossActionList = new List<int>();
     public BossActionScriptableObject BossData;
-    public ItemScriptableObject ItemData;
+    public ItemScriptableObject AItemData;
+    public ItemScriptableObject BItemData;
+    public BossInputScriptableObject ABossInputData;
+    public BossInputScriptableObject BBossInputData;
 
     public int2 bossHeadPos;
     public int2 bossLeftHandPos;
@@ -28,11 +30,12 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public int2 PlayerStartPos;
     
     public GameObject PlayerPrefab;
-    public GameObject BossPrefab;
 
     public GameObject BossHeadPrefab;
     public GameObject BossLeftHandPrefab;
     public GameObject BossRightHandPrefab;
+    public Animator BossAnimator;
+    public Animator PlayerAnimator;
 
     public CountDown CountDown_UI;
     public BossHp BossHp_UI;
@@ -48,13 +51,17 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public List<int> PlayerInputList = new List<int>();
     public List<int> BossInputList = new List<int>();
 
-    private List<int> inputLists = new List<int>();
+    public List<int> inputLists = new List<int>();
     
     public PlayerInputComponent PlayerInput;
 
     public Dictionary<int, int> ItemDic = new Dictionary<int, int>();
+
+    public bool IsPlayerA;
     
     private int currTurnNum;
+    private List<int> BossActionList = new List<int>();
+
 
     void Start()
     {
@@ -71,19 +78,26 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
         // boss spawn
         // 这里的boss只是一个数据载体，剩余的三个boss prefab才是视觉上看到的
-        var boss = Instantiate(BossPrefab);
-        boss.GetComponent<Transform>().SetParent(transform);
-        var bossComponent = boss.GetComponent<BossComponent>();
-        Boss = bossComponent;
-
         var bossHead = Instantiate(BossHeadPrefab);
         TileManagerSingleton.Instance.AddObjectToTile(bossHeadPos,bossHead);
+        var bossComponent = bossHead.GetComponent<BossComponent>();
+        Boss = bossComponent;
+        
         var bossLeftHand = Instantiate(BossLeftHandPrefab);
         TileManagerSingleton.Instance.AddObjectToTile(bossLeftHandPos,bossLeftHand);
         var bossRightHand = Instantiate(BossRightHandPrefab);
         TileManagerSingleton.Instance.AddObjectToTile(bossRightHandPos,bossRightHand);
         bossComponent.Setup(bossHeadPos,bossLeftHandPos,bossRightHandPos,bossHead,bossLeftHand,bossRightHand);
 
+        BossAnimator = bossHead.GetComponent<Animator>();
+        PlayerAnimator = player.GetComponent<Animator>();
+
+        // TODO setup isplayerA bool when load into this scene
+        foreach (var data in IsPlayerA ? ABossInputData.InputList : BBossInputData.InputList)
+        {
+            BossActionList.Add(data);
+        }
+        
         // player hp & boss hp spawn
         BossHp_UI.Setup(bossStartHp);
         PlayerHp_UI.Setup(playerStartHp);
@@ -96,7 +110,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     private void SetupItems()
     {
         // 更新dic,本身的数据就不重要了
-        foreach (var item in ItemData.ItemDatas)
+        foreach (var item in IsPlayerA ? AItemData.ItemDatas: BItemData.ItemDatas)
         {
             ItemDic.Add(item.Id,item.Amount);
         }
@@ -205,27 +219,47 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     private void HandleBossActions()
     {
-        foreach (var data in BossData.BossActions[BossActionList[currTurnNum]].BossActions)
+        for (int i = 0; i < BossData.BossActions[BossActionList[currTurnNum]].BossActions.Count; i++)
         {
-            BossInputList.Add(data);
+            if (currTurnNum != 0 && i == 0) continue;
+            BossInputList.Add(BossData.BossActions[BossActionList[currTurnNum]].BossActions[i]);
         }
     }
+    
+    
+    // player-boss-player-boss
+    
+    //第一个回合就是纯随机
 
     /// <summary>
     /// 交替重排指令
     /// </summary>
     private void ReorderInput()
     {
-        while(PlayerInputList.Count < 5) PlayerInputList.Add(-1);
-        for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
+        while(PlayerInputList.Count < 6) PlayerInputList.Add(-1);
+        
+        if (currTurnNum == 0)
         {
-            if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
-            if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
+            for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
+            {
+                if(i < BossInputList.Count) inputLists.Add(BossInputList[i]);
+                if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
+            }
         }
+        else
+        {
+            for (int i = 0; i < Math.Max(BossInputList.Count, PlayerInputList.Count) * 2; i++)
+            {
+                if(i < PlayerInputList.Count) inputLists.Add(PlayerInputList[i]);
+                if (i < BossInputList.Count)  inputLists.Add(BossInputList[i]);
+            }
+        }
+        if(currTurnNum < BossActionList.Count-1)inputLists.Add(BossData.BossActions[BossActionList[currTurnNum+1]].BossActions[0]);
     }
 
-    private async void HandleBossInput(int value)
+    private IEnumerator HandleBossInput(int value)
     {
+        if (value == -1) yield break;
         switch (value)
         {
             case BossInputType.ATTACK10:
@@ -265,13 +299,13 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 Boss.DoAttack2Step(5);
                 break;
             case BossInputType.ATTACK30:
-                Boss.DoAttack3Pre();
+                yield return StartCoroutine(WaitForTask(Boss.DoAttack3Pre()));
                 break;
             case BossInputType.ATTACK31:
-                Boss.DoAttack3Step(1);
+                yield return StartCoroutine(WaitForTask(Boss.DoAttack3Step1(true)));
                 break;
             case BossInputType.ATTACK32:
-                Boss.DoAttack3Step(2);
+                yield return StartCoroutine(WaitForTask(Boss.DoAttack3Step1(false)));
                 break;
             case BossInputType.ATTACK33:
                 Boss.DoAttack3Step(3);
@@ -283,13 +317,14 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 Boss.DoAttack3Step(5);
                 break;
             case BossInputType.ATTACK40:
-                Boss.DoAttack4Pre();
+                yield return StartCoroutine(WaitForTask(Boss.DoAttack4Pre()));
                 break;
             case BossInputType.ATTACK41:
-                Boss.DoAttack4Step(1);
+                yield return StartCoroutine(WaitForTask(Boss.DoAttack4Step1(true)));
                 break;
             case BossInputType.ATTACK42:
                 Boss.DoAttack4Step(2);
+                yield return StartCoroutine(WaitForTask(Boss.DoAttack4Step1(false)));
                 break;
             case BossInputType.ATTACK43:
                 Boss.DoAttack4Step(3);
@@ -327,6 +362,15 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 break;
         }
     }
+    
+    private IEnumerator WaitForTask(Task task)
+    {
+        while (!task.IsCompleted)
+        {
+            yield return null; // 等待任务完成
+        }
+    }
+    
 
     private Task HandlePlayerInput(int value)
     {
@@ -375,16 +419,34 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // switch back to i%2==0 for player after boss pose finish
         for (int i = 0; i < inputLists.Count; i++)
         {
-            if (i % 2 != 0)
+            if (currTurnNum == 0)
             {
-                // PlayerInput.HighlightInputButton(i/2);
-                yield return HandlePlayerInput(inputLists[i]);
+                if (i % 2 != 0)
+                {
+                    // PlayerInput.HighlightInputButton(i/2);
+                    yield return HandlePlayerInput(inputLists[i]);
+                }
+                else
+                {
+                    // if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
+                    yield return StartCoroutine(HandleBossInput(inputLists[i]));
+                }    
             }
             else
             {
-                // if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
-                HandleBossInput(inputLists[i]);
+                if (i % 2 == 0)
+                {
+                    // PlayerInput.HighlightInputButton(i/2);
+                    yield return HandlePlayerInput(inputLists[i]);
+                }
+                else
+                {
+                    // if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
+                    yield return StartCoroutine(HandleBossInput(inputLists[i]));
+                }   
+                
             }
+            
         
             yield return new WaitForSecondsRealtime(1f);
         }

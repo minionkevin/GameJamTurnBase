@@ -8,7 +8,8 @@ public class SwitchItemComponent : MonoBehaviour
 {
     public RectTransform HaveItemRect;
     public RectTransform MissingItemRect;
-    public TextMeshProUGUI PasswordLabel;
+    public RectTransform PasswordRect;
+    public GameObject NumPrefab;
 
     public List<GameObject> ItemList = new List<GameObject>();
 
@@ -28,7 +29,7 @@ public class SwitchItemComponent : MonoBehaviour
                 Destroy(MissingItemRect.GetChild(i).gameObject);
             }   
         GameManager = GameManagerSingleton.Instance;
-        PasswordLabel.gameObject.SetActive(false); 
+        PasswordRect.gameObject.SetActive(false);
         ShowItems();
         deleteId = -1;
     }
@@ -62,8 +63,12 @@ public class SwitchItemComponent : MonoBehaviour
         sb.Append(id);
         
         // placeholder password
-        PasswordLabel.text = sb.ToString();
-        PasswordLabel.gameObject.SetActive(true);
+        foreach (var data in sb.ToString())
+        {
+            var num = Instantiate(NumPrefab, PasswordRect);
+            num.GetComponent<NumComponent>().Setup(data);
+        }
+        PasswordRect.gameObject.SetActive(true);
     }
 
     public void UpdateInputAction()

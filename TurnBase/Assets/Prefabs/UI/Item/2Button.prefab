@@ -88,6 +88,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3794667219837138907, guid: cf4e834f5f8ecd64090c7e0337947239, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4992743631811436899, guid: cf4e834f5f8ecd64090c7e0337947239, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -117,16 +121,24 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 7455418023236632733, guid: cf4e834f5f8ecd64090c7e0337947239, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7455418023236632733, guid: cf4e834f5f8ecd64090c7e0337947239, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 77c7994fc57d2aa459626c9fa2b08335, type: 3}
+    - target: {fileID: 7455418023236632733, guid: cf4e834f5f8ecd64090c7e0337947239, type: 3}
       propertyPath: m_Color.b
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7455418023236632733, guid: cf4e834f5f8ecd64090c7e0337947239, type: 3}
       propertyPath: m_Color.g
-      value: 0.89930856
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7455418023236632733, guid: cf4e834f5f8ecd64090c7e0337947239, type: 3}
       propertyPath: m_Color.r
-      value: 0.051886797
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8229256534959504935, guid: cf4e834f5f8ecd64090c7e0337947239, type: 3}
       propertyPath: m_Name

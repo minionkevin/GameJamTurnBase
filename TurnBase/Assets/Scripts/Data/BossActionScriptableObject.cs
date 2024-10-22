@@ -56,4 +56,6 @@ public class BossInputType
     public const int ATTACK54 = 54;
     public const int ATTACK55 = 55;
 
+    public const int END = 101;
+
 }

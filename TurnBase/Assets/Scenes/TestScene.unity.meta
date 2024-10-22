@@ -1,5 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:TurnBase/Assets/Fonts.meta
+guid: d9f1033071e0da64588801c9e509af92
+folderAsset: yes
+========
 guid: 45ad97821bb71f84eaa2db54504682bf
+>>>>>>>> main:TurnBase/Assets/Scenes/TestScene.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

@@ -87,7 +87,7 @@ public class PlayerInputComponent : MonoBehaviour
     /// <param name="button"></param>
     public void HandleJumpButton(Button button)
     {
-        if (GameManagerSingleton.Instance.PlayerInputList[^1] == PlayerInputType.JUMP) return;
+        if (GameManagerSingleton.Instance.PlayerInputList.Count>0 && GameManagerSingleton.Instance.PlayerInputList[^1] == PlayerInputType.JUMP) return;
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         AddBtnToMemoryList(button);
         GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.JUMP);

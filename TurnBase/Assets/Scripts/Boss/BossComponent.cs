@@ -1,8 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class BossComponent : MonoBehaviour
 {
@@ -60,6 +63,7 @@ public class BossComponent : MonoBehaviour
     public void DoAttack1Pre()
     {
         MoveHandToPlayerTop();
+        MoveObject(headObj,width/2,height-1,ref currHeadPos);
     }
 
     private async void DoAttackSingleHand()
@@ -161,16 +165,10 @@ public class BossComponent : MonoBehaviour
     #endregion
 
     #region attack3-全屏激光
-    public void DoAttack3Step(int step)
+    public async void DoAttack3Step(int step)
     {
         switch (step)
         {
-            case 1:
-                DoAttack3Step1();
-                break;
-            case 2:
-                DoAttack3Step1();
-                break;
             case 3:
                 DoAttack3MoveHand();
                 break;
@@ -178,29 +176,44 @@ public class BossComponent : MonoBehaviour
             case 5:
                 DoAttack3HandAttack();
                 break;
-            
         }
     }
     
-    public void DoAttack3Pre()
+    public Task DoAttack3Pre()
     {
+        var tcs = new TaskCompletionSource<bool>();
+        StartCoroutine(PlayAnimationAndWait("WarningTrigger", "bossWarning", tcs));
         SetupBossStartPos(new int2(1, height - 2),
             new int2(width-2,height-2),
             new int2(width/2, 1));
+        return tcs.Task;
+
     }
 
-    private void DoAttack3Step1()
+    public Task DoAttack3Step1(bool isLeft)
     {
-        // 激光
-        // 第一步和第二步只是视觉上的区别，数据上都是一样的
         List<int2> attackList = new List<int2>();
-        int targetPos = TileManagerSingleton.Instance.GetIndexPos(new int2(width / 2, 0));
+        int2 targetPos = new int2(width / 2, 0);
         foreach (var tile in TileManagerSingleton.Instance.TileList)
         {
-            int index = tile.GetTileIndex();
-            if(index != targetPos) attackList.Add(index);
+            int2 pos = tile.GetTilePos();
+            if(!pos.Equals(targetPos)) attackList.Add(pos);
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
+        GameManagerSingleton.Instance.Player.CheckForDamageLaser(attackList, 1);
+    
+        var tcs = new TaskCompletionSource<bool>();
+        StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
+        return tcs.Task;
+    }
+
+    IEnumerator PlayAnimationAndWait(string triggerName,string animationName, TaskCompletionSource<bool> tcs)
+    {
+        var animator = GameManagerSingleton.Instance.BossAnimator;
+        animator.SetTrigger(triggerName);
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(animationName));
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
+        tcs.SetResult(true);
     }
 
     private async void DoAttack3MoveHand()
@@ -216,11 +229,14 @@ public class BossComponent : MonoBehaviour
     #endregion
     
     # region attack4-地面清扫
-    public void DoAttack4Pre()
+    public Task DoAttack4Pre()
     {
+        var tcs = new TaskCompletionSource<bool>();
+        StartCoroutine(PlayAnimationAndWait("WarningTrigger", "bossWarning", tcs));
         SetupBossStartPos(new int2(1, height - 2),
             new int2(width-2,height-2),
                new int2(width/2, height - 2));
+        return tcs.Task;
     }
 
     public async void DoAttack4Step(int step)
@@ -228,11 +244,11 @@ public class BossComponent : MonoBehaviour
         switch (step)
         {
             case 1:
-                DoAttack4Step1();
+                await DoAttack4Step1(true);
                 break;
             case 2:
                 await MoveObject(headObj,currHeadPos.x,currHeadPos.y-1,ref currHeadPos);
-                DoAttack4Step1();
+                await DoAttack4Step1(false);
                 break;
             case 3:
                 await MoveObject(leftHandObj, currLeftHandPos.x, 0, ref currLeftHandPos);
@@ -249,21 +265,29 @@ public class BossComponent : MonoBehaviour
         }
     }
     
-    private void DoAttack4Step1()
+    public Task DoAttack4Step1(bool isLeft)
     {
         // 激光
         List<int2> attackList = new List<int2>();
-        int targetPos1 = TileManagerSingleton.Instance.GetIndexPos(new int2(width / 2, 0));
-        int targetPos2 = TileManagerSingleton.Instance.GetIndexPos(new int2(width / 2, 1));
-        int targetPos3 = TileManagerSingleton.Instance.GetIndexPos(new int2(width / 2-1, 0));
-        int targetPos4 = TileManagerSingleton.Instance.GetIndexPos(new int2(width / 2+1, 0));
+        int2 targetPos1 = new int2(width / 2, 0);
+        int2 targetPos2 = new int2(width / 2, 1);
+        int2 targetPos3 = new int2(width / 2-1, 0);
+        int2 targetPos4 = new int2(width / 2+1, 0);
         
         foreach (var tile in TileManagerSingleton.Instance.TileList)
         {
-            int index = tile.GetTileIndex();
-            if(index != targetPos1 || index != targetPos2||index!=targetPos3||index!=targetPos4) attackList.Add(index);
+            int2 pos = tile.GetTilePos();
+            if (!pos.Equals(targetPos1) && !pos.Equals(targetPos2) && !pos.Equals(targetPos3) && !pos.Equals(targetPos4))
+            {
+                attackList.Add(pos);
+            }
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
+        GameManagerSingleton.Instance.Player.CheckForDamageLaser(attackList, 1);
+        
+        var tcs = new TaskCompletionSource<bool>();
+        StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
+        return tcs.Task;
         
         // 播放动画
         // 播放音效
@@ -311,6 +335,18 @@ public class BossComponent : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// 轮次实际动作做完后，在队尾默认添加的一个指令
+    /// </summary>
+    public void DoActionEnd()
+    {
+        // Do Nothing now.
+        // 先让Boss手回归原位吧！
+        MoveObject(leftHandObj, GameManagerSingleton.Instance.bossLeftHandPos.x, GameManagerSingleton.Instance.bossLeftHandPos.y, ref currLeftHandPos);
+        MoveObject(rightHandObj, GameManagerSingleton.Instance.bossRightHandPos.x, GameManagerSingleton.Instance.bossRightHandPos.y, ref currRightHandPos);
+    }
+    
+    
     private void SetupBossStartPos(int2 leftHandPos,int2 rightHandPos, int2 headPos)
     {
         MoveObject(headObj, headPos, ref currHeadPos);
@@ -429,8 +465,11 @@ public class BossComponent : MonoBehaviour
         
         if (isLeft) currLeftHandPos = tmp;
         else currRightHandPos = tmp;
-
+        
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
+        //todo try better way on this
+        GameManagerSingleton.Instance.Player.CheckForDamageLaser(attackList,1);
+        
         await TileManagerSingleton.Instance.AddObjectToTile(tmp,obj);
 
         if (isBack)
@@ -475,8 +514,14 @@ public class BossComponent : MonoBehaviour
             {
                 GameManagerSingleton.Instance.BossHp_UI.OnTakeDamage(value);
             }
+            TileManagerSingleton.Instance.ChangeTileColorBoss(pos);
         }
+        
+        GameManagerSingleton.Instance.BossAnimator.SetTrigger("DamageTrigger");
+    }
+
+    public void DieAnimation()
+    {
+        GameManagerSingleton.Instance.BossAnimator.SetTrigger("DieTrigger");
     }
 }
-
-// 所有攻击都是，先攻击再移动，反正肯定不是同时发生

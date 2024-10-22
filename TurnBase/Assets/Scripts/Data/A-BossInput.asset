@@ -9,15 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18185a26cec03dd48977080786c7b040, type: 3}
-  m_Name: ItemsData
+  m_Script: {fileID: 11500000, guid: 1f2b440a17146ee458b18d4dadc8f7bb, type: 3}
+  m_Name: A-BossInput
   m_EditorClassIdentifier: 
-  ItemDatas:
-  - Id: 0
-    Amount: 1
-  - Id: 1
-    Amount: 1
-  - Id: 2
-    Amount: 1
-  - Id: 3
-    Amount: 0
+  InputList: 0000000001000000020000000100000002000000000000000400000001000000030000000400000004000000010000000300000004000000030000000400000001000000030000000400000003000000

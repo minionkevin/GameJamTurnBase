@@ -49,6 +49,7 @@ public class BossHp : MonoBehaviour
         {
             // todo:Boss死亡逻辑
             Debug.Log("Boss Die!");
+            GameManagerSingleton.Instance.Boss.DieAnimation();
             return;
         }
     }
