@@ -147,16 +147,16 @@ public class BossComponent : MonoBehaviour
                 await DoAOEAttackBack(leftHandObj, currLeftHandPos, true,false);
                 break;
             case 2:
-                await DoAOEAttackBack(rightHandObj, currRightHandPos, false,false);
-                MoveObject(leftHandObj, 2, height - 2, ref currLeftHandPos);
+                await MoveObject(leftHandObj, 1, height - 2, ref currLeftHandPos);
+                await DoAOEAttackBack(leftHandObj, currLeftHandPos, true,false);
                 break;
             case 3:
-                await DoAOEAttackBack(leftHandObj, currLeftHandPos, true,false);
-                MoveObject(rightHandObj, width - 3, height - 2, ref currRightHandPos);
+                MoveObject(leftHandObj, 1, height - 2, ref currLeftHandPos);
+                await DoAOEAttackBack(rightHandObj, currRightHandPos, false,false);
                 break;
             case 4:
+                await MoveObject(rightHandObj, width - 2, height - 2, ref currRightHandPos);
                 await DoAOEAttackBack(rightHandObj, currRightHandPos, false,false);
-                MoveObject(leftHandObj, 1, height - 2, ref currLeftHandPos);
                 break;
             case 5:
                 MoveObject(rightHandObj, width - 2, height - 2, ref currRightHandPos);
