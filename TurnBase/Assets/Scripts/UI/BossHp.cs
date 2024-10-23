@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ public class BossHp : MonoBehaviour
     [SerializeField]
     Scrollbar HpScroll;
 
+    public TextMeshProUGUI BossHpLabel;
     int maxHp;
     int curHp;
 
@@ -32,9 +34,10 @@ public class BossHp : MonoBehaviour
     /// <summary>
     /// 更新血条UI显示
     /// </summary>
-    public void Update_HpDisplay()
+    private void Update_HpDisplay()
     {
         HpScroll.size = Mathf.Clamp01((float)curHp / maxHp);
+        BossHpLabel.text = curHp + " / " + maxHp;
     }
 
     /// <summary>

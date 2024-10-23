@@ -105,7 +105,7 @@ public class PlayerComponent : MonoBehaviour
             if (!CheckLimit(newPos)) continue;
             attackList.Add(newPos);
         }
-        GameManagerSingleton.Instance.Boss.CheckForDamage(2, attackList);
+        GameManagerSingleton.Instance.Boss.CheckForDamage(3, attackList);
         
         return HandleAnimation( "SwordTrigger","playerASword");
     }

@@ -524,12 +524,9 @@ public class BossComponent : MonoBehaviour
     {
         foreach (int2 pos in attackList)
         {
-            if(TileManagerSingleton.Instance.CheckPos(currHeadPos, pos))
-            {
-                GameManagerSingleton.Instance.BossHp_UI.OnTakeDamage(value*2);
-            }
-            else if (TileManagerSingleton.Instance.CheckPos(currLeftHandPos, pos) ||
-                     TileManagerSingleton.Instance.CheckPos(currRightHandPos, pos))
+            if (TileManagerSingleton.Instance.CheckPos(currLeftHandPos, pos) ||
+                     TileManagerSingleton.Instance.CheckPos(currRightHandPos, pos) ||
+                     TileManagerSingleton.Instance.CheckPos(currHeadPos, pos))
             {
                 GameManagerSingleton.Instance.BossHp_UI.OnTakeDamage(value);
             }
