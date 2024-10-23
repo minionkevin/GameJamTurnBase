@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Threading.Tasks;
 using TMPro;
-using UnityEngine.Serialization;
 
 public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 {
@@ -73,7 +72,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     private List<int> BossActionList = new List<int>();
     private int currHighlight = -1;
 
-
     void Start()
     {
         // Setup
@@ -121,6 +119,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         SetupItems();
         StartCoroutine(BattleCoroutine());
         
+        // Timer setup
         CurrTurnLabel.text = currTurnNum.ToString();
         CountDown_UI.OnTimerEnd += HandleTimerEnd;
     }
@@ -139,7 +138,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     {
         StartBattle();
     }
-
+    
     public void SetupTakeItemPanel()
     {
         TakeItemPanel.GetComponent<TakeItemComponent>().Setup();
@@ -401,6 +400,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 case PlayerInputType.ATTACK2: 
                     return Player.DoCrossAttack();
                 case PlayerInputType.DEFENSE:
+                    Player.IsLastDefense = true;
                     return Player.DoProtected();
                 case PlayerInputType.HEAL:
                     return Player.DoHeal();
@@ -436,9 +436,14 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                     currHighlight = i / 2;
                     PlayerInput.HighlightInputButton(currHighlight);
                     
+                    // 检查上回合是否是盾
+                    Player.HandleLastDefense();
+                    
                     yield return StartCoroutine(WaitForTask(HandlePlayerInput(inputLists[i])));
+                    
                     // 检查上个回合是否是跳跃
                     Player.HandleLastJump();
+                    
                     // 跳跃是最后一个指令则落下
                     if(i+2 < inputLists.Count && inputLists[i+2]== -1) Player.HandleLastJump();
                 }

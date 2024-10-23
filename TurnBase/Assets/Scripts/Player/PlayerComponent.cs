@@ -13,18 +13,17 @@ public class PlayerComponent : MonoBehaviour
   
     [HideInInspector]
     public bool isJumping;          // 玩家跳跃的状态
-    [HideInInspector]
-    public bool isUnderProtected;   // 护盾开启的状态
 
     public SpriteRenderer PlayerSprite;
     public bool IsLastJump;
+    public bool IsLastDefense;
 
     private PlayerInputType preInputType;
     private int healMax;
 
     private int damageAmount;
     private bool shouldDamage;
-    private bool isPlayerA;
+    private bool laserDamage;
     
     public void Setup(int2 playerPos)
     {
@@ -32,8 +31,8 @@ public class PlayerComponent : MonoBehaviour
         currPlayerPos = playerPos;
         // 初始化时，重置到默认状态
         isJumping = false;
-        isUnderProtected = false;
-        isPlayerA = GameManagerSingleton.Instance.IsPlayerA;
+        IsLastDefense = false;
+        IsLastJump = false;
     }
 
     public void Reset()
@@ -89,6 +88,26 @@ public class PlayerComponent : MonoBehaviour
         if (!IsLastJump) return;
         DoMove(new int2(0, -1));
         IsLastJump = false;
+    }
+
+    public void HandleLastDefense()
+    {
+        if (!IsLastDefense || !laserDamage) return;
+        IsLastDefense = false;
+
+        List<int2> attackList = new List<int2>();
+        int index = 0;
+        for (int i = 0; i < GameManagerSingleton.Instance.Height; i++)
+        {
+            for (int j = -index; j < index+1; j++)
+            {
+                int2 targetPos = new int2(currPlayerPos.x + j, currPlayerPos.y + i);
+                if (!CheckLimit(targetPos)) continue;
+                attackList.Add(targetPos);
+            }
+            index += 1;
+        }
+        GameManagerSingleton.Instance.Boss.CheckForDamage(4, attackList);
     }
 
     /// <summary>
@@ -163,14 +182,12 @@ public class PlayerComponent : MonoBehaviour
     /// </summary>
     public Task DoProtected()
     {
-        isUnderProtected = true;
         return HandleAnimation("ShieldTrigger", "playerAShield");
     }
     
     public void ResetPlayerState()
     {
         isJumping = false;
-        isUnderProtected = false;
         // (状态对应的动画，也一并重置)
     }
     
@@ -186,15 +203,6 @@ public class PlayerComponent : MonoBehaviour
 
     private void OnTakeDamage(int _damage)
     {
-        if (isJumping) return;
-
-        if (isUnderProtected) _damage /= 2;
-        
-        // Anim
-
-        // VFX
-
-        // Audio
         shouldDamage = true;
         damageAmount = _damage;
     }
@@ -208,6 +216,16 @@ public class PlayerComponent : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Boss") && shouldDamage)
         {
+            GameManagerSingleton.Instance.PlayerHp_UI.OnTakeDamage(damageAmount);
+            TakeDamageAnimation();
+        }
+        if (other.gameObject.CompareTag("Laser") && shouldDamage)
+        {
+            if (IsLastDefense)
+            {
+                laserDamage = true;
+                return;
+            }
             GameManagerSingleton.Instance.PlayerHp_UI.OnTakeDamage(damageAmount);
             TakeDamageAnimation();
         }
