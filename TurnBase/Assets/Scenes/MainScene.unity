@@ -1188,6 +1188,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1469976438849659606, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 133.59744
+      objectReference: {fileID: 0}
     - target: {fileID: 1514594025024882857, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1195,6 +1199,22 @@ PrefabInstance:
     - target: {fileID: 1514594025024882857, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1553819842533478080, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 25.59745
+      objectReference: {fileID: 0}
+    - target: {fileID: 2479112610036139775, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
+      propertyPath: m_fontSize
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 2479112610036139775, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 2479112610036139775, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3106741196008321168, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1240,6 +1260,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6325530472471426974, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -413.39996
+      objectReference: {fileID: 0}
+    - target: {fileID: 6325530472471426974, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 37.597443
+      objectReference: {fileID: 0}
     - target: {fileID: 6609574427899335154, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1255,6 +1283,14 @@ PrefabInstance:
     - target: {fileID: 6609574427899335154, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6671394939404879689, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 960
+      objectReference: {fileID: 0}
+    - target: {fileID: 6671394939404879689, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 6824266762823278764, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1384,6 +1420,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7819808749343881638, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 79.447205
+      objectReference: {fileID: 0}
     - target: {fileID: 8095897767560579606, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1399,6 +1439,14 @@ PrefabInstance:
     - target: {fileID: 8095897767560579606, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245122061992123321, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 466.5739
+      objectReference: {fileID: 0}
+    - target: {fileID: 8349102305976923912, guid: ec65f5692fdf4054b899faf6a3583891, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

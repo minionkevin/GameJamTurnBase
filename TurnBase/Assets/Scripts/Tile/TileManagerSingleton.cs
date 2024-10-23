@@ -19,7 +19,7 @@ public class TileManagerSingleton : BaseSingleton<TileManagerSingleton>
         width = xCount;
         height = yCount;
 
-        GenerateTiles(1,0.1f);
+        GenerateTiles(1.5f,0.1f);
     }
     
     void GenerateTiles(float tileSize, float tileSpacing)
