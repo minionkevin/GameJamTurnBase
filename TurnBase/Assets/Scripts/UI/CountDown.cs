@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System;
+using System.Threading.Tasks;
 
 public class CountDown : BaseSingleton<CountDown>
 {
@@ -32,13 +33,11 @@ public class CountDown : BaseSingleton<CountDown>
         int minutes = curTime / 60;
         int seconds = curTime % 60;
         CountDown_Text.text = string.Format("{0:D2}:{1:D2}", minutes, seconds);
-
-        if (curTime <= 0)
-        {
-            isTiming = false;
-            // 计时结束，（执行对战）
-            OnTimerEnd?.Invoke();
-        }
+        
+        if (curTime > 0) return;
+        isTiming = false;
+        Task.Delay(1000);
+        OnTimerEnd?.Invoke();
     }
 
 

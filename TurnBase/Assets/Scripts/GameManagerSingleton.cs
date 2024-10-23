@@ -122,6 +122,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         StartCoroutine(BattleCoroutine());
         
         CurrTurnLabel.text = currTurnNum.ToString();
+        CountDown_UI.OnTimerEnd += HandleTimerEnd;
     }
 
     private void SetupItems()
@@ -132,6 +133,11 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             ItemDic.Add(item.Id,item.Amount);
         }
         PlayerInput.UpdateButton(ItemDic);
+    }
+
+    private void HandleTimerEnd()
+    {
+        StartBattle();
     }
 
     public void SetupTakeItemPanel()

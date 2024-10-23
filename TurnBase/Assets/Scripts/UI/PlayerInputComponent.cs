@@ -205,7 +205,7 @@ public class PlayerInputComponent : MonoBehaviour
     
     public void HighlightInputButton(int index)
     {
-        if (memoryList.Count < index-1) return;
+        if (memoryList.Count < index-1 || index < 0) return;
         var btn = memoryList[index];
         btn.GetComponent<Image>().color = Color.yellow;
     }
