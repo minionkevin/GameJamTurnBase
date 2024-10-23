@@ -28,7 +28,7 @@ public class PlayerComponent : MonoBehaviour
     
     public void Setup(int2 playerPos)
     {
-        healMax = 4;
+        healMax = 2;
         currPlayerPos = playerPos;
         // 初始化时，重置到默认状态
         isJumping = false;
@@ -154,7 +154,7 @@ public class PlayerComponent : MonoBehaviour
     {
         healMax--;
         if (healMax <= 0) return null;
-        GameManagerSingleton.Instance.PlayerHp_UI.OnGetRecovery(2);
+        GameManagerSingleton.Instance.PlayerHp_UI.OnGetRecovery(GameManagerSingleton.Instance.playerStartHp);
         return HandleAnimation("HealTrigger", "playerAHeal");
     }
 
