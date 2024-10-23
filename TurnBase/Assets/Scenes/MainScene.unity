@@ -835,7 +835,7 @@ MonoBehaviour:
   bossRightHandPos:
     x: 5
     y: 2
-  bossStartHp: 1
+  bossStartHp: 40
   playerStartHp: 4
   countdownTime: 40
   PlayerStartPos:
