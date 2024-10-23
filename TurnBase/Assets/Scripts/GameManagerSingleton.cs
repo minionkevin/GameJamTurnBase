@@ -480,6 +480,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         StartCoroutine(BattleCoroutine());
 
         HandlePlayerDie(false);
+        HandleBossDie(false);
     }
 
     public void HandlePlayerDie(bool value)
