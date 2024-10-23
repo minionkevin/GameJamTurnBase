@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 185003420}
   - component: {fileID: 185003421}
+  - component: {fileID: 185003422}
   m_Layer: 0
   m_Name: fall
   m_TagString: Untagged
@@ -180,6 +181,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &185003422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185003419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5298249aeda6ea84d83d7f9bda40e740, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &232137449
 GameObject:
   m_ObjectHideFlags: 0
