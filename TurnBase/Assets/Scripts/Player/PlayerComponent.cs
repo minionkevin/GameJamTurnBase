@@ -135,13 +135,12 @@ public class PlayerComponent : MonoBehaviour
     {
         List<int2> attackList = new List<int2>();
         
-        int2 pos = new int2(currPlayerPos.x, currPlayerPos.y + 1);
-        if (CheckLimit(pos)) attackList.Add(pos);
-        pos = new int2(currPlayerPos.x - 1, currPlayerPos.y);
-        if (CheckLimit(pos)) attackList.Add(pos);
-        pos = new int2(currPlayerPos.x + 1, currPlayerPos.y);
-        if (CheckLimit(pos)) attackList.Add(pos);
-        attackList.Add(currPlayerPos);
+        for (int i = 0; i < 3; i++)
+        {
+            int2 newPos = new int2(currPlayerPos.x, currPlayerPos.y + i);
+            if (!CheckLimit(newPos)) continue;
+            attackList.Add(newPos);
+        }
         
         GameManagerSingleton.Instance.Boss.CheckForDamage(damage, attackList);
 
