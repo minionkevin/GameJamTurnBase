@@ -46,16 +46,16 @@ public class BossComponent : MonoBehaviour
                 DoAttackSingleHand();
                 break;
             case 2:
-                DoAttackAndMoveHand(Attack1StepCheck(true));
+                DoAttackAndMoveHand(Attack1StepCheck(true),true);
                 break;
             case 3:
-                DoAttackAndMoveHand(Attack1StepCheck(false));
+                DoAttackAndMoveHand(Attack1StepCheck(false),true);
                 break;
             case 4:
-                HandleVerticalMove(true);
+                DoAttackAndMoveHand(Attack1StepCheck(true),true);
                 break;
             case 5:
-                HandleVerticalMove(false);
+                DoAttackAndMoveHand(Attack1StepCheck(false));
                 break;
             
         }
@@ -65,8 +65,30 @@ public class BossComponent : MonoBehaviour
     {
         GameManagerSingleton.Instance.BossLeftAnimator.Play("bossChopWarning");
         GameManagerSingleton.Instance.BossRightAnimator.Play("bossChopWarning");
-        MoveHandToPlayerTop();
+
+        SetupHandsForAttack1();
         MoveObject(headObj,width/2,height-1,ref currHeadPos);
+    }
+
+    private void SetupHandsForAttack1()
+    {
+        int2 playerPos = GameManagerSingleton.Instance.Player.GetPlayerPos(); 
+        
+        if (playerPos.x < width / 2)
+        {
+            MoveObject(leftHandObj, 1, height-2,ref currLeftHandPos);
+            MoveObject(rightHandObj,2,height-2,ref currRightHandPos);
+            
+            isPlayerOnLeft = true;
+            attack1yPos = currLeftHandPos.y;
+        }
+        else
+        {
+            MoveObject(rightHandObj,width-2, height-2,ref currRightHandPos);
+            MoveObject(leftHandObj, width-3, height-2,ref currLeftHandPos);
+            
+            attack1yPos = currRightHandPos.y;
+        }
     }
 
     private async void DoAttackSingleHand()
@@ -87,47 +109,19 @@ public class BossComponent : MonoBehaviour
         }
         return tmp;
     }
+    
 
-    private void HandleVerticalMove(bool isFirstTime)
-    {
-        switch (isFirstTime)
-        {
-            case true when isPlayerOnLeft:
-                DoAttackAndResetHand(rightHandObj, ref currRightHandPos, leftHandObj, ref currLeftHandPos, false, false);
-                break;
-            case false when isPlayerOnLeft:
-                DoAttackAndResetHand(leftHandObj, ref currLeftHandPos, rightHandObj, ref currRightHandPos, true, true);
-                break;
-            case true when !isPlayerOnLeft:
-                DoAttackAndResetHand(leftHandObj, ref currLeftHandPos, rightHandObj, ref currRightHandPos, true, false);
-                break;
-            case false when !isPlayerOnLeft:
-                DoAttackAndResetHand(rightHandObj, ref currRightHandPos, leftHandObj, ref currLeftHandPos, false, true);
-                break;
-        }
-    }
-
-    private async void DoAttackAndMoveHand(bool value)
+    private async void DoAttackAndMoveHand(bool value,bool isMoveBack = false)
     {
         if (value)
         {
             await DoVerticalAttack(rightHandObj,currRightHandPos,false);
-            MoveObject(leftHandObj, isPlayerOnLeft ? currRightHandPos.x + 1 : currRightHandPos.x - 1, attack1yPos, ref currLeftHandPos);
+            if(isMoveBack)MoveObject(leftHandObj, isPlayerOnLeft ? currRightHandPos.x + 1 : currRightHandPos.x - 1, attack1yPos, ref currLeftHandPos);
         }
         else
         {
             await DoVerticalAttack(leftHandObj, currLeftHandPos,true);
-            MoveObject(rightHandObj,isPlayerOnLeft?currLeftHandPos.x + 1:currLeftHandPos.x - 1,attack1yPos,ref currRightHandPos);
-        }
-    }
-
-    private void DoAttackAndResetHand(GameObject attackHand, ref int2 attackPos, GameObject moveHand, ref int2 movePos, bool isAttackHandLeft, bool value)
-    {
-        if (value) DoVerticalAttack(attackHand, attackPos, isAttackHandLeft);
-        else
-        {
-            DoVerticalAttack(attackHand, attackPos, isAttackHandLeft);
-            MoveObject(moveHand, movePos.x, attack1yPos, ref movePos);
+            if(isMoveBack)MoveObject(rightHandObj,isPlayerOnLeft?currLeftHandPos.x + 1:currLeftHandPos.x - 1,attack1yPos,ref currRightHandPos);
         }
     }
     #endregion
