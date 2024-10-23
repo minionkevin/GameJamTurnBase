@@ -384,7 +384,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     private Task HandlePlayerInput(int value)
     {
         if (value == -1 || IsPlayerDie) return null;
-        // todo 跳跃攻击
             switch (value)
             {
                 case PlayerInputType.MOVEA: 

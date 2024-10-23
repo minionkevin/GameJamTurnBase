@@ -107,13 +107,13 @@ public class PlayerComponent : MonoBehaviour
         }
         GameManagerSingleton.Instance.Boss.CheckForDamage(2, attackList);
         
-        return HandleAnimation( "SwordTrigger","playerASword","playerBSword");
+        return HandleAnimation( "SwordTrigger","playerASword");
     }
 
-    private Task HandleAnimation(string triggerName, string animationNameA, string animationNameB)
+    private Task HandleAnimation(string triggerName, string animationNameA)
     {
         var tcs = new TaskCompletionSource<bool>();
-        StartCoroutine( PlayAnimationAndWait(triggerName,isPlayerA?animationNameA:animationNameB, tcs) );
+        StartCoroutine( PlayAnimationAndWait(triggerName,animationNameA, tcs) );
         return tcs.Task;
     }
     
@@ -145,7 +145,7 @@ public class PlayerComponent : MonoBehaviour
         
         GameManagerSingleton.Instance.Boss.CheckForDamage(damage, attackList);
 
-        return HandleAnimation("HammerTrigger", "playerAHammer", "playerBHammer");
+        return HandleAnimation("HammerTrigger", "playerAHammer");
     }
 
     /// <summary>
@@ -156,7 +156,7 @@ public class PlayerComponent : MonoBehaviour
         healMax--;
         if (healMax <= 0) return null;
         GameManagerSingleton.Instance.PlayerHp_UI.OnGetRecovery(2);
-        return HandleAnimation("HealTrigger", "playerAHeal", "playerBHeal");
+        return HandleAnimation("HealTrigger", "playerAHeal");
     }
 
     /// <summary>
@@ -165,7 +165,7 @@ public class PlayerComponent : MonoBehaviour
     public Task DoProtected()
     {
         isUnderProtected = true;
-        return HandleAnimation("ShieldTrigger", "playerAShield", "playerBShield");
+        return HandleAnimation("ShieldTrigger", "playerAShield");
     }
     
     public void ResetPlayerState()
