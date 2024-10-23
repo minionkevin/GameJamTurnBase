@@ -176,8 +176,9 @@ public class BossComponent : MonoBehaviour
                 DoAttack3MoveHand();
                 break;
             case 4:
+                DoAttack3HandAttack(false);
+                break;
             case 5:
-                DoAttack3HandAttack();
                 break;
         }
     }
@@ -233,9 +234,9 @@ public class BossComponent : MonoBehaviour
             MoveObject(leftHandObj, currLeftHandPos.x + 1, currHeadPos.y + 1, ref currLeftHandPos));
     }
 
-    private async void DoAttack3HandAttack()
+    private async void DoAttack3HandAttack(bool needBack)
     {
-        await Task.WhenAll(DoAOEAttackBack(leftHandObj, currLeftHandPos, true), DoAOEAttackBack(rightHandObj, currRightHandPos, false));
+        await Task.WhenAll(DoAOEAttackBack(leftHandObj, currLeftHandPos, true,needBack), DoAOEAttackBack(rightHandObj, currRightHandPos, false,needBack));
     }
     #endregion
     
