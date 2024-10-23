@@ -395,11 +395,11 @@ public class BossComponent : MonoBehaviour
         currentHandPos = newPos;
         return TileManagerSingleton.Instance.MoveObjectToTile(new int2(x,y),handObj);
     }
-    private Task MoveObject(GameObject handObj, int2 pos, ref int2 currentHandPos)
+    private Task MoveObject(GameObject handObj, int2 pos, ref int2 currentHandPos,float time = 0.5f)
     {
         if (!CheckLimit(pos)) return null;
         currentHandPos = pos;
-        return TileManagerSingleton.Instance.MoveObjectToTile(pos,handObj);
+        return TileManagerSingleton.Instance.MoveObjectToTile(pos,handObj,time);
     }
     
     // 头部垂直攻击
@@ -499,6 +499,13 @@ public class BossComponent : MonoBehaviour
         Sequence timeline = DOTween.Sequence();
         timeline.Insert(0, currTrans.DOLocalMove(Vector3.zero, 0.5f).SetEase(Ease.Linear));
         return timeline.Play().AsyncWaitForCompletion();
+    }
+    
+    public Task MoveToReady()
+    {
+        GameManagerSingleton.Instance.BossLeftAnimator.Play("bossFist");
+        GameManagerSingleton.Instance.BossRightAnimator.Play("bossFist");
+        return Task.WhenAll(MoveObject(headObj, new int2(width / 2, height - 1), ref currHeadPos,1.5f));
     }
     
     private bool CheckLimit(int2 targetPos)

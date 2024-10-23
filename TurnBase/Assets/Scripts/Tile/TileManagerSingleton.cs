@@ -61,9 +61,9 @@ public class TileManagerSingleton : BaseSingleton<TileManagerSingleton>
         return TileList[GetIndexPos(pos)].AddObjectToTile(objectPrefab);
     }
 
-    public async void MoveObjectToTile(int2 pos, GameObject objectPrefab, float time = 0.5f, Ease ease = Ease.Linear)
+    public Task MoveObjectToTile(int2 pos, GameObject objectPrefab, float time = 0.5f, Ease ease = Ease.Linear)
     {
-        await TileList[GetIndexPos(pos)].AddObjectToTile(objectPrefab, time, ease);
+        return TileList[GetIndexPos(pos)].AddObjectToTile(objectPrefab, time, ease);
     }
 
     public void ChangeTileColorPlayer(int2 pos)

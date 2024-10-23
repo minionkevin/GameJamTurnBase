@@ -117,7 +117,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         
         // Start game
         SetupItems();
-        StartCoroutine(BattleCoroutine());
         
         // Timer setup
         CurrTurnLabel.text = currTurnNum.ToString();
@@ -411,6 +410,18 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                     Debug.LogError("wrong player attack type");
                     return null;
             }
+    }
+    
+    private Task BossAliveAnimation()
+    {
+        return Boss.MoveToReady();
+    }
+
+    public async void StartGame()
+    { 
+        GamePanel.SetActive(true);
+        await BossAliveAnimation();
+        StartCoroutine(BattleCoroutine());
     }
 
     /// <summary>
