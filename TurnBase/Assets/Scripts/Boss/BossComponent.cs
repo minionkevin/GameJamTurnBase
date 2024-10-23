@@ -444,7 +444,8 @@ public class BossComponent : MonoBehaviour
     {
         List<int2> attackList = new List<int2>();
         int direction = isLeft ? 1 : -1;
-        for (int i = pos.x; i >= 0 && i < width; i += direction)
+        int startPos = isLeft ? pos.x + 2 : pos.x - 2;
+        for (int i = startPos; i >= 0 && i < width; i += direction)
         {
             int2 targetPos = new int2(i, pos.y);
             if (CheckLimit(targetPos)) attackList.Add(targetPos);
