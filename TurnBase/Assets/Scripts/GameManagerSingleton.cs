@@ -118,7 +118,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         PlayerHp_UI.Setup(playerStartHp);
         
         // Start game
-        HandlePlayerTurn();
         SetupItems();
         StartCoroutine(BattleCoroutine());
         
