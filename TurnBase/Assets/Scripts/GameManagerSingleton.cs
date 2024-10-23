@@ -71,6 +71,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     
     private int currTurnNum;
     private List<int> BossActionList = new List<int>();
+    private int currHighlight = -1;
 
 
     void Start()
@@ -433,7 +434,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             {
                 if (i % 2 == 0)
                 {
-                    PlayerInput.HighlightInputButton(i/2);
+                    currHighlight = i / 2;
+                    PlayerInput.HighlightInputButton(currHighlight);
+                    
                     yield return StartCoroutine(WaitForTask(HandlePlayerInput(inputLists[i])));
                     // 检查上个回合是否是跳跃
                     Player.HandleLastJump();
@@ -442,7 +445,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 }
                 else
                 {
-                    if(i/2-1>=0) PlayerInput.SetBackInputButton(i / 2 - 1);
+                    if(currHighlight>=0) PlayerInput.SetBackInputButton(currHighlight);
+                    
                     yield return StartCoroutine(WaitForTask(HandleBossInput(inputLists[i])));
                 }   
                 yield return new WaitForSecondsRealtime(1f);
@@ -480,6 +484,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         BossHp_UI.Setup(bossStartHp);
         PlayerHp_UI.Setup(playerStartHp);
         currTurnNum = 0;
+        currHighlight = -1;
         
         HandlePlayerTurn();
         StartCoroutine(BattleCoroutine());

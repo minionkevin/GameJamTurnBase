@@ -207,7 +207,6 @@ public class BossComponent : MonoBehaviour
             if(!pos.Equals(targetPos)) attackList.Add(pos);
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
-        GameManagerSingleton.Instance.Player.CheckForDamageLaser(attackList, 1);
     
         var tcs = new TaskCompletionSource<bool>();
         StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
@@ -300,7 +299,6 @@ public class BossComponent : MonoBehaviour
             }
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
-        GameManagerSingleton.Instance.Player.CheckForDamageLaser(attackList, 1);
         
         var tcs = new TaskCompletionSource<bool>();
         StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
@@ -481,9 +479,6 @@ public class BossComponent : MonoBehaviour
         else currRightHandPos = tmp;
         
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
-        //todo try better way on this
-        GameManagerSingleton.Instance.Player.CheckForDamageLaser(attackList,1);
-        
         await TileManagerSingleton.Instance.AddObjectToTile(tmp,obj);
 
         if (isBack)
