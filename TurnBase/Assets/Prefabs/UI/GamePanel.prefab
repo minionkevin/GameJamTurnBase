@@ -1724,7 +1724,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4992743631811436899, guid: cf4e834f5f8ecd64090c7e0337947239, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ClearMemoryList
+      value: HandleClearMemory
       objectReference: {fileID: 0}
     - target: {fileID: 4992743631811436899, guid: cf4e834f5f8ecd64090c7e0337947239, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName

@@ -139,17 +139,6 @@ public class PlayerInputComponent : MonoBehaviour
         GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.DEFENSE);
     }
 
-    public void HandleSwitchItem()
-    {
-        if (!InputEnabled) return;
-        
-        // 1.打开新ui界面
-        // 2.生成 拥有/未拥有物品
-        // 3.拥有物品可以传送
-        // 4.密码？
-        // 5.取出=指令=
-    }
-
     /// <summary>
     /// 进入对战
     /// </summary>
@@ -161,7 +150,6 @@ public class PlayerInputComponent : MonoBehaviour
 
     #endregion
 
-    // --------------------------------------------------------------
 
     /// <summary>
     /// 更新UI
@@ -192,6 +180,17 @@ public class PlayerInputComponent : MonoBehaviour
         memoryList.Clear();
         GameManagerSingleton.Instance.PlayerInputList.Clear();
     }
+    
+    public void HandleClearMemory()
+    {
+        if(!InputEnabled)return;
+        foreach (var item in memoryList)
+        {
+            Destroy(item);
+        }
+        memoryList.Clear();
+        GameManagerSingleton.Instance.PlayerInputList.Clear();
+    }
 
     // todo fix this logic
     // public void SetBackInputButton(int index)
@@ -207,46 +206,5 @@ public class PlayerInputComponent : MonoBehaviour
     //     var btn = memoryList[index];
     //     btn.GetComponent<Image>().color = Color.yellow;
     // }
-
-
-    // -----------------------------------------------------------
-
-    [Obsolete]
-    private void HandlePlayerMove(int2 dir,Button button)
-    {
-        //// UI显示更新
-        //var tmpButton = Instantiate(button, memoryContainerRect);
-        //tmpButton.interactable = false;
-        //memoryList.Add(tmpButton.gameObject);
-        //// 跟新事件列表
-        //GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.HandleMove(dir);
-    }
-
-    [Obsolete]
-    private void HandlePlayerAttack(List<int2> posList, Button button)
-    {
-        //// UI显示更新
-        //var tmpButton = Instantiate(button, memoryContainerRect);
-        //tmpButton.interactable = false;
-        //memoryList.Add(tmpButton.gameObject);
-        //// 跟新事件列表
-        //GameManagerSingleton.Instance.PlayerActionList += () => GameManagerSingleton.Instance.Player.HandleAttack(posList);
-    }
-
-    // 无上下移动
-    [Obsolete]
-    public void HandleSButton(Button button)
-    {
-        if (!InputEnabled) return;
-        HandlePlayerMove(new int2(0, -1), button);
-    }
-
-    [Obsolete]
-    public void HandleWButton(Button button)
-    {
-        if (!InputEnabled) return;
-        HandlePlayerMove(new int2(0, 1), button);
-    }
-
 
 }

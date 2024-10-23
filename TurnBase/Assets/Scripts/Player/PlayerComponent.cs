@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DG.Tweening;
@@ -16,12 +17,14 @@ public class PlayerComponent : MonoBehaviour
     public bool isUnderProtected;   // 护盾开启的状态
 
     public SpriteRenderer PlayerSprite;
+    public bool IsLastJump;
 
     private PlayerInputType preInputType;
     private int healMax;
 
     private int damageAmount;
     private bool shouldDamage;
+    private bool isPlayerA;
     
     public void Setup(int2 playerPos)
     {
@@ -30,6 +33,17 @@ public class PlayerComponent : MonoBehaviour
         // 初始化时，重置到默认状态
         isJumping = false;
         isUnderProtected = false;
+        isPlayerA = GameManagerSingleton.Instance.IsPlayerA;
+    }
+
+    public void Reset()
+    {
+        int2 startPos = GameManagerSingleton.Instance.PlayerStartPos;
+        if (!currPlayerPos.Equals(startPos))
+        {
+            TileManagerSingleton.Instance.MoveObjectToTile(startPos, gameObject);
+        }
+        Setup(startPos);
     }
 
     /// <summary>
@@ -58,20 +72,30 @@ public class PlayerComponent : MonoBehaviour
     /// 跳跃
     /// </summary>
     /// todo remake
-    public void DoJump()
+    public async void DoJump()
     {
-        isJumping = true;
         // 跳跃动画
+        isJumping = true;
         GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("JumpTrigger");
-        DoMove(new int2(0, 1));
+        await DoMove(new int2(0, 1));
+        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("JumpIdleTrigger");
 
+        IsLastJump = true;
+    }
+    
+
+    public void HandleLastJump()
+    {
+        if (!IsLastJump) return;
+        DoMove(new int2(0, -1));
+        IsLastJump = false;
     }
 
     /// <summary>
     /// 处理横向轻攻击
     /// </summary>
     /// <param name="attackPosList"></param>
-    public void DoHorizontalAttack(int damage = 2)
+    public Task DoHorizontalAttack(int damage = 2)
     {
         // 正常攻击
         List<int2> attackList = new List<int2>();
@@ -82,14 +106,32 @@ public class PlayerComponent : MonoBehaviour
             attackList.Add(newPos);
         }
         GameManagerSingleton.Instance.Boss.CheckForDamage(2, attackList);
-        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("SwordTrigger");
+        
+        return HandleAnimation( "SwordTrigger","playerASword");
     }
+
+    private Task HandleAnimation(string triggerName, string animationNameA)
+    {
+        var tcs = new TaskCompletionSource<bool>();
+        StartCoroutine( PlayAnimationAndWait(triggerName,animationNameA, tcs) );
+        return tcs.Task;
+    }
+    
+    IEnumerator PlayAnimationAndWait(string triggerName,string animationName, TaskCompletionSource<bool> tcs)
+    {
+        var animator = GameManagerSingleton.Instance.PlayerAnimator;
+        animator.SetTrigger(triggerName);
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(animationName));
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
+        tcs.SetResult(true);
+    }
+    
 
     /// <summary>
     /// 处理十字重攻击
     /// </summary>
     /// <param name="attackPosList"></param>
-    public void DoCrossAttack(int damage = 4)
+    public Task DoCrossAttack(int damage = 4)
     {
         List<int2> attackList = new List<int2>();
         
@@ -102,37 +144,28 @@ public class PlayerComponent : MonoBehaviour
         attackList.Add(currPlayerPos);
         
         GameManagerSingleton.Instance.Boss.CheckForDamage(damage, attackList);
-        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("HammerTrigger");
+
+        return HandleAnimation("HammerTrigger", "playerAHammer");
     }
 
     /// <summary>
     /// 加血
     /// </summary>
-    public void DoHeal()
+    public Task DoHeal()
     {
         healMax--;
-        if (healMax <= 0) return;
+        if (healMax <= 0) return null;
         GameManagerSingleton.Instance.PlayerHp_UI.OnGetRecovery(2);
-        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("HealTrigger");
-        // Anim
-
-        // VFX
-
-        // Audio
+        return HandleAnimation("HealTrigger", "playerAHeal");
     }
 
     /// <summary>
     /// 护盾
     /// </summary>
-    public void DoProtected()
+    public Task DoProtected()
     {
         isUnderProtected = true;
-        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("ShieldTrigger");
-        // Anim
-
-        // VFX
-
-        // Audio
+        return HandleAnimation("ShieldTrigger", "playerAShield");
     }
     
     public void ResetPlayerState()
@@ -141,38 +174,7 @@ public class PlayerComponent : MonoBehaviour
         isUnderProtected = false;
         // (状态对应的动画，也一并重置)
     }
-
-    /// <summary>
-    /// 跳跃攻击
-    /// </summary>
-    public void DoJumpAttack(int attackType)
-    {
-        if (attackType.Equals(PlayerInputType.ATTACK1))
-        {
-            DoHorizontalAttack();
-        }
-        else if (attackType.Equals(PlayerInputType.ATTACK2))
-        {
-            DoCrossAttack();
-        }
-    }
-
-    /// <summary>
-    /// 玩家轮次结束后，默认添加的一个状态
-    /// </summary>
-    public void DoActionEnd()
-    {
-        isUnderProtected = false;
-    }
-
-    /// <summary>
-    /// 没有输入指令时，执行的一条指令（占位符，为了指令和Boss对齐）
-    /// </summary>
-    public void DoNothing()
-    {
-        // 
-        Debug.Log("没输入指令，跳过回合");
-    }
+    
 
     public void CheckForDamage(List<int2> attackList,int value)
     {
@@ -188,7 +190,7 @@ public class PlayerComponent : MonoBehaviour
         foreach (var pos in attackList)
         {
             if (!currPlayerPos.Equals(pos)) continue;
-            GameManagerSingleton.Instance.PlayerHp_UI.OnTakeDamage(damageAmount);
+            GameManagerSingleton.Instance.PlayerHp_UI.OnTakeDamage(value);
             TakeDamageAnimation();
         }
     }
@@ -241,8 +243,4 @@ public class PlayerInputType
     public const int DEFENSE = 4;
     public const int HEAL = 5;
     public const int JUMP = 6;
-    public const int JUMPATTACK = 7;
-
-    public const int NULL = 100;     // 空指令,用于补全玩家未输入指令。 
-    public const int END = 101;      // 结束指令，在玩家指令队列的最后，默认添加此指令。
 }

@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerHp : MonoBehaviour
 {
@@ -14,13 +12,6 @@ public class PlayerHp : MonoBehaviour
     int maxHp;
     int curHp;
     List<Heart> HeartsList;
-
-    //// 测试用
-    //// 之后删此调用，在GameManager中调用
-    //private void OnEnable()
-    //{
-    //    Setup(4);
-    //}
 
     /// <summary>
     /// 初始化
@@ -38,31 +29,26 @@ public class PlayerHp : MonoBehaviour
         }
     }
 
+    public void Clear()
+    {
+        foreach (var item in HeartsList)
+        {
+            Destroy(item.gameObject);
+        }
+        HeartsList.Clear();
+    }
+
     /// <summary>
     /// 更新血条UI显示
     /// 半格血逻辑
     /// </summary>
-    public void Update_HpDisplay()
+    private void Update_HpDisplay()
     {
-        // Debug.Log("curHp" + curHp);
-        // Debug.Log("maxHp" + maxHp);
         for (int i = 0; i < maxHp/2; i++)
         {
-            if (i < curHp / 2)
-            {
-                // Debug.Log("full heart");
-                HeartsList[i].SetDisplay(1);
-            }
-            else if (i > curHp / 2)
-            {
-                // Debug.Log("null heart");
-                HeartsList[i].SetDisplay(0);
-            }
-            else
-            {
-                // Debug.Log("half heart");
-                HeartsList[i].SetDisplay(curHp % 2 == 1 ? -1 : 0);
-            }
+            if (i < curHp / 2)  HeartsList[i].SetDisplay(1);
+            else if (i > curHp / 2) HeartsList[i].SetDisplay(0);
+            else HeartsList[i].SetDisplay(curHp % 2 == 1 ? -1 : 0);
         }
         
     }
@@ -77,12 +63,8 @@ public class PlayerHp : MonoBehaviour
         if (curHp <= 0) curHp = 0;
         Update_HpDisplay();
 
-        if (curHp <= 0)
-        {
-            // todo:Player死亡逻辑
-            Debug.Log("Player Die!");
-            return;
-        }
+        if (curHp > 0) return;
+        GameManagerSingleton.Instance.HandlePlayerDie(true);
     }
 
     /// <summary>
