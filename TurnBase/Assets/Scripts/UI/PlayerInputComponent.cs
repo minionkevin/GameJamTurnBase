@@ -183,6 +183,7 @@ public class PlayerInputComponent : MonoBehaviour
         }
         memoryList.Clear();
         GameManagerSingleton.Instance.PlayerInputList.Clear();
+        currMemoryIndex = 0;
     }
     
     public void HandleClearMemory()
