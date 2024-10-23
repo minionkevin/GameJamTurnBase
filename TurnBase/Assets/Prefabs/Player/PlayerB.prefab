@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 53
   m_Sprite: {fileID: 21300000, guid: c8d0e33a45621ec4aaa7f788172551d2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -156,7 +156,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 53
   m_Sprite: {fileID: 21300000, guid: 02b1fe99a3419d84aafa9227f4831e06, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -303,6 +303,7 @@ MonoBehaviour:
   isJumping: 0
   isUnderProtected: 0
   PlayerSprite: {fileID: 2037859436310251152, guid: 19b39d30dd96eee4598d394c848a5c4b, type: 3}
+  IsLastJump: 0
 --- !u!61 &5227901967020391936
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -447,7 +448,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 52
   m_Sprite: {fileID: 21300000, guid: b25f96c4b5639bc49bd7107c27de94cb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -531,7 +532,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingOrder: 51
   m_Sprite: {fileID: 21300000, guid: eac023a45da051b4a90d2b6db936f3bd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -615,7 +616,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 53
   m_Sprite: {fileID: 21300000, guid: 758acdd8176af1649ac7a9a91e2f72b4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -685,7 +686,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4012213879431844987, guid: b016d9942bb14a44aaa9f19932404db2, type: 3}
       propertyPath: m_SortingOrder
-      value: -1
+      value: 51
       objectReference: {fileID: 0}
     - target: {fileID: 4039117216361293506, guid: b016d9942bb14a44aaa9f19932404db2, type: 3}
       propertyPath: InitialModule.startLifetime.scalar
@@ -805,6 +806,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4012213879431844987, guid: d3f94e11da4ee934787de400addca42c, type: 3}
+      propertyPath: m_SortingOrder
+      value: 51
+      objectReference: {fileID: 0}
     - target: {fileID: 4039117216361293506, guid: d3f94e11da4ee934787de400addca42c, type: 3}
       propertyPath: SizeModule.enabled
       value: 1
@@ -898,6 +903,10 @@ PrefabInstance:
     - target: {fileID: 19888532, guid: 6b5cdea243db4bc4b9498aae2aa4c103, type: 3}
       propertyPath: lengthInSec
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 19984166, guid: 6b5cdea243db4bc4b9498aae2aa4c103, type: 3}
+      propertyPath: m_SortingOrder
+      value: 59
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
