@@ -225,7 +225,6 @@ public class BossComponent : MonoBehaviour
         animator.SetTrigger(triggerName);
         if (GameManagerSingleton.Instance.IsPlayerDie)
         {
-            Debug.Log("CHECK");
             tcs.SetResult(true);
             yield break;
         }

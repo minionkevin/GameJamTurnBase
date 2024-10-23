@@ -149,7 +149,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             PlayerInputList.RemoveAt(4);
             PlayerInput.RemoveBtnFromMemoryList(4);
         }
-        PlayerInput.AddBtnToMemoryList(PlayerInput.buttonList[7]);
+        PlayerInput.AddBtnToMemoryList(7);
         if (PlayerInputList.Count > 0) PlayerInputList[^1] = -1;
         else PlayerInputList.Add(-1);
     }
@@ -427,7 +427,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             {
                 if (i % 2 == 0)
                 {
-                    // PlayerInput.HighlightInputButton(i/2);
+                    PlayerInput.HighlightInputButton(i/2);
                     yield return StartCoroutine(WaitForTask(HandlePlayerInput(inputLists[i])));
                     // 检查上个回合是否是跳跃
                     Player.HandleLastJump();
@@ -436,7 +436,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 }
                 else
                 {
-                    // if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
+                    if(i/2-1>=0) PlayerInput.SetBackInputButton(i / 2 - 1);
                     yield return StartCoroutine(WaitForTask(HandleBossInput(inputLists[i])));
                 }   
                 yield return new WaitForSecondsRealtime(1f);

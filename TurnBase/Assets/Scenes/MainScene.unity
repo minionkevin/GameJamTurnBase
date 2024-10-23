@@ -797,7 +797,7 @@ MonoBehaviour:
     x: 5
     y: 2
   bossStartHp: 40
-  playerStartHp: 5
+  playerStartHp: 1
   countdownTime: 120
   PlayerStartPos:
     x: 3
