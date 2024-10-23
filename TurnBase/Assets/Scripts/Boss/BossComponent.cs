@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Rendering.UI;
 
 public class BossComponent : MonoBehaviour
 {
@@ -397,7 +398,7 @@ public class BossComponent : MonoBehaviour
     // 移动物体位置
     private Task MoveObject(GameObject handObj, int x, int y, ref int2 currentHandPos)
     {
-        if (!CheckLimit(x, y)) return null;
+        if (!CheckLimit(x, y)) return Task.CompletedTask;
         int2 newPos = new int2(x, y);
         currentHandPos = newPos;
         return TileManagerSingleton.Instance.MoveObjectToTile(new int2(x,y),handObj);
