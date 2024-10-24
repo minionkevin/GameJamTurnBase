@@ -52,6 +52,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public GameObject TakeItemPanel;
     public GameObject PlayerDeathPanel;
     public GameObject BossDeathPanel;
+    public GameObject FirstHintPanel;
+    public GameObject SecondHintPanel;
 
     public PlayerComponent Player;
     public BossComponent Boss;
