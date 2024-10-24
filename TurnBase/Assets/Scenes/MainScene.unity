@@ -545,6 +545,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8479241135440644056, guid: 622bc510e8bcba443b36d7ec3acfdfe6, type: 3}
   m_PrefabInstance: {fileID: 8229950983435729757}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &519861799 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4695051272379709122, guid: 622bc510e8bcba443b36d7ec3acfdfe6, type: 3}
+  m_PrefabInstance: {fileID: 8229950983435729757}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519861797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0803608cf29e044883f3c8a6bdb97c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &694388960
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2097,7 +2108,11 @@ PrefabInstance:
     - target: {fileID: 2248596948384455929, guid: 622bc510e8bcba443b36d7ec3acfdfe6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1191930787}
+      objectReference: {fileID: 519861799}
+    - target: {fileID: 2248596948384455929, guid: 622bc510e8bcba443b36d7ec3acfdfe6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ClosePanel
+      objectReference: {fileID: 0}
     - target: {fileID: 4695051272379709122, guid: 622bc510e8bcba443b36d7ec3acfdfe6, type: 3}
       propertyPath: ItemStatusRect
       value: 

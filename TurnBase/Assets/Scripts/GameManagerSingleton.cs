@@ -147,6 +147,12 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     {
         TakeItemPanel.GetComponent<TakeItemComponent>().Setup();
     }
+
+    public void SendItemPanel(bool value)
+    {
+        SwitchPanel.SetActive(value);
+        GamePanel.SetActive(!value);
+    }
     
     public void UpdateAddItems()
     {

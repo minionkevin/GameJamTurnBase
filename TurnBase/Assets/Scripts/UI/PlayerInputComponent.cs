@@ -57,8 +57,7 @@ public class PlayerInputComponent : MonoBehaviour
     
     public void ShowSwitchPanel()
     {
-        GameManagerSingleton.Instance.GamePanel.SetActive(false);
-        GameManagerSingleton.Instance.SwitchPanel.SetActive(true);
+        GameManagerSingleton.Instance.SendItemPanel(true);
         GameManagerSingleton.Instance.SetupSwitchPanel();
     }
     

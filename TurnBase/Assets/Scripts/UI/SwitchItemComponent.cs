@@ -1,14 +1,17 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
+// todo ItemStatusRect spawn在item的右边显示密码
+// 传送后再次打开没有更新item的位置。传送之后=0的物品依旧在右边。
 public class SwitchItemComponent : MonoBehaviour
 {
     public RectTransform HaveItemRect;
     public RectTransform MissingItemRect;
-    public RectTransform PasswordRect;
     public RectTransform ItemStatusRect;
-    public GameObject NumPrefab;
+    public RectTransform MiddleRect;
+    public GameObject Backplate;
 
     public List<GameObject> ItemList = new List<GameObject>();
     public List<RectTransform> ItemPWStatus = new List<RectTransform>();
@@ -28,10 +31,15 @@ public class SwitchItemComponent : MonoBehaviour
         {
             Destroy(MissingItemRect.GetChild(i).gameObject);
         }
+        ResetPanelVisual();
         GameManager = GameManagerSingleton.Instance;
-        PasswordRect.gameObject.SetActive(false);
         ShowItems();
         deleteId = -1;
+    }
+
+    private void ResetPanelVisual()
+    {
+        Backplate.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
     }
 
 
@@ -47,8 +55,7 @@ public class SwitchItemComponent : MonoBehaviour
                 rectTransform = Instantiate(ItemPWStatus[data.Key], ItemStatusRect);
                 havepwstatus.Add(data.Key);
             }
-
-
+            
             if (data.Value > 0)
             {
                 item = Instantiate(ItemList[data.Key], HaveItemRect);
@@ -68,27 +75,22 @@ public class SwitchItemComponent : MonoBehaviour
 
     }
     
-    public void SendItem(int id)
+    public async void SendItem(int id)
     {
         Password.ItemPasswordRenew(id);
         ShowSendingItemsPW(id);
 
         deleteId = id;
-        /*
-        StringBuilder sb = new StringBuilder();
-        sb.Append(id);
-        sb.Append(id);
-        sb.Append(id);
-        sb.Append(id);
+
+        var sendItem = Instantiate(ItemList[id], MiddleRect);
+
+        Sequence timeline = DOTween.Sequence();
+        timeline.Insert(0, sendItem.GetComponent<Image>().DOFade(0, 1.5f));
+        timeline.Insert(0.75f, Backplate.transform.DOScale(Vector3.zero, 1.5f));
+        timeline.Insert(0.75f, Backplate.transform.DORotate(new Vector3(0, 0 ,360), 1f,RotateMode.FastBeyond360));
+        await timeline.Play().AsyncWaitForCompletion();
         
-        // placeholder password
-        foreach (var data in sb.ToString())
-        {
-            var num = Instantiate(NumPrefab, PasswordRect);
-            num.GetComponent<NumComponent>().Setup(data);
-        }
-        PasswordRect.gameObject.SetActive(true);
-        */
+        ClosePanel();
     }
 
     void ShowSendingItemsPW(int id)
@@ -131,6 +133,11 @@ public class SwitchItemComponent : MonoBehaviour
             Destroy(ItemStatusRect.GetChild(i).gameObject);
         }
         havepwstatus = new List<int>();
+    }
+
+    public void ClosePanel()
+    {
+        GameManagerSingleton.Instance.SendItemPanel(false);
     }
 
 
