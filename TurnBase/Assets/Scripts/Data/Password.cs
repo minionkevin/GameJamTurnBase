@@ -121,8 +121,6 @@ public class Password : MonoBehaviour
 
     void reGeneratePasswordSeeds()
     {
-        ItemMark = { 2, 3, 5, 7, 11, 13, 17 };//暂时物品不能超过7种
-        times = { 19, 31, 97, 101, 89, 59, 103, 37, 41, 73, 79, 83, 23, 29, 61, 67, 71, 43, 47, 53 };//暂时相互传递次数不超过20次
         int l = ItemMark.Length;
         int t = times.Length;
 
@@ -140,8 +138,7 @@ public class Password : MonoBehaviour
         List<int> tempTimes = new List<int>();
         for (int ii = 0; ii < l; ii++)
         {
-            int index = Random.Range(0, l);
-            tempItemMark.Add(all[index]); ;
+            tempItemMark.Add(all[Random.Range(0, l)]); ;
         }
         for (int a = 0; a < all.Length; a++)
         {
