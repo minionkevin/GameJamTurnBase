@@ -549,7 +549,7 @@ MonoBehaviour:
   AItemData: {fileID: 11400000, guid: 6c96cd782392add4dbfe3713f1f6ab88, type: 2}
   BItemData: {fileID: 11400000, guid: 0bb938a018af24d408c5b0b4d1d252f4, type: 2}
   ABossInputData: {fileID: 11400000, guid: 3d429f112b81c1c418bb749815ce8159, type: 2}
-  BBossInputData: {fileID: 11400000, guid: 45b7996f8b9398d4fbc9318d568392b1, type: 2}
+  BBossInputData: {fileID: 11400000, guid: 6efe26bb416fbf74586ff4e7676b789f, type: 2}
   bossHeadPos:
     x: 3
     y: 0
