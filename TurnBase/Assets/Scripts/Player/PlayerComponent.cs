@@ -150,7 +150,7 @@ public class PlayerComponent : MonoBehaviour
     /// 处理十字重攻击
     /// </summary>
     /// <param name="attackPosList"></param>
-    public Task DoCrossAttack(int damage = 4)
+    public Task DoCrossAttack(int damage = 3)
     {
         List<int2> attackList = new List<int2>();
         

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Rendering.UI;
 
 public class BossComponent : MonoBehaviour
 {
@@ -67,7 +66,7 @@ public class BossComponent : MonoBehaviour
         GameManagerSingleton.Instance.BossRightAnimator.Play("bossChopWarning");
 
         SetupHandsForAttack1();
-        MoveObject(headObj,width/2,height-1,ref currHeadPos);
+        MoveObject(headObj, new int2(isPlayerOnLeft ? width - 2 : 1, height - 1),ref currHeadPos);
     }
 
     private void SetupHandsForAttack1()
@@ -132,8 +131,8 @@ public class BossComponent : MonoBehaviour
         GameManagerSingleton.Instance.BossLeftAnimator.Play("bossPalmWarning");
         GameManagerSingleton.Instance.BossRightAnimator.Play("bossPalmWarning");
         
-        MoveObject(leftHandObj, 1, height - 2, ref currLeftHandPos);
-        MoveObject(rightHandObj,width-2,height-2,ref currRightHandPos);
+        MoveObject(leftHandObj, 2, height - 2, ref currLeftHandPos);
+        MoveObject(rightHandObj,width-3,height-2,ref currRightHandPos);
         MoveObject(headObj,width/2,height-1,ref currHeadPos);
     }
     public async void DoAttack2Step(int step)
