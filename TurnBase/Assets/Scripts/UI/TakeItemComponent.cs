@@ -14,6 +14,7 @@ public class TakeItemComponent : MonoBehaviour
     public List<GameObject> ItemList = new List<GameObject>();
     public GameObject GamePanel;
 
+    public List<RectTransform> NumPosList = new List<RectTransform>();
     private List<int> inputPassword = new List<int>();
     private StringBuilder currPassword = new StringBuilder();
 
@@ -31,13 +32,14 @@ public class TakeItemComponent : MonoBehaviour
             int randomIndex = random.Next(i, indices.Count);
             (indices[i], indices[randomIndex]) = (indices[randomIndex], indices[i]);
         }
-        
-        foreach (int t in indices)
+
+        for (int i = 0; i < indices.Count; i++)
         {
-            var num = Instantiate(NumPrefab, NumRect);
+            var num = Instantiate(NumPrefab, NumPosList[i]);
             var numComponent = num.GetComponent<NumComponent>();
-            numComponent.Setup(t, this);
+            numComponent.Setup(indices[i], this);
         }
+
         PasswordLabel.text = "";
     }
     
