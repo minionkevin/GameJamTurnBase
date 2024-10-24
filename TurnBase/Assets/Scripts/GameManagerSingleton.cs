@@ -28,6 +28,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public int countdownTime = 40;
 
     public static int SendCounter = 0;//为传递物品行为计数，每次传出+1
+    public static List<int> ReceivedTimes = new List<int>();//为传递物品行为计数，每次接收+1
 
     // 有了config之后从scriptableobject read
     public int2 PlayerStartPos;

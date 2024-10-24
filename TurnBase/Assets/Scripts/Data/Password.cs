@@ -5,7 +5,7 @@ using UnityEngine;
 public class Password : MonoBehaviour
 {
     public static int[] ItemMark = { 2, 3, 5, 7, 11, 13, 17 };//暂时物品不能超过7种
-    static int[] times = { 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103 };//暂时相互传递次数不超过20次
+    static int[] times = { 19, 31, 97, 101, 89, 59, 103, 37, 41, 73, 79, 83, 23, 29, 61, 67, 71, 43, 47, 53 };//暂时相互传递次数不超过20次
 
     /*
      * 第二套种子
@@ -49,6 +49,8 @@ public class Password : MonoBehaviour
 
     public static void ItemPasswordRenew(int itemID)
     {
+        if (GameManagerSingleton.SendCounter > 20)
+            GameManagerSingleton.SendCounter = 1;
         int pw = ItemMark[itemID] * times[GameManagerSingleton.SendCounter++];//根据当前物品和传出次数，生成针对此次传递的密码
 
         if (!PasswordBook.ContainsKey(itemID))
@@ -77,8 +79,6 @@ public class Password : MonoBehaviour
         return null;
     }
 
-
-
     public static int To10(List<int> input)
     {
         float result = 0;
@@ -88,4 +88,16 @@ public class Password : MonoBehaviour
         }
         return (int)result;
     }
+
+
+    public static bool checkReceived(int time)
+    {
+        foreach (int t in GameManagerSingleton.ReceivedTimes)
+        {
+            if (t == time)
+                return true;
+        }
+        return false; ;
+    }
+
 }
