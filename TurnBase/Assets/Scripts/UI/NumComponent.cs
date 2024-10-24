@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class NumComponent : MonoBehaviour
 {
+    public List<Sprite> NumImages = new List<Sprite>();
     public Image NumImage;
     private TakeItemComponent takeItemComponent;
     private int id;
