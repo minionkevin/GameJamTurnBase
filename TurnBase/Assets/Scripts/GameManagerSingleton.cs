@@ -461,7 +461,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 PlayerInput.HighlightInputButton(currHighlight);
                     
                 // 检查上回合是否是盾
-                Player.HandleLastDefense();
+                yield return StartCoroutine(WaitForTask(Player.HandleLastDefense()));
                     
                 yield return StartCoroutine(WaitForTask(HandlePlayerInput(inputLists[i])));
                     

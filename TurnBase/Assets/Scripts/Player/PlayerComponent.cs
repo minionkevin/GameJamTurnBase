@@ -90,10 +90,11 @@ public class PlayerComponent : MonoBehaviour
         IsLastJump = false;
     }
 
-    public void HandleLastDefense()
+    public Task HandleLastDefense()
     {
-        if (!IsLastDefense || !laserDamage) return;
+        if (!IsLastDefense || !laserDamage) return Task.CompletedTask;
         IsLastDefense = false;
+        
 
         List<int2> attackList = new List<int2>();
         int index = 0;
@@ -108,6 +109,8 @@ public class PlayerComponent : MonoBehaviour
             index += 1;
         }
         GameManagerSingleton.Instance.Boss.CheckForDamage(4, attackList);
+        
+        return HandleAnimation( "MirrorAttackTrigger","playerAMirrorAttack");
     }
 
     /// <summary>
@@ -182,7 +185,7 @@ public class PlayerComponent : MonoBehaviour
     /// </summary>
     public Task DoProtected()
     {
-        return HandleAnimation("ShieldTrigger", "playerAShield");
+        return HandleAnimation("MirrorTrigger", "playerAMirror");
     }
     
     public void ResetPlayerState()
@@ -223,6 +226,7 @@ public class PlayerComponent : MonoBehaviour
         {
             if (IsLastDefense)
             {
+                HandleAnimation("MirrorChargeTrigger", "playerAMirrorCharge");
                 laserDamage = true;
                 return;
             }
