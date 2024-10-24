@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
@@ -7,8 +6,6 @@ using UnityEngine;
 
 public class TileComponent : MonoBehaviour
 {
-    // 注意：alpha=0，用之前需要先调整
-    public GameObject EffectLayer;
     public SpriteRenderer CircleSprite;
     public Transform ObjectLayerRect;
     // Debug only

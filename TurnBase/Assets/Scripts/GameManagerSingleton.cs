@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Threading.Tasks;
 using TMPro;
-using UnityEngine.Serialization;
 
 public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 {
@@ -73,7 +72,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     
     private int currTurnNum;
     private List<int> BossActionList = new List<int>();
-
+    private int currHighlight = -1;
 
     void Start()
     {
@@ -119,11 +118,11 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         PlayerHp_UI.Setup(playerStartHp);
         
         // Start game
-        HandlePlayerTurn();
         SetupItems();
-        StartCoroutine(BattleCoroutine());
         
+        // Timer setup
         CurrTurnLabel.text = currTurnNum.ToString();
+        CountDown_UI.OnTimerEnd += HandleTimerEnd;
     }
 
     private void SetupItems()
@@ -136,6 +135,11 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         PlayerInput.UpdateButton(ItemDic);
     }
 
+    private void HandleTimerEnd()
+    {
+        StartBattle();
+    }
+    
     public void SetupTakeItemPanel()
     {
         TakeItemPanel.GetComponent<TakeItemComponent>().Setup();
@@ -151,7 +155,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             PlayerInputList.RemoveAt(4);
             PlayerInput.RemoveBtnFromMemoryList(4);
         }
-        PlayerInput.AddBtnToMemoryList(PlayerInput.buttonList[7]);
+        PlayerInput.AddBtnToMemoryList(7);
         if (PlayerInputList.Count > 0) PlayerInputList[^1] = -1;
         else PlayerInputList.Add(-1);
     }
@@ -240,7 +244,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     {
         for (int i = 0; i < BossData.BossActions[BossActionList[currTurnNum]].BossActions.Count; i++)
         {
-            if (currTurnNum != 0 && i == 0) continue;
+            if (i == 0) continue;
             BossInputList.Add(BossData.BossActions[BossActionList[currTurnNum]].BossActions[i]);
         }  
     }
@@ -397,6 +401,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 case PlayerInputType.ATTACK2: 
                     return Player.DoCrossAttack();
                 case PlayerInputType.DEFENSE:
+                    Player.IsLastDefense = true;
                     return Player.DoProtected();
                 case PlayerInputType.HEAL:
                     return Player.DoHeal();
@@ -408,6 +413,27 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                     return null;
             }
     }
+    
+    private Task BossAliveAnimation()
+    {
+        return Boss.MoveToReady();
+    }
+
+    public async void StartGame()
+    { 
+        GamePanel.SetActive(true);
+        await BossAliveAnimation();
+        BossStartPoss();
+        StartCoroutine(WaitForTask(HandleBossInput(inputLists[0])));
+        
+        PlayerInput.ClearMemoryList();
+        
+        BossInputList.Clear();
+        PlayerInputList.Clear();
+        inputLists.Clear();
+
+        HandlePlayerTurn();
+    }
 
     /// <summary>
     /// 对战过程
@@ -416,34 +442,35 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     IEnumerator BattleCoroutine()
     {
         if (IsPlayerDie) yield break;
-        if (currTurnNum == 0)
-        {
-            BossStartPoss();
-            yield return StartCoroutine(WaitForTask(HandleBossInput(inputLists[0])));
-        }
-        else
-        {
-            ReorderInput();
+        ReorderInput();
             
-            for (int i = 0; i < inputLists.Count; i++)
+        for (int i = 0; i < inputLists.Count; i++)
+        {
+            if (i % 2 == 0)
             {
-                if (i % 2 == 0)
-                {
-                    // PlayerInput.HighlightInputButton(i/2);
-                    yield return StartCoroutine(WaitForTask(HandlePlayerInput(inputLists[i])));
-                    // 检查上个回合是否是跳跃
-                    Player.HandleLastJump();
-                    // 跳跃是最后一个指令则落下
-                    if(i+2 < inputLists.Count && inputLists[i+2]== -1) Player.HandleLastJump();
-                }
-                else
-                {
-                    // if(i/2-1>=0)PlayerInput.SetBackInputButton(i / 2 - 1);
-                    yield return StartCoroutine(WaitForTask(HandleBossInput(inputLists[i])));
-                }   
-                yield return new WaitForSecondsRealtime(1f);
+                currHighlight = i / 2;
+                PlayerInput.HighlightInputButton(currHighlight);
+                    
+                // 检查上回合是否是盾
+                Player.HandleLastDefense();
+                    
+                yield return StartCoroutine(WaitForTask(HandlePlayerInput(inputLists[i])));
+                    
+                // 检查上个回合是否是跳跃
+                Player.HandleLastJump();
+                    
+                // 跳跃是最后一个指令则落下
+                if(i+2 < inputLists.Count && inputLists[i+2]== -1) Player.HandleLastJump();
+            }
+            else
+            {
+                if(currHighlight>=0) PlayerInput.SetBackInputButton(currHighlight);
+                    
+                yield return StartCoroutine(WaitForTask(HandleBossInput(inputLists[i])));
             }   
-        }
+            yield return new WaitForSecondsRealtime(1f);
+        }   
+        
         
         PlayerInput.ClearMemoryList();
         
@@ -476,6 +503,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         BossHp_UI.Setup(bossStartHp);
         PlayerHp_UI.Setup(playerStartHp);
         currTurnNum = 0;
+        currHighlight = -1;
         
         HandlePlayerTurn();
         StartCoroutine(BattleCoroutine());
