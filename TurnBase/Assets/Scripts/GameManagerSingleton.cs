@@ -364,7 +364,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
             
             ////
             case BossInputType.ATTACK51:
-                Boss.DoAttack5Step1();
+                Boss.DoAttack5Step1(0);
                 break;
             case BossInputType.ATTACK52:
                 Boss.DoAttack5Step1();
