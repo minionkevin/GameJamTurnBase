@@ -46,16 +46,16 @@ public class BossComponent : MonoBehaviour
                 DoAttackSingleHand();
                 break;
             case 2:
-                DoAttackAndMoveHand(Attack1StepCheck(true));
+                DoAttackAndMoveHand(Attack1StepCheck(true),true);
                 break;
             case 3:
-                DoAttackAndMoveHand(Attack1StepCheck(false));
+                DoAttackAndMoveHand(Attack1StepCheck(false),true);
                 break;
             case 4:
-                HandleVerticalMove(true);
+                DoAttackAndMoveHand(Attack1StepCheck(true),true);
                 break;
             case 5:
-                HandleVerticalMove(false);
+                DoAttackAndMoveHand(Attack1StepCheck(false));
                 break;
             
         }
@@ -65,8 +65,30 @@ public class BossComponent : MonoBehaviour
     {
         GameManagerSingleton.Instance.BossLeftAnimator.Play("bossChopWarning");
         GameManagerSingleton.Instance.BossRightAnimator.Play("bossChopWarning");
-        MoveHandToPlayerTop();
+
+        SetupHandsForAttack1();
         MoveObject(headObj,width/2,height-1,ref currHeadPos);
+    }
+
+    private void SetupHandsForAttack1()
+    {
+        int2 playerPos = GameManagerSingleton.Instance.Player.GetPlayerPos(); 
+        
+        if (playerPos.x < width / 2)
+        {
+            MoveObject(leftHandObj, 1, height-2,ref currLeftHandPos);
+            MoveObject(rightHandObj,2,height-2,ref currRightHandPos);
+            
+            isPlayerOnLeft = true;
+            attack1yPos = currLeftHandPos.y;
+        }
+        else
+        {
+            MoveObject(rightHandObj,width-2, height-2,ref currRightHandPos);
+            MoveObject(leftHandObj, width-3, height-2,ref currLeftHandPos);
+            
+            attack1yPos = currRightHandPos.y;
+        }
     }
 
     private async void DoAttackSingleHand()
@@ -87,47 +109,19 @@ public class BossComponent : MonoBehaviour
         }
         return tmp;
     }
+    
 
-    private void HandleVerticalMove(bool isFirstTime)
-    {
-        switch (isFirstTime)
-        {
-            case true when isPlayerOnLeft:
-                DoAttackAndResetHand(rightHandObj, ref currRightHandPos, leftHandObj, ref currLeftHandPos, false, false);
-                break;
-            case false when isPlayerOnLeft:
-                DoAttackAndResetHand(leftHandObj, ref currLeftHandPos, rightHandObj, ref currRightHandPos, true, true);
-                break;
-            case true when !isPlayerOnLeft:
-                DoAttackAndResetHand(leftHandObj, ref currLeftHandPos, rightHandObj, ref currRightHandPos, true, false);
-                break;
-            case false when !isPlayerOnLeft:
-                DoAttackAndResetHand(rightHandObj, ref currRightHandPos, leftHandObj, ref currLeftHandPos, false, true);
-                break;
-        }
-    }
-
-    private async void DoAttackAndMoveHand(bool value)
+    private async void DoAttackAndMoveHand(bool value,bool isMoveBack = false)
     {
         if (value)
         {
             await DoVerticalAttack(rightHandObj,currRightHandPos,false);
-            MoveObject(leftHandObj, isPlayerOnLeft ? currRightHandPos.x + 1 : currRightHandPos.x - 1, attack1yPos, ref currLeftHandPos);
+            if(isMoveBack)MoveObject(leftHandObj, isPlayerOnLeft ? currRightHandPos.x + 1 : currRightHandPos.x - 1, attack1yPos, ref currLeftHandPos);
         }
         else
         {
             await DoVerticalAttack(leftHandObj, currLeftHandPos,true);
-            MoveObject(rightHandObj,isPlayerOnLeft?currLeftHandPos.x + 1:currLeftHandPos.x - 1,attack1yPos,ref currRightHandPos);
-        }
-    }
-
-    private void DoAttackAndResetHand(GameObject attackHand, ref int2 attackPos, GameObject moveHand, ref int2 movePos, bool isAttackHandLeft, bool value)
-    {
-        if (value) DoVerticalAttack(attackHand, attackPos, isAttackHandLeft);
-        else
-        {
-            DoVerticalAttack(attackHand, attackPos, isAttackHandLeft);
-            MoveObject(moveHand, movePos.x, attack1yPos, ref movePos);
+            if(isMoveBack)MoveObject(rightHandObj,isPlayerOnLeft?currLeftHandPos.x + 1:currLeftHandPos.x - 1,attack1yPos,ref currRightHandPos);
         }
     }
     #endregion
@@ -153,16 +147,16 @@ public class BossComponent : MonoBehaviour
                 await DoAOEAttackBack(leftHandObj, currLeftHandPos, true,false);
                 break;
             case 2:
-                await DoAOEAttackBack(rightHandObj, currRightHandPos, false,false);
-                MoveObject(leftHandObj, 2, height - 2, ref currLeftHandPos);
+                await MoveObject(leftHandObj, 1, height - 2, ref currLeftHandPos);
+                await DoAOEAttackBack(leftHandObj, currLeftHandPos, true,false);
                 break;
             case 3:
-                await DoAOEAttackBack(leftHandObj, currLeftHandPos, true,false);
-                MoveObject(rightHandObj, width - 3, height - 2, ref currRightHandPos);
+                MoveObject(leftHandObj, 1, height - 2, ref currLeftHandPos);
+                await DoAOEAttackBack(rightHandObj, currRightHandPos, false,false);
                 break;
             case 4:
+                await MoveObject(rightHandObj, width - 2, height - 2, ref currRightHandPos);
                 await DoAOEAttackBack(rightHandObj, currRightHandPos, false,false);
-                MoveObject(leftHandObj, 1, height - 2, ref currLeftHandPos);
                 break;
             case 5:
                 MoveObject(rightHandObj, width - 2, height - 2, ref currRightHandPos);
@@ -182,8 +176,9 @@ public class BossComponent : MonoBehaviour
                 DoAttack3MoveHand();
                 break;
             case 4:
+                DoAttack3HandAttack(false);
+                break;
             case 5:
-                DoAttack3HandAttack();
                 break;
         }
     }
@@ -212,7 +207,6 @@ public class BossComponent : MonoBehaviour
             if(!pos.Equals(targetPos)) attackList.Add(pos);
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
-        GameManagerSingleton.Instance.Player.CheckForDamageLaser(attackList, 1);
     
         var tcs = new TaskCompletionSource<bool>();
         StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
@@ -225,7 +219,6 @@ public class BossComponent : MonoBehaviour
         animator.SetTrigger(triggerName);
         if (GameManagerSingleton.Instance.IsPlayerDie)
         {
-            Debug.Log("CHECK");
             tcs.SetResult(true);
             yield break;
         }
@@ -240,9 +233,9 @@ public class BossComponent : MonoBehaviour
             MoveObject(leftHandObj, currLeftHandPos.x + 1, currHeadPos.y + 1, ref currLeftHandPos));
     }
 
-    private async void DoAttack3HandAttack()
+    private async void DoAttack3HandAttack(bool needBack)
     {
-        await Task.WhenAll(DoAOEAttackBack(leftHandObj, currLeftHandPos, true), DoAOEAttackBack(rightHandObj, currRightHandPos, false));
+        await Task.WhenAll(DoAOEAttackBack(leftHandObj, currLeftHandPos, true,needBack), DoAOEAttackBack(rightHandObj, currRightHandPos, false,needBack));
     }
     #endregion
     
@@ -306,7 +299,6 @@ public class BossComponent : MonoBehaviour
             }
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
-        GameManagerSingleton.Instance.Player.CheckForDamageLaser(attackList, 1);
         
         var tcs = new TaskCompletionSource<bool>();
         StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
@@ -403,11 +395,11 @@ public class BossComponent : MonoBehaviour
         currentHandPos = newPos;
         return TileManagerSingleton.Instance.MoveObjectToTile(new int2(x,y),handObj);
     }
-    private Task MoveObject(GameObject handObj, int2 pos, ref int2 currentHandPos)
+    private Task MoveObject(GameObject handObj, int2 pos, ref int2 currentHandPos,float time = 0.5f)
     {
         if (!CheckLimit(pos)) return null;
         currentHandPos = pos;
-        return TileManagerSingleton.Instance.MoveObjectToTile(pos,handObj);
+        return TileManagerSingleton.Instance.MoveObjectToTile(pos,handObj,time);
     }
     
     // 头部垂直攻击
@@ -450,7 +442,8 @@ public class BossComponent : MonoBehaviour
     {
         List<int2> attackList = new List<int2>();
         int direction = isLeft ? 1 : -1;
-        for (int i = pos.x; i >= 0 && i < width; i += direction)
+        int startPos = isLeft ? pos.x + 2 : pos.x - 2;
+        for (int i = startPos; i >= 0 && i < width; i += direction)
         {
             int2 targetPos = new int2(i, pos.y);
             if (CheckLimit(targetPos)) attackList.Add(targetPos);
@@ -486,9 +479,6 @@ public class BossComponent : MonoBehaviour
         else currRightHandPos = tmp;
         
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
-        //todo try better way on this
-        GameManagerSingleton.Instance.Player.CheckForDamageLaser(attackList,1);
-        
         await TileManagerSingleton.Instance.AddObjectToTile(tmp,obj);
 
         if (isBack)
@@ -511,6 +501,13 @@ public class BossComponent : MonoBehaviour
         return timeline.Play().AsyncWaitForCompletion();
     }
     
+    public Task MoveToReady()
+    {
+        GameManagerSingleton.Instance.BossLeftAnimator.Play("bossFist");
+        GameManagerSingleton.Instance.BossRightAnimator.Play("bossFist");
+        return Task.WhenAll(MoveObject(headObj, new int2(width / 2, height - 1), ref currHeadPos,1.5f));
+    }
+    
     private bool CheckLimit(int2 targetPos)
     {
         return targetPos.x >= 0 && targetPos.x < width && targetPos.y >= 0 && targetPos.y < height;
@@ -524,12 +521,9 @@ public class BossComponent : MonoBehaviour
     {
         foreach (int2 pos in attackList)
         {
-            if(TileManagerSingleton.Instance.CheckPos(currHeadPos, pos))
-            {
-                GameManagerSingleton.Instance.BossHp_UI.OnTakeDamage(value*2);
-            }
-            else if (TileManagerSingleton.Instance.CheckPos(currLeftHandPos, pos) ||
-                     TileManagerSingleton.Instance.CheckPos(currRightHandPos, pos))
+            if (TileManagerSingleton.Instance.CheckPos(currLeftHandPos, pos) ||
+                     TileManagerSingleton.Instance.CheckPos(currRightHandPos, pos) ||
+                     TileManagerSingleton.Instance.CheckPos(currHeadPos, pos))
             {
                 GameManagerSingleton.Instance.BossHp_UI.OnTakeDamage(value);
             }

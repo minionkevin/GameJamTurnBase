@@ -1,15 +1,13 @@
 using UnityEngine;
 using TMPro;
 using System;
+using System.Threading.Tasks;
 
 public class CountDown : BaseSingleton<CountDown>
 {
     [SerializeField]
     TMP_Text CountDown_Text;
-
-    // 计时循环
-    [HideInInspector]
-    public int CountDownCycle = 60;
+    
 
     // 计时及状态
     int curTime = 0;
@@ -23,23 +21,23 @@ public class CountDown : BaseSingleton<CountDown>
     /// </summary>
     public void Setup(int cycleTime)
     {
-        curTime = CountDownCycle = cycleTime;
+        curTime = cycleTime;
         timer = 0;
         isTiming = true;
 
         UpdateTimerDisplay();
     }
 
-    public void UpdateTimerDisplay()
+    private void UpdateTimerDisplay()
     {
-        CountDown_Text.text = curTime.ToString("00:00");
-
-        if (curTime <= 0)
-        {
-            isTiming = false;
-            // 计时结束，（执行对战）
-            OnTimerEnd?.Invoke();
-        }
+        int minutes = curTime / 60;
+        int seconds = curTime % 60;
+        CountDown_Text.text = string.Format("{0:D2}:{1:D2}", minutes, seconds);
+        
+        if (curTime > 0) return;
+        isTiming = false;
+        Task.Delay(1000);
+        OnTimerEnd?.Invoke();
     }
 
 
