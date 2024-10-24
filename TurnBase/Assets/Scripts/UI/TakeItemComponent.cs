@@ -50,9 +50,44 @@ public class TakeItemComponent : MonoBehaviour
 
     public void CheckPassword()
     {
+        int currItem=-1;
+        int itemIndex = -1;
+        int inputPW = Password.To10(inputPassword);
+        //for (int i = inputPassword.Count; i > 0; i--)
+        //{ 
+        //    inputPW += int.Parse((inputPassword[inputPassword.Count-i] *1.0 * Math.Pow(10, i-1)).ToString());
+        //}
+        if (Password.pwdVerified(inputPW))
+        {
+            foreach (int itemid in Password.ItemMark)
+            {
+                itemIndex++;
+
+                if (inputPW % itemid == 0)
+                {
+                    currItem = itemIndex;
+                    Instantiate(ItemList[currItem], ItemRect);
+                    //获取物品成功，则检查传出状态，如果是之前传出的物品，此时更新状态取消密码显示
+                    if(Password.PasswordBook.ContainsKey(currItem))
+                    {
+                        Password.PasswordBook.Remove(currItem);
+                    }
+                    break;
+                }
+            }
+            GameManagerSingleton.Instance.ItemDic[currItem]++;
+            GameManagerSingleton.Instance.UpdateAddItems();
+        }
+        else
+        {
+            // 在这里播放失败动画
+            ClosePanel();
+        }
+
+        /*
         // placeholder
         string result = string.Join("", inputPassword);
-        int currItem;
+
 
         switch (result)
         {
@@ -78,9 +113,8 @@ public class TakeItemComponent : MonoBehaviour
                 ClosePanel();
                 return;
         }
-        
-        GameManagerSingleton.Instance.ItemDic[currItem]++;
-        GameManagerSingleton.Instance.UpdateAddItems();
+        */
+
     }
 
     public void ClosePanel()

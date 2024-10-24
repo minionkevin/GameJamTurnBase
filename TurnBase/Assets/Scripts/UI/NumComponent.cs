@@ -16,15 +16,14 @@ public class NumComponent : MonoBehaviour
     {
         NumImage.sprite = NumImages[num];
         this.takeItemComponent = takeItemComponent;
-        id = num;
+        id = num+1;
     }
     
     // for password
-    public void Setup(char num)
+    public void Setup(int num)
     {
-        int number = int.Parse(num.ToString());
-        NumImage.sprite = NumImages[number];
-        id = number;
+        NumImage.sprite = NumImages[num-1];
+        id = num;
     }
     
 

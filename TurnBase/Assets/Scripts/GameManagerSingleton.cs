@@ -116,6 +116,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // UI spawn
         BossHp_UI.Setup(bossStartHp);
         PlayerHp_UI.Setup(playerStartHp);
+
+        //Password
+        Password.init();
         
         // Start game
         SetupItems();

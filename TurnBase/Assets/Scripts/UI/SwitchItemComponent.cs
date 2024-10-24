@@ -76,6 +76,7 @@ public class SwitchItemComponent : MonoBehaviour
         ShowSendingItemsPW(id);
 
         deleteId = id;
+        /*
         StringBuilder sb = new StringBuilder();
         sb.Append(id);
         sb.Append(id);
@@ -89,6 +90,7 @@ public class SwitchItemComponent : MonoBehaviour
             num.GetComponent<NumComponent>().Setup(data);
         }
         PasswordRect.gameObject.SetActive(true);
+        */
     }
 
     void ShowSendingItemsPW(int id)
@@ -101,15 +103,24 @@ public class SwitchItemComponent : MonoBehaviour
                 t.gameObject.SetActive(true);//Rect
                 t.GetChild(0).gameObject.SetActive(true);//child 0为Image
 
-                int pwd = Password.PasswordBook[i];
+                List<int> pw12 = Password.get12PW(i);
                 int j = 1;//child 1-4为密码
-                foreach (char c in pwd.ToString())
+                foreach (int n in pw12)
                 {
                     var num = t.GetComponent<RectTransform>().GetChild(j++).GetComponent<NumComponent>();
                     num.gameObject.SetActive(true);
-                    num.Setup(c);
+                    num.Setup(n);
                 }
             }
+            //    int pwd = Password.PasswordBook[i];
+            //    int j = 1;//child 1-4为密码
+            //    foreach (char c in pwd.ToString())
+            //    {
+            //        var num = t.GetComponent<RectTransform>().GetChild(j++).GetComponent<NumComponent>();
+            //        num.gameObject.SetActive(true);
+            //        num.Setup(c);
+            //    }
+            //}
             else
                 ItemStatusRect.GetChild(i).GetComponent<RectTransform>().gameObject.SetActive(false);
         }
@@ -124,23 +135,6 @@ public class SwitchItemComponent : MonoBehaviour
         havepwstatus = new List<int>();
     }
 
-    /// <summary>
-    /// 无从真正知晓另一名玩家是否取件
-    /// 检测自己拥有的物品，当一件【发送中】状态的物品，（因取件）重新拥有时，清除发送状态
-    /// </summary>
-    /// <param name="itemID"></param>
-    /// <param name="sendingSuccessful"></param>
-    void updateSendingItemStatus(int itemID,bool sendingSuccessful)
-    {
-        if (sendingSuccessful)
-        {
-            
-        }
-        else
-        {
-
-        }
-    }
 
     public void UpdateInputAction()
     {
