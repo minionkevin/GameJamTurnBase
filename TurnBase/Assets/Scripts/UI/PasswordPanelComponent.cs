@@ -11,11 +11,6 @@ public class PasswordPanelComponent : MonoBehaviour
     
     private List<GameObject> numButton = new List<GameObject>();
 
-    private void Start()
-    {
-        Setup();
-    }
-
     private void Setup()
     {
         List<int> indices = new List<int>();
@@ -49,6 +44,7 @@ public class PasswordPanelComponent : MonoBehaviour
     {
         GameManagerSingleton.Instance.FirstHintPanel.SetActive(false);
         gameObject.SetActive(true);
+        Setup();
     }
 
     public void ShowHint2()
