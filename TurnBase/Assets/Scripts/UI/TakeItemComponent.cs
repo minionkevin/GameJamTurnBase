@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using TMPro;
@@ -7,16 +5,19 @@ using UnityEngine;
 
 public class TakeItemComponent : MonoBehaviour
 {
-    public RectTransform NumRect;
     public RectTransform ItemRect;
-    public GameObject NumPrefab;
+    public List<GameObject> NumPrefab = new List<GameObject>();
     public TextMeshProUGUI PasswordLabel;
     public List<GameObject> ItemList = new List<GameObject>();
     public GameObject GamePanel;
+    public RectTransform InputRect;
+    public GameObject FakeNumPrefab;
 
     public List<RectTransform> NumPosList = new List<RectTransform>();
     private List<int> inputPassword = new List<int>();
     private StringBuilder currPassword = new StringBuilder();
+    private List<GameObject> numButton = new List<GameObject>();
+    private List<GameObject> currShowingPassword = new List<GameObject>();
 
     public void Setup()
     {
@@ -35,21 +36,36 @@ public class TakeItemComponent : MonoBehaviour
 
         for (int i = 0; i < indices.Count; i++)
         {
-            var num = Instantiate(NumPrefab, NumPosList[i]);
+            var num = Instantiate(NumPrefab[indices[i]], NumPosList[i]);
             var numComponent = num.GetComponent<NumComponent>();
             numComponent.Setup(indices[i], this);
+            numButton.Add(num);
         }
 
         PasswordLabel.text = "";
     }
     
-    public void AddToPassword(int num)
+    // todo 删除用于debug的passwordlabel
+    public void AddToPassword(int num, Sprite sprite)
     {
         currPassword.Append(num.ToString());
         inputPassword.Add(num);
         PasswordLabel.text = currPassword.ToString();
+
+        var fakeNum = Instantiate(FakeNumPrefab, InputRect);
+        fakeNum.GetComponent<FakeNumComponent>().ChangeSprite(sprite);
+        currShowingPassword.Add(fakeNum);
     }
 
+    private void CleanupCurrShowingPassword()
+    {
+        foreach (var fakeNum in currShowingPassword)
+        {
+            Destroy(fakeNum);
+        }
+        currShowingPassword.Clear();
+    }
+    
     public void CheckPassword()
     {
         int currItem=-1;
@@ -83,57 +99,31 @@ public class TakeItemComponent : MonoBehaviour
         else
         {
             // 在这里播放失败动画
-            ClosePanel();
+            
+            // 清空目前输入
+            ClearCurrPassword();
         }
-
-        /*
-        // placeholder
-        string result = string.Join("", inputPassword);
-
-
-        switch (result)
-        {
-            case "0000":
-                Instantiate(ItemList[0], ItemRect);
-                currItem = 0;
-                break;
-            case "1111":
-                Instantiate(ItemList[1], ItemRect);
-                currItem = 1;
-                break;
-            case "2222":
-                Instantiate(ItemList[2], ItemRect);
-                currItem = 2;
-                break;
-            case "3333":
-                Instantiate(ItemList[3], ItemRect);
-                currItem = 3;
-                break;
-            default:
-                PasswordLabel.text = "WRONG PASSWORD";
-                // 在这里播放失败动画
-                ClosePanel();
-                return;
-        }
-        */
-
     }
-
+    
     public void ClosePanel()
     {
         gameObject.SetActive(false);
         GamePanel.SetActive(true);
         PasswordLabel.text = "";
-        for (int i = NumRect.childCount - 1; i >= 0; i--)
+
+        foreach (GameObject numButton in numButton)
         {
-            Destroy(NumRect.GetChild(i).gameObject);
+            Destroy(numButton);
         }
+        
         for (int i = ItemRect.childCount - 1; i >= 0; i--)
         {
             Destroy(ItemRect.GetChild(i).gameObject);
         }
         inputPassword.Clear();
         currPassword.Clear();
+        numButton.Clear();
+        CleanupCurrShowingPassword();
     }
 
     public void ClearCurrPassword()
@@ -141,6 +131,7 @@ public class TakeItemComponent : MonoBehaviour
         inputPassword.Clear();
         currPassword.Clear();
         PasswordLabel.text = "";
+        CleanupCurrShowingPassword();
     }
     
     

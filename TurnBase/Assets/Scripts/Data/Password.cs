@@ -4,22 +4,22 @@ using UnityEngine;
 
 public class Password : MonoBehaviour
 {
-    public static int[] ItemMark = { 2, 3, 5, 7, 11, 13, 17 };//ÔİÊ±ÎïÆ·²»ÄÜ³¬¹ı7ÖÖ
-    static int[] times = { 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103 };//ÔİÊ±Ïà»¥´«µİ´ÎÊı²»³¬¹ı20´Î
+    public static int[] ItemMark = { 2, 3, 5, 7, 11, 13, 17 };//æš‚æ—¶ç‰©å“ä¸èƒ½è¶…è¿‡7ç§
+    static int[] times = { 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103 };//æš‚æ—¶ç›¸äº’ä¼ é€’æ¬¡æ•°ä¸è¶…è¿‡20æ¬¡
 
     /*
-     * µÚ¶şÌ×ÖÖ×Ó
-     * public static int[] ItemMark = { 61, 67, 71, 73, 79, 83, 89 };//ÔİÊ±ÎïÆ·²»ÄÜ³¬¹ı7ÖÖ
-        static int[] times = { 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 2, 3, 5, 7, 11, 13, 17, 97, 101, 103 };//ÔİÊ±Ïà»¥´«µİ´ÎÊı²»³¬¹ı20´Î
+     * ç¬¬äºŒå¥—ç§å­
+     * public static int[] ItemMark = { 61, 67, 71, 73, 79, 83, 89 };//æš‚æ—¶ç‰©å“ä¸èƒ½è¶…è¿‡7ç§
+        static int[] times = { 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 2, 3, 5, 7, 11, 13, 17, 97, 101, 103 };//æš‚æ—¶ç›¸äº’ä¼ é€’æ¬¡æ•°ä¸è¶…è¿‡20æ¬¡
      */
 
     static List<int> pwTable = new List<int>();
-    static List<List<int>> pw12Table = new List<List<int>>();//13½øÖÆÃÜÂë±í
+    static List<List<int>> pw12Table = new List<List<int>>();//13è¿›åˆ¶å¯†ç è¡¨
     public static Dictionary<int, int> PasswordBook = new Dictionary<int, int>();
 
     public static void init()
     {
-        //Íæ¼Ò¶ÔÆë
+        //ç©å®¶å¯¹é½
         //currentseed = randomSeed[0];
 
         for (int i = 0; i < ItemMark.Length; i++)
@@ -30,14 +30,14 @@ public class Password : MonoBehaviour
         for (int i = 0; i < pwTable.Count; i++)
         {
             int x = pwTable[i];
-            List<int> To12 = new List<int>();//µÍÎ»µ½¸ßÎ»         
+            List<int> To12 = new List<int>();//ä½ä½åˆ°é«˜ä½         
             while (x != 0)
             {
                 To12.Add(x % 13);
                 x = x / 13;
             }
-            To12.Reverse();//¸ßÎ»µ½µÍÎ»
-            //µ±Ç°ÖÊÊı³Ë»ı±íÖĞ²»´æÔÚ12µÄ±¶Êı»òĞ¡ÓÚ12µÄÊı£¬·ñÔòĞèÒª´¦Àí
+            To12.Reverse();//é«˜ä½åˆ°ä½ä½
+            //å½“å‰è´¨æ•°ä¹˜ç§¯è¡¨ä¸­ä¸å­˜åœ¨12çš„å€æ•°æˆ–å°äº12çš„æ•°ï¼Œå¦åˆ™éœ€è¦å¤„ç†
             pw12Table.Add(To12);
         }
 
@@ -49,14 +49,14 @@ public class Password : MonoBehaviour
 
     public static void ItemPasswordRenew(int itemID)
     {
-        int pw = ItemMark[itemID] * times[GameManagerSingleton.SendCounter++];//¸ù¾İµ±Ç°ÎïÆ·ºÍ´«³ö´ÎÊı£¬Éú³ÉÕë¶Ô´Ë´Î´«µİµÄÃÜÂë
+        int pw = ItemMark[itemID] * times[GameManagerSingleton.SendCounter++];//æ ¹æ®å½“å‰ç‰©å“å’Œä¼ å‡ºæ¬¡æ•°ï¼Œç”Ÿæˆé’ˆå¯¹æ­¤æ¬¡ä¼ é€’çš„å¯†ç 
 
         if (!PasswordBook.ContainsKey(itemID))
         {
-            PasswordBook.Add(itemID, pw);//¼ÇÂ¼ÎïÆ·ºÍ¶ÔÓ¦ÃÜÂë
+            PasswordBook.Add(itemID, pw);//è®°å½•ç‰©å“å’Œå¯¹åº”å¯†ç 
         }
         else
-            PasswordBook[itemID] = pw;//Ó¦¶Ô¿ÉÄÜ³öÏÖµÄ£¬´«³öÊ§°Ü£¬ÖØĞÂ»Ø¹éÍæ¼ÒÊÖÖĞµÄÇé¿ö£¬ÔÙ´Î´«µİÉú³ÉĞÂµÄÃÜÂë
+            PasswordBook[itemID] = pw;//åº”å¯¹å¯èƒ½å‡ºç°çš„ï¼Œä¼ å‡ºå¤±è´¥ï¼Œé‡æ–°å›å½’ç©å®¶æ‰‹ä¸­çš„æƒ…å†µï¼Œå†æ¬¡ä¼ é€’ç”Ÿæˆæ–°çš„å¯†ç 
 
     }
 

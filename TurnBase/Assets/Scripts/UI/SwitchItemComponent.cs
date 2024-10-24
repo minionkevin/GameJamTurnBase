@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Text;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -104,7 +102,7 @@ public class SwitchItemComponent : MonoBehaviour
                 t.GetChild(0).gameObject.SetActive(true);//child 0ÎªImage
 
                 List<int> pw12 = Password.get12PW(i);
-                int j = 1;//child 1-4ÎªÃÜÂë
+                int j = 1;//child 1-4Îªï¿½ï¿½ï¿½ï¿½
                 foreach (int n in pw12)
                 {
                     var num = t.GetComponent<RectTransform>().GetChild(j++).GetComponent<NumComponent>();
@@ -113,7 +111,7 @@ public class SwitchItemComponent : MonoBehaviour
                 }
             }
             //    int pwd = Password.PasswordBook[i];
-            //    int j = 1;//child 1-4ÎªÃÜÂë
+            //    int j = 1;//child 1-4Îªï¿½ï¿½ï¿½ï¿½
             //    foreach (char c in pwd.ToString())
             //    {
             //        var num = t.GetComponent<RectTransform>().GetChild(j++).GetComponent<NumComponent>();
