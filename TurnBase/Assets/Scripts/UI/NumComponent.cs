@@ -8,6 +8,7 @@ public class NumComponent : MonoBehaviour
     public Image NumImage;
     private TakeItemComponent takeItemComponent;
     private PasswordPanelComponent passwordPanelComponent;
+
     private int id;
     
     // for take component 
@@ -64,7 +65,7 @@ public class NumComponent : MonoBehaviour
 
     public void SendPasswordInfo()
     {
-        passwordPanelComponent.updatConfirmInfo(id);
+        passwordPanelComponent.updatInput(id);
 
     }
 

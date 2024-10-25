@@ -81,9 +81,10 @@ public class PasswordPanelComponent : MonoBehaviour
         }
     }
 
-
-    public void updatConfirmInfo(int input)
+    public void updatInput(int input)
     {
+        updateButtonsView(input);
+
         if (playerinput.Count == 0)
         {
             ConfirmText.text = "";
@@ -100,7 +101,7 @@ public class PasswordPanelComponent : MonoBehaviour
             if (phase == 0 && !isPlayerA)//初始状态的B玩家，首次输入密码时，转为反向确认种子序列，如能确认，再进行验证
             {
                 seedSequenceID = Password.SequenceExist(playerinput);
-                if(seedSequenceID !=-1)
+                if (seedSequenceID != -1)
                 {
                     passNum.Clear();
                     for (int i = 0; i < 3; i++)
@@ -112,9 +113,17 @@ public class PasswordPanelComponent : MonoBehaviour
                         HintText.text = "seedSequenceID=" + seedSequenceID;
                     }
                 }
+                else//反向定位种子序列失败，虚构一份密码表使其获得输入错误的判定
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        passNum.Add(-1);
+                    }
+                }
             }
             if (verifyPW(playerinput))
             {
+                frezzeVerifiedButtons(playerinput);
                 if (phase == 3)//对齐结束
                 {
                     Password.selectPWSeed(seedSequenceID);
@@ -168,6 +177,40 @@ public class PasswordPanelComponent : MonoBehaviour
             }
             playerinput.Clear();
         }
+
+    }
+    void frezzeVerifiedButtons(List<int> btnIDList) 
+    {
+        foreach (var btn in numButton)
+        {
+            if (btnIDList.Contains(int.Parse(btn.name.Replace("Num", "").Replace("(Clone)", ""))+1))
+            {
+                btn.transform.GetChild(0).GetComponent<Button>().interactable = false;
+            }       
+        }
+    }
+
+    void updateButtonsView(int btnID)
+    {
+        string spriteName = "";
+        //numButton[0].transform.GetChild(0).GetComponent<Button>().image = null;
+        //numButton[0].transform.GetChild(0).GetComponent<Button>().OnDeselect += btnDeselect;
+        //numButton[0].transform.GetChild(0).GetComponent<Button>().spriteState.highlightedSprite = null;
+        //numButton[0].transform.GetChild(0).GetComponent<Button>().interactable = false;
+        //Button btn = numButton[0].transform.GetChild(0).GetComponent<Button>();
+        //btn.OnDeselect += fun(new Button.ButtonClickedEvent());
+        //numButton[0].transform.GetChild(0).GetComponent<Button>().OnDeselect= fun;
+        //numButton[1].transform.GetChild(0).GetComponent<Button>().Select();
+        //numButton[2].transform.GetChild(0).GetComponent<Button>().Select();
+
+        Sprite btnSprite = numButton[0].transform.GetChild(0).GetComponent<Button>().GetComponent<Image>().sprite;
+
+        string a= btnSprite.name.Contains("Dark") ? "L" : "Dark";
+        string b = !btnSprite.name.Contains("Dark") ? "L" : "Dark";
+        spriteName = btnSprite.name.Replace(b, a);
+
+        //btnSprite = Resources.Load<Sprite>(@"/UI/Num/" + spriteName);
+
 
     }
 
