@@ -21,6 +21,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 057da7164313f7d48b93ed43df8b0d3b, type: 3}
     - target: {fileID: 4574347552196728653, guid: 5a059d06561551f47b998497484f652c, type: 3}
+      propertyPath: m_SpriteState.m_SelectedSprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4574347552196728653, guid: 5a059d06561551f47b998497484f652c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}

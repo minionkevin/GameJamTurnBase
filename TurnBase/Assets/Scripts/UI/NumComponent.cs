@@ -7,6 +7,7 @@ public class NumComponent : MonoBehaviour
     public List<Sprite> NumImages = new List<Sprite>();
     public Image NumImage;
     private TakeItemComponent takeItemComponent;
+    private PasswordPanelComponent passwordPanelComponent;
     private int id;
     
     // for take component 
@@ -15,7 +16,7 @@ public class NumComponent : MonoBehaviour
         this.takeItemComponent = takeItemComponent;
         id = num+1;
     }
-    
+
     // for password
     public void Setup(int num)
     {
@@ -23,8 +24,9 @@ public class NumComponent : MonoBehaviour
         id = num;
     }
 
-    public void PasswordSetup(int num)
+    public void PasswordSetup(int num, PasswordPanelComponent passwordPanelComponent)
     {
+        this.passwordPanelComponent = passwordPanelComponent;
         id = num;
     }
 
@@ -62,6 +64,8 @@ public class NumComponent : MonoBehaviour
     public void SendPasswordInfo()
     {
         // todo 这里写对密码界面收到玩家输入逻辑
+        passwordPanelComponent.updatConfirmInfo(id);
+
     }
 
 }

@@ -82,6 +82,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // Setup
         currTurnNum = 0;
         IsPlayerA = PlayerData.IsPlayerA;
+        //todo toRemove
+        IsPlayerA = false;
         TileManagerSingleton.Instance.Setup(Width, Height);
         
         // Player spawn

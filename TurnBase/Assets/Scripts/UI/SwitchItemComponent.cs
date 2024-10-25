@@ -101,26 +101,21 @@ public class SwitchItemComponent : MonoBehaviour
             {
                 Transform t = ItemStatusRect.GetChild(i);
                 t.gameObject.SetActive(true);//Rect
-                t.GetChild(0).gameObject.SetActive(true);//child 0ΪImage
+                t.GetChild(0).gameObject.SetActive(true);//child 0 for Image
 
                 List<int> pw12 = Password.get12PW(i);
-                int j = 1;//child 1-4Ϊ����
+                int j = 1;//child 1-5 for password display
                 foreach (int n in pw12)
                 {
                     var num = t.GetComponent<RectTransform>().GetChild(j++).GetComponent<NumComponent>();
                     num.gameObject.SetActive(true);
                     num.Setup(n);
+                    if (j > 6)
+                    {
+                        //password length out of bounds
+                    }
                 }
             }
-            //    int pwd = Password.PasswordBook[i];
-            //    int j = 1;//child 1-4Ϊ����
-            //    foreach (char c in pwd.ToString())
-            //    {
-            //        var num = t.GetComponent<RectTransform>().GetChild(j++).GetComponent<NumComponent>();
-            //        num.gameObject.SetActive(true);
-            //        num.Setup(c);
-            //    }
-            //}
             else
                 ItemStatusRect.GetChild(i).GetComponent<RectTransform>().gameObject.SetActive(false);
         }
