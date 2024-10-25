@@ -3,18 +3,16 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-// todo ItemStatusRect spawn在item的右边显示密码
-// 传送后再次打开没有更新item的位置。传送之后=0的物品依旧在右边。
+
 public class SwitchItemComponent : MonoBehaviour
 {
     public RectTransform HaveItemRect;
     public RectTransform MissingItemRect;
-    public RectTransform ItemStatusRect;
     public RectTransform MiddleRect;
     public GameObject Backplate;
 
     public List<GameObject> ItemList = new List<GameObject>();
-    public List<RectTransform> ItemPWStatus = new List<RectTransform>();
+    //public List<RectTransform> ItemPWStatus = new List<RectTransform>();
     List<int> havepwstatus = new List<int>();
 
     private GameManagerSingleton GameManager;
@@ -47,15 +45,9 @@ public class SwitchItemComponent : MonoBehaviour
     {
         foreach (var data in GameManager.ItemDic)
         {
-            RectTransform rectTransform;
+            //RectTransform rectTransform;
             GameObject item;
 
-            if (!havepwstatus.Contains(data.Key))
-            {
-                rectTransform = Instantiate(ItemPWStatus[data.Key], ItemStatusRect);
-                havepwstatus.Add(data.Key);
-            }
-            
             if (data.Value > 0)
             {
                 item = Instantiate(ItemList[data.Key], HaveItemRect);
@@ -67,7 +59,7 @@ public class SwitchItemComponent : MonoBehaviour
                 item.GetComponent<Button>().interactable = false;
             }
 
-            ShowSendingItemsPW(data.Key);
+            ShowSendedItemsPW(data.Key);
 
             item.GetComponent<ItemComponent>().Setup(data.Key,this);
 
@@ -89,43 +81,74 @@ public class SwitchItemComponent : MonoBehaviour
         timeline.Insert(0.75f, Backplate.transform.DOScale(Vector3.zero, 1.5f));
         timeline.Insert(0.75f, Backplate.transform.DORotate(new Vector3(0, 0 ,360), 1f,RotateMode.FastBeyond360));
         await timeline.Play().AsyncWaitForCompletion();
-        
+
+        UpdateInputAction();
         ClosePanel();
     }
 
-    void ShowSendingItemsPW(int id)
+    void ShowSendedItemsPW(int id)
     {
-        for (int i = 0; i < ItemStatusRect.childCount; i++)
+        for (int i = 0; i < MissingItemRect.childCount; i++)
         {
-            if (Password.PasswordBook.ContainsKey(i))
+            int itemID = int.Parse(MissingItemRect.GetChild(i).tag);
+            if (Password.PasswordBook.ContainsKey(itemID))
             {
-                Transform t = ItemStatusRect.GetChild(i);
+                Transform item = MissingItemRect.GetChild(i);
+                Transform t = item.GetChild(1);
                 t.gameObject.SetActive(true);//Rect
-                t.GetChild(0).gameObject.SetActive(true);//child 0 for Image
 
-                List<int> pw12 = Password.get12PW(i);
-                int j = 1;//child 1-5 for password display
+                List<int> pw12 = Password.get12PW(itemID);
+                int j = 0;//child 1-5 for password display
                 foreach (int n in pw12)
                 {
                     var num = t.GetComponent<RectTransform>().GetChild(j++).GetComponent<NumComponent>();
                     num.gameObject.SetActive(true);
                     num.Setup(n);
-                    if (j > 6)
+                    if (j > 5)
                     {
                         //password length out of bounds
                     }
                 }
             }
             else
-                ItemStatusRect.GetChild(i).GetComponent<RectTransform>().gameObject.SetActive(false);
+                MissingItemRect.GetChild(i).GetChild(1).gameObject.SetActive(false);
+        }
+    }
+    void ShowSendingItemsPW(int id)
+    {
+        for (int i = 0; i < HaveItemRect.childCount; i++)
+        {
+            int itemID = int.Parse(HaveItemRect.GetChild(i).tag);
+            if (Password.PasswordBook.ContainsKey(itemID))
+            {
+                Transform item = HaveItemRect.GetChild(i);
+                Transform t = item.GetChild(1);
+                t.gameObject.SetActive(true);//Rect
+
+                List<int> pw12 = Password.get12PW(itemID);
+                int j = 0;//child 1-5 for password display
+                foreach (int n in pw12)
+                {
+                    //var num = t.GetComponent<RectTransform>().GetChild(j++).GetComponent<NumComponent>();
+                    var num = t.GetChild(j++).GetComponent<NumComponent>();
+                    num.gameObject.SetActive(true);
+                    num.Setup(n);
+                    if (j > 5)
+                    {
+                        //password length out of bounds
+                    }
+                }
+            }
+            else
+                MissingItemRect.GetChild(i).GetChild(1).gameObject.SetActive(false);
         }
     }
 
     void clearSendingItemsPW()
     {
-        for (int i = ItemStatusRect.childCount - 1; i >= 0; i--)
+        for (int i = 0; i < MissingItemRect.childCount; i++)
         {
-            Destroy(ItemStatusRect.GetChild(i).gameObject);
+            Destroy(MissingItemRect.GetChild(i).GetChild(1).gameObject);
         }
         havepwstatus = new List<int>();
     }

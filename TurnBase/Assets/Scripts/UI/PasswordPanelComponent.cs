@@ -44,7 +44,7 @@ public class PasswordPanelComponent : MonoBehaviour
             numComponent.PasswordSetup(indices[i]+1, this);
             numButton.Add(num);
         }
-
+        btnContinue.gameObject.SetActive(false);
 
         isPlayerA = GameManagerSingleton.Instance.IsPlayerA;
         if (isPlayerA)
@@ -55,7 +55,6 @@ public class PasswordPanelComponent : MonoBehaviour
         else
         {
             HintPanel.gameObject.SetActive(true);
-            //phase++;
             HintText.text = "根据玩家A的提示依次点亮图标";
         }
     }

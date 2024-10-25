@@ -17,10 +17,11 @@ public class NumComponent : MonoBehaviour
         id = num+1;
     }
 
-    // for password
+    // for sending item
     public void Setup(int num)
     {
-        // NumImage.sprite = NormalNumImages[num-1];
+        NumImage.sprite = NumImages[num-1];
+        //NumImage.GetComponent<NumComponent>().transform.GetChild(0).GetComponent<Button>().onClick.RemoveAllListeners();
         id = num;
     }
 
@@ -63,7 +64,6 @@ public class NumComponent : MonoBehaviour
 
     public void SendPasswordInfo()
     {
-        // todo 这里写对密码界面收到玩家输入逻辑
         passwordPanelComponent.updatConfirmInfo(id);
 
     }

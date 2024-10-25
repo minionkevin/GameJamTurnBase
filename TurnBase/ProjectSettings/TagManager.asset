@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Boss
   - Laser
+  - Missile
+  - 1
+  - 2
+  - 3
+  - 0
   layers:
   - Default
   - TransparentFX

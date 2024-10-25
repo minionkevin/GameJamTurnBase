@@ -23,36 +23,12 @@ public class Password : MonoBehaviour
         //初始化种子库和选择序列，未来改读表
         initPasswordSeedAndSequences();
         
-        //初始化10进制密码表
-        for (int i = 0; i < ItemMark.Length; i++)
-        {
-            for (int j = 0; j < times.Length; j++)
-                pwTable.Add(ItemMark[i] * times[j]);
-        }
-        //根据10进制密码表，生成用于映射密码按键的13进制密码表
-        for (int i = 0; i < pwTable.Count; i++)
-        {
-            int x = pwTable[i];
-            List<int> To12 = new List<int>();//低位到高位         
-            while (x != 0)
-            {
-                To12.Add(x % 13);
-                x = x / 13;
-            }
-            To12.Reverse();//高位到低位
-            //当前质数乘积表中不存在12的倍数或小于12的数，否则需要处理
-            pw12Table.Add(To12);
-        }
-
-    }
-    void convertTo12()
-    {
-
+        //selectPWSeed(2);//此行仅用于快速测试，删除不影响正常流程游戏
     }
 
     static void initPasswordSeedAndSequences()
     {
-        //第二三套密码种子
+        //10套密码种子
         int[] im1 = { 59, 2, 103, 29, 17, 73, 89 };
         int[] im2 = { 73, 61, 43, 71, 37, 101, 7 };
         int[] im3 = { 2, 3, 5, 7, 11, 13, 17 };
@@ -174,8 +150,31 @@ public class Password : MonoBehaviour
 
     public static void selectPWSeed(int seedIndex)
     {
-        ItemMark = itmeMarkSource[seedIndex];
-        times = timesSource[seedIndex];
+        ItemMark = itmeMarkSource[seedIndex-1];
+        times = timesSource[seedIndex-1];
+        pwTable = new List<int>();
+        pw12Table = new List<List<int>>();
+
+        //初始化10进制密码表
+        for (int i = 0; i < ItemMark.Length; i++)
+        {
+            for (int j = 0; j < times.Length; j++)
+                pwTable.Add(ItemMark[i] * times[j]);
+        }
+        //根据10进制密码表，生成用于映射密码按键的13进制密码表
+        for (int i = 0; i < pwTable.Count; i++)
+        {
+            int x = pwTable[i];
+            List<int> To12 = new List<int>();//低位到高位         
+            while (x != 0)
+            {
+                To12.Add(x % 13);
+                x = x / 13;
+            }
+            To12.Reverse();//高位到低位
+            //当前质数乘积表中不存在12的倍数或小于12的数，否则需要处理
+            pw12Table.Add(To12);
+        }
     }
     public static int SequenceExist(List<int> input)
     {
