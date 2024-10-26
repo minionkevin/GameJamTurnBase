@@ -631,5 +631,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         if(value) StopAllCoroutines();
         BossDeathPanel.SetActive(value);
         GamePanel.SetActive(!value);
+        audioManager.AudioBGM.clip = audioManager.AudioDic["战斗胜利"];
+        audioManager.AudioBGM.Play();
+
     }
 }
