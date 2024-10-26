@@ -222,7 +222,8 @@ public class BossComponent : MonoBehaviour
             if(!pos.Equals(targetPos)) attackList.Add(pos);
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,2);
-    
+        AudioManagerSingleton.Instance.PlayBossAudio("LaserAttack");
+        
         var tcs = new TaskCompletionSource<bool>();
         StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
         return tcs.Task;
@@ -314,6 +315,7 @@ public class BossComponent : MonoBehaviour
             }
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,2);
+        AudioManagerSingleton.Instance.PlayBossAudio("LaserAttack");
         
         var tcs = new TaskCompletionSource<bool>();
         StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
@@ -461,7 +463,8 @@ public class BossComponent : MonoBehaviour
             int2 targetPos = new int2(i, pos.y);
             if (CheckLimit(targetPos)) attackList.Add(targetPos);
         }
-        
+
+        AudioManagerSingleton.Instance.PlayBossAudio("FistAttack");
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
         
         if (isLeft) currLeftHandPos = attackList[^1];

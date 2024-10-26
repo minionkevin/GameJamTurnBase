@@ -127,6 +127,7 @@ public class PlayerComponent : MonoBehaviour
             if (!CheckLimit(newPos)) continue;
             attackList.Add(newPos);
         }
+        AudioManagerSingleton.Instance.PlayPlayerAudio("PlayerHorizontalAttack");
         GameManagerSingleton.Instance.Boss.CheckForDamage(3, attackList);
         
         return HandleAnimation( "SwordTrigger","playerASword");
@@ -163,7 +164,7 @@ public class PlayerComponent : MonoBehaviour
             if (!CheckLimit(newPos)) continue;
             attackList.Add(newPos);
         }
-        
+        AudioManagerSingleton.Instance.PlayPlayerAudio("PlayerVerticalAttack");
         GameManagerSingleton.Instance.Boss.CheckForDamage(damage, attackList);
 
         return HandleAnimation("HammerTrigger", "playerAHammer");
@@ -176,6 +177,7 @@ public class PlayerComponent : MonoBehaviour
     {
         healMax--;
         if (healMax <= 0) return null;
+        AudioManagerSingleton.Instance.PlayPlayerAudio("PlayerHeal");
         GameManagerSingleton.Instance.PlayerHp_UI.OnGetRecovery(GameManagerSingleton.Instance.playerStartHp);
         return HandleAnimation("HealTrigger", "playerAHeal");
     }
