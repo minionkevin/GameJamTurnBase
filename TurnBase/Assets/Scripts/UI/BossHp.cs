@@ -14,13 +14,6 @@ public class BossHp : MonoBehaviour
     int maxHp;
     int curHp;
 
-    // 测试用
-    // 之后删此调用，在GameManager中调用
-    private void OnEnable()
-    {
-        Setup(40);
-    }
-
     /// <summary>
     /// 初始化
     /// </summary>
@@ -47,6 +40,7 @@ public class BossHp : MonoBehaviour
     public async void OnTakeDamage(int _damageValue)
     {
         curHp -= _damageValue;
+        if (curHp <= 0) curHp = 0;
         Update_HpDisplay();
 
         if (curHp > 0) return;

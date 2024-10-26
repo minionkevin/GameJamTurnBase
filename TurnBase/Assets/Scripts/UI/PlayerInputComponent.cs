@@ -22,6 +22,8 @@ public class PlayerInputComponent : MonoBehaviour
     public static bool InputEnabled = false;
 
     private int currMemoryIndex = 0;
+    private int healTmp = 0;
+    private Button healButton;
     
 
     public void UpdateButton(Dictionary<int,int> itemData)
@@ -124,7 +126,9 @@ public class PlayerInputComponent : MonoBehaviour
     public void HandleHeal(Button button)
     {
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
+        if (healButton == null) healButton = button;
         GameManagerSingleton.Instance.ItemDic[3]--;
+        healTmp++;
         AddBtnToMemoryList(6);
         GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.HEAL);
         if (GameManagerSingleton.Instance.ItemDic[3] <= 0) button.interactable = false;
@@ -184,16 +188,32 @@ public class PlayerInputComponent : MonoBehaviour
         GameManagerSingleton.Instance.PlayerInputList.Clear();
         currMemoryIndex = 0;
     }
+
+    private void RefreshHeal()
+    {
+        if (GameManagerSingleton.Instance.ItemDic[3] > 0) healButton.interactable = true;
+    }
+
     
     public void HandleClearMemory()
     {
         if(!InputEnabled)return;
+        
+        // 如果有药水，扣掉的要还回去
+        if (healTmp > 0)
+        {
+            GameManagerSingleton.Instance.ItemDic[3]+=healTmp;
+            healTmp = 0;
+            RefreshHeal();
+        }
+        
         foreach (var item in memoryList)
         {
             Destroy(item);
         }
         memoryList.Clear();
         GameManagerSingleton.Instance.PlayerInputList.Clear();
+        currMemoryIndex = 0;
     }
     
     public void SetBackInputButton(int index)

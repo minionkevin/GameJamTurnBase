@@ -55,6 +55,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public GameObject BossDeathPanel;
     public GameObject FirstHintPanel;
     public GameObject SecondHintPanel;
+    public GameObject ThirdHintPanel;
 
     public PlayerComponent Player;
     public BossComponent Boss;
@@ -74,8 +75,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public TextMeshProUGUI CurrTurnLabel;
     
     private int currTurnNum;
-    private List<int> BossActionList = new List<int>();
+    public List<int> BossActionList = new List<int>();
     private int currHighlight = -1;
+    private int currTutorialNum = 0;
 
     void Start()
     {
@@ -229,13 +231,24 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     /// </summary>
     private void HandlePlayerTurn()
     {
-        // 开启游戏计时
-        CountDown_UI.Setup(countdownTime);
         // 启用玩家输入
         PlayerInputComponent.InputEnabled = true;
         
         // todo 检测玩家血量并决定下一个boss指令
         HandleBossActions();
+
+        switch (currTutorialNum)
+        {
+            case 1:
+                ShowHintPanel(2);
+                return;
+            case 2:
+                ShowHintPanel(3);
+                return;
+        }
+        
+        // 开启游戏计时
+        CountDown_UI.Setup(countdownTime);
     }
 
     /// <summary>
@@ -247,7 +260,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         PlayerInputComponent.InputEnabled = false;
         // 计时器暂停（等到下一回合重置）
         CountDown.Instance.SetTimerPause();
-        
+        // 当玩家完成输入之后，看作过了一轮
+        currTutorialNum++;
         // 进入对战
         StartCoroutine(BattleCoroutine());
     }
@@ -282,9 +296,10 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     }
 
     private Task HandleBossInput(int value)
-    {
+    {   
         if(IsPlayerDie) return null;
         if (value == -1) return null;
+        
         switch (value)
         {
             case BossInputType.ATTACK10:
@@ -431,10 +446,46 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         return Boss.MoveToReady();
     }
 
-    public async void StartGame()
+    public async void ShowHintPanel(int index)
+    {
+        switch (index)
+        {
+            case 1:
+                await BossAliveAnimation();
+                FirstHintPanel.SetActive(true);
+                break;
+            case 2:
+                SecondHintPanel.SetActive(true);
+                break;
+            case 3:
+                ThirdHintPanel.SetActive(true);
+                break;
+                
+        }
+    }
+
+    public void CloseHintPanel(int index)
+    {
+        switch (index)
+        {
+            case 1:
+                FirstHintPanel.SetActive(false);
+                GamePanel.SetActive(true);
+                StartGame();
+                break;
+            case 2:
+                SecondHintPanel.SetActive(false);
+                CountDown_UI.Setup(countdownTime);
+                break;
+            case 3:
+                ThirdHintPanel.SetActive(false);
+                CountDown_UI.Setup(countdownTime);
+                break;
+        }
+    }
+
+    private void StartGame()
     { 
-        GamePanel.SetActive(true);
-        await BossAliveAnimation();
         BossStartPoss();
         StartCoroutine(WaitForTask(HandleBossInput(inputLists[0])));
         
@@ -455,7 +506,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     {
         if (IsPlayerDie) yield break;
         ReorderInput();
-            
+        
         for (int i = 0; i < inputLists.Count; i++)
         {
             if (i % 2 == 0)
@@ -504,28 +555,25 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         BossAnimator.Play("bossIdle");
         // BossAnimator.CrossFade("bossIdle",0.1f);
         
-        PlayerInput.ClearMemoryList();
-        BossInputList.Clear();
-        PlayerInputList.Clear();
-        inputLists.Clear();
         Player.Reset();
-
         PlayerHp_UI.Clear();
         
         BossHp_UI.Setup(bossStartHp);
         PlayerHp_UI.Setup(playerStartHp);
         currTurnNum = 0;
         currHighlight = -1;
+        if(currTurnNum <= 3) currTutorialNum = 0;
         
-        HandlePlayerTurn();
-        StartCoroutine(BattleCoroutine());
-
         HandlePlayerDie(false);
         HandleBossDie(false);
+        
+        inputLists.Clear();
+        StartGame();
     }
 
     public void HandlePlayerDie(bool value)
     {
+        if(value) StopAllCoroutines();
         PlayerDeathPanel.SetActive(value);
         GamePanel.SetActive(!value);
         IsPlayerDie = value;
@@ -533,6 +581,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     public void HandleBossDie(bool value)
     {
+        if(value) StopAllCoroutines();
         BossDeathPanel.SetActive(value);
         GamePanel.SetActive(!value);
     }
