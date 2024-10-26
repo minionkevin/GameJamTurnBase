@@ -251,11 +251,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!82 &141038011 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 874675287962749986, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
-  m_PrefabInstance: {fileID: 1864919629}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &162598401 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3915801342201384294, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
@@ -1309,7 +1304,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3054814484323630651, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3054814484323630651, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
@@ -1318,7 +1313,7 @@ PrefabInstance:
     - target: {fileID: 3054814484323630651, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 141038011}
+      objectReference: {fileID: 0}
     - target: {fileID: 3054814484323630651, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
@@ -1643,7 +1638,8 @@ PrefabInstance:
       propertyPath: audioManager
       value: 
       objectReference: {fileID: 290195721}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 874675287962749986, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

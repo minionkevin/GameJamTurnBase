@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class PlayerComponent : MonoBehaviour
 {
+
+    AudioManager audioManager;
     // 每次玩家移动需更新
     [HideInInspector]
     public int2 currPlayerPos;
@@ -25,7 +27,7 @@ public class PlayerComponent : MonoBehaviour
     private bool shouldDamage;
     private bool laserDamage;
     
-    public void Setup(int2 playerPos)
+    public void Setup(int2 playerPos, AudioManager am)
     {
         healMax = 2;
         currPlayerPos = playerPos;
@@ -33,6 +35,8 @@ public class PlayerComponent : MonoBehaviour
         isJumping = false;
         IsLastDefense = false;
         IsLastJump = false;
+
+        audioManager = am;
     }
 
     public void Reset()
@@ -42,7 +46,7 @@ public class PlayerComponent : MonoBehaviour
         {
             TileManagerSingleton.Instance.MoveObjectToTile(startPos, gameObject);
         }
-        Setup(startPos);
+        Setup(startPos, audioManager);
     }
 
     /// <summary>
@@ -87,6 +91,8 @@ public class PlayerComponent : MonoBehaviour
     {
         if (!IsLastJump) return;
         DoMove(new int2(0, -1));
+        audioManager.AudioPlayer.clip = audioManager.AudioDic["跳跃到落地"];
+        audioManager.AudioPlayer.Play();
         IsLastJump = false;
     }
 

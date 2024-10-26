@@ -92,7 +92,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         var player = Instantiate(IsPlayerA? APlayerPrefab:BPlayerPrefab);
         var playerComponent = player.GetComponent<PlayerComponent>();
         Player = playerComponent;
-        playerComponent.Setup(PlayerStartPos);
+        playerComponent.Setup(PlayerStartPos, audioManager);
         TileManagerSingleton.Instance.AddObjectToTile(PlayerStartPos,player);
 
         // Boss spawn
@@ -428,22 +428,54 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         if (value == -1 || IsPlayerDie) return null;
             switch (value)
             {
-                case PlayerInputType.MOVEA: 
-                    return Player.DoMove(new int2(-1,0));
-                case PlayerInputType.MOVED: 
-                    return Player.DoMove(new int2(1,0));
-                case PlayerInputType.ATTACK1: 
+                case PlayerInputType.MOVEA:
+                {
+                    if (!Player.isJumping)
+                    {
+                        audioManager.AudioPlayer.clip = audioManager.AudioDic["移动"];
+                        audioManager.AudioPlayer.Play();
+                    }
+                    return Player.DoMove(new int2(-1, 0));
+                }
+                case PlayerInputType.MOVED:
+                {
+                    if (!Player.isJumping)
+                    {
+                        audioManager.AudioPlayer.clip = audioManager.AudioDic["移动"];
+                        audioManager.AudioPlayer.Play();
+                    }
+                    return Player.DoMove(new int2(1, 0));
+                }
+                case PlayerInputType.ATTACK1:
+                {
+                    audioManager.AudioPlayer.clip = audioManager.AudioDic["长剑挥舞"];
+                    audioManager.AudioPlayer.Play();
                     return Player.DoHorizontalAttack();
-                case PlayerInputType.ATTACK2: 
+                }
+                case PlayerInputType.ATTACK2:
+                {
+                    audioManager.AudioPlayer.clip = audioManager.AudioDic["swing3"];
+                    audioManager.AudioPlayer.Play();
                     return Player.DoCrossAttack();
+                }
                 case PlayerInputType.DEFENSE:
+                {
+                    audioManager.AudioPlayer.clip = audioManager.AudioDic["防护罩开启"];
+                    audioManager.AudioPlayer.Play();
                     Player.IsLastDefense = true;
                     return Player.DoProtected();
+                }
                 case PlayerInputType.HEAL:
+                {
+                    audioManager.AudioPlayer.clip = audioManager.AudioDic["吃伤药治疗"];
+                    audioManager.AudioPlayer.Play();                  
                     return Player.DoHeal();
+                }
                 case PlayerInputType.JUMP:
+                {
                     Player.DoJump();
                     return null;
+                }
                 default:
                     Debug.LogError("wrong player attack type");
                     return null;
