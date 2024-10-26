@@ -791,8 +791,8 @@ MonoBehaviour:
   bossRightHandPos:
     x: 5
     y: 0
-  bossStartHp: 60
-  playerStartHp: 1
+  bossStartHp: 1
+  playerStartHp: 5
   countdownTime: 120
   PlayerStartPos:
     x: 4
@@ -826,6 +826,7 @@ MonoBehaviour:
   IsPlayerA: 1
   IsPlayerDie: 0
   CurrTurnLabel: {fileID: 300765798}
+  BossActionList: 
 --- !u!4 &1720132322
 Transform:
   m_ObjectHideFlags: 0

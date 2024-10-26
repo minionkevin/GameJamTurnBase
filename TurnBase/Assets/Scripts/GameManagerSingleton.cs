@@ -279,9 +279,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     private void BossStartPoss()
     {
         inputLists.Add(BossData.BossActions[BossActionList[0]].BossActions[0]);
-        Debug.LogError(BossActionList[0]);
-        
-        Debug.LogError(BossData.BossActions[BossActionList[0]].BossActions[0]);
     }
 
     /// <summary>
@@ -300,7 +297,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     private Task HandleBossInput(int value)
     {   
-        Debug.LogError(value);
         if(IsPlayerDie) return null;
         if (value == -1) return null;
         
@@ -578,6 +574,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     public void HandlePlayerDie(bool value)
     {
+        if(value) StopAllCoroutines();
         PlayerDeathPanel.SetActive(value);
         GamePanel.SetActive(!value);
         IsPlayerDie = value;
@@ -585,6 +582,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     public void HandleBossDie(bool value)
     {
+        if(value) StopAllCoroutines();
         BossDeathPanel.SetActive(value);
         GamePanel.SetActive(!value);
     }
