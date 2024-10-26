@@ -13,7 +13,6 @@ public class SwitchItemComponent : MonoBehaviour
     public GameObject Backplate;
 
     public List<GameObject> ItemList = new List<GameObject>();
-    //public List<RectTransform> ItemPWStatus = new List<RectTransform>();
     List<int> havepwstatus = new List<int>();
 
     private GameManagerSingleton GameManager;

@@ -81,6 +81,14 @@ public class TakeItemComponent : MonoBehaviour
 
                 if (inputPW % itemid == 0 && !Password.checkReceived(inputPW / itemid))
                 {
+                    if (Password.PasswordBook.ContainsKey(itemIndex))
+                    {
+                        if (Password.PasswordBook[itemIndex] == inputPW)//不能接收自己传出状态的物品
+                        {
+                            ClearCurrPassword();
+                            return;
+                        }
+                    }
                     currItem = itemIndex;
                     Instantiate(ItemList[currItem], ItemRect);
                     audioManager.AudioUI.clip = audioManager.AudioDic["法阵指令成功"];
