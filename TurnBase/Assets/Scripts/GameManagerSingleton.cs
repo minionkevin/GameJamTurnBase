@@ -300,7 +300,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         if(IsPlayerDie) return null;
         if (value == -1) return null;
         
-        // Debug.LogError(value);
         switch (value)
         {
             case BossInputType.ATTACK10:
