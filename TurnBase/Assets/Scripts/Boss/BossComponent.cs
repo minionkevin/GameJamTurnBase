@@ -331,7 +331,10 @@ public class BossComponent : MonoBehaviour
             }
         }
         GameManagerSingleton.Instance.Player.CheckForDamage(attackList,2);
-        
+
+        audioManager.AudioUI.clip = audioManager.AudioDic["激光扫射"];
+        audioManager.AudioUI.Play();
+
         var tcs = new TaskCompletionSource<bool>();
         StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
         return tcs.Task;
