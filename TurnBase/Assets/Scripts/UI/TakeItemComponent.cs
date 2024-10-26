@@ -148,6 +148,8 @@ public class TakeItemComponent : MonoBehaviour
         currPassword.Clear();
         PasswordLabel.text = "";
         CleanupCurrShowingPassword();
+        audioManager.AudioUI.clip = audioManager.AudioDic["输入失败"];
+        audioManager.AudioUI.Play();
     }
     
     

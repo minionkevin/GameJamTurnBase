@@ -11,6 +11,7 @@ using UnityEngine.UI;
 /// </summary>
 public class PlayerInputComponent : MonoBehaviour
 {
+    public AudioManager audioManager;
     public List<Button> buttonList = new List<Button>();
     public List<GameObject> memoryActionList = new List<GameObject>();
 
@@ -54,11 +55,15 @@ public class PlayerInputComponent : MonoBehaviour
 
     public void ShowTakeItemPanel()
     {
+        audioManager.AudioUI.clip = audioManager.AudioDic["弹出"];
+        audioManager.AudioUI.Play();
         GameManagerSingleton.Instance.SetupTakeItemPanel();
     }
     
     public void ShowSwitchPanel()
     {
+        audioManager.AudioUI.clip = audioManager.AudioDic["弹出"];
+        audioManager.AudioUI.Play();
         GameManagerSingleton.Instance.SendItemPanel(true);
         GameManagerSingleton.Instance.SetupSwitchPanel();
     }
