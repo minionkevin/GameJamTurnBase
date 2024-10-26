@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class SwitchItemComponent : MonoBehaviour
 {
+    public AudioManager audioManager;
     public RectTransform HaveItemRect;
     public RectTransform MissingItemRect;
     public RectTransform MiddleRect;
@@ -69,6 +70,9 @@ public class SwitchItemComponent : MonoBehaviour
     
     public async void SendItem(int id)
     {
+        audioManager.AudioUI.clip = audioManager.AudioDic["物品传送成功"];
+        audioManager.AudioUI.Play();
+
         Password.ItemPasswordRenew(id);
         ShowSendingItemsPW(id);
 

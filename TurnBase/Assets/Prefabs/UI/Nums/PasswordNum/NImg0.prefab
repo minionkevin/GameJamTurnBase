@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3916094345817167363, guid: c347d5bdf6d447947a1e1d49c29a9907, type: 3}
       propertyPath: m_Name
-      value: NImage0 Variant
+      value: NImg0
       objectReference: {fileID: 0}
     - target: {fileID: 5656524513864275162, guid: c347d5bdf6d447947a1e1d49c29a9907, type: 3}
       propertyPath: m_Sprite
