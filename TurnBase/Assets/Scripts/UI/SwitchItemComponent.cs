@@ -69,6 +69,8 @@ public class SwitchItemComponent : MonoBehaviour
     
     public async void SendItem(int id)
     {
+
+
         audioManager.AudioUI.clip = audioManager.AudioDic["物品传送成功"];
         audioManager.AudioUI.Play();
 
@@ -86,7 +88,8 @@ public class SwitchItemComponent : MonoBehaviour
         await timeline.Play().AsyncWaitForCompletion();
 
         UpdateInputAction();
-        ClosePanel();
+        ResetPanelVisual();
+        //ClosePanel();
     }
 
     void ShowSendedItemsPW(int id)
