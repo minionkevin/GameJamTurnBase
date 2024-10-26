@@ -66,7 +66,6 @@ public class NumComponent : MonoBehaviour
     public void SendPasswordInfo()
     {
         passwordPanelComponent.updatInput(id);
-
     }
 
 }

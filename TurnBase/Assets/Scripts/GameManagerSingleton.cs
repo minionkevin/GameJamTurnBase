@@ -79,6 +79,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     private int currHighlight = -1;
     private int currTutorialNum = 0;
 
+    public AudioManager audioManager;
+
     void Start()
     {
         // Setup
@@ -124,13 +126,20 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
         //Password
         Password.init();
-        
+
+        //Audio
+        audioManager.init();
+
         // Start game
         SetupItems();
         
         // Timer setup
         CurrTurnLabel.text = currTurnNum.ToString();
         CountDown_UI.OnTimerEnd += HandleTimerEnd;
+
+        audioManager.AudioBGM.clip = audioManager.AudioDic["游戏主bgm"];
+        audioManager.AudioBGM.Play();
+
     }
 
     private void SetupItems()
@@ -451,6 +460,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         switch (index)
         {
             case 1:
+                audioManager.AudioBoss.clip = audioManager.AudioDic["interface2"];
+                audioManager.AudioBoss.Play();
+
                 await BossAliveAnimation();
                 FirstHintPanel.SetActive(true);
                 break;
@@ -485,7 +497,10 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     }
 
     private void StartGame()
-    { 
+    {
+        audioManager.AudioBGM.clip = audioManager.AudioDic["战斗bgm"];
+        audioManager.AudioBGM.Play();
+
         BossStartPoss();
         StartCoroutine(WaitForTask(HandleBossInput(inputLists[0])));
         

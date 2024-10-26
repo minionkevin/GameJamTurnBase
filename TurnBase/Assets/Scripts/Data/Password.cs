@@ -23,7 +23,7 @@ public class Password : MonoBehaviour
         //初始化种子库和选择序列，未来改读表
         initPasswordSeedAndSequences();
         
-        //selectPWSeed(2);//此行仅用于快速测试，删除不影响正常流程游戏
+        selectPWSeed(2);//此行仅用于快速测试，删除不影响正常流程游戏
     }
 
     static void initPasswordSeedAndSequences()

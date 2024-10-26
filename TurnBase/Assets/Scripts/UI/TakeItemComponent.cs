@@ -18,6 +18,7 @@ public class TakeItemComponent : MonoBehaviour
     private StringBuilder currPassword = new StringBuilder();
     private List<GameObject> numButton = new List<GameObject>();
     private List<GameObject> currShowingPassword = new List<GameObject>();
+    public AudioManager audioManager;
 
     public void Setup()
     {
@@ -82,6 +83,8 @@ public class TakeItemComponent : MonoBehaviour
                 {
                     currItem = itemIndex;
                     Instantiate(ItemList[currItem], ItemRect);
+                    audioManager.AudioUI.clip = audioManager.AudioDic["法阵指令成功"];
+                    audioManager.AudioUI.Play();
                     //获取物品成功，则检查传出状态，如果是之前传出的物品，此时更新状态取消密码显示
                     if (Password.PasswordBook.ContainsKey(currItem))
                     {

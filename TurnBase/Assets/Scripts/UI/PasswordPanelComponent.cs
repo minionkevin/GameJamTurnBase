@@ -6,7 +6,7 @@ public class PasswordPanelComponent : MonoBehaviour
 {
     // 这里只是一个简单的点击按钮后开始
     // 在这个按钮点击之前应该已经把密码对好了
-
+    public AudioManager audioManager;
     public List<GameObject> NumPrefab = new List<GameObject>();
     public List<GameObject> NumImage = new List<GameObject>();
     public List<RectTransform> NumPosList = new List<RectTransform>();
@@ -44,7 +44,7 @@ public class PasswordPanelComponent : MonoBehaviour
             numComponent.PasswordSetup(indices[i]+1, this);
             numButton.Add(num);
         }
-        btnContinue.gameObject.SetActive(false);
+        //btnContinue.gameObject.SetActive(false);
 
         isPlayerA = GameManagerSingleton.Instance.IsPlayerA;
         if (isPlayerA)
@@ -83,7 +83,7 @@ public class PasswordPanelComponent : MonoBehaviour
 
     public void updatInput(int input)
     {
-        updateButtonsView(input);
+        //updateButtonsView(input);
 
         if (playerinput.Count == 0)
         {
@@ -174,6 +174,10 @@ public class PasswordPanelComponent : MonoBehaviour
                     Destroy(ConfirmPanel.GetChild(i).gameObject);
                 }
                 ConfirmText.text = "验证失败，请重新输入...";
+
+                audioManager.AudioUI.clip = audioManager.AudioDic["输入失败"];
+                audioManager.AudioUI.Play();
+
             }
             playerinput.Clear();
         }
@@ -188,6 +192,8 @@ public class PasswordPanelComponent : MonoBehaviour
                 btn.transform.GetChild(0).GetComponent<Button>().interactable = false;
             }       
         }
+        audioManager.AudioUI.clip = audioManager.AudioDic["激活符号"];
+        audioManager.AudioUI.Play();
     }
 
     void updateButtonsView(int btnID)
