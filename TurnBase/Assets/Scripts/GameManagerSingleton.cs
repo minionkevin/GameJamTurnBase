@@ -231,8 +231,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     /// </summary>
     private void HandlePlayerTurn()
     {
-        // 开启游戏计时
-        CountDown_UI.Setup(countdownTime);
         // 启用玩家输入
         PlayerInputComponent.InputEnabled = true;
         
@@ -243,11 +241,14 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         {
             case 1:
                 ShowHintPanel(2);
-                break;
+                return;
             case 2:
                 ShowHintPanel(3);
-                break;
+                return;
         }
+        
+        // 开启游戏计时
+        CountDown_UI.Setup(countdownTime);
     }
 
     /// <summary>
@@ -462,7 +463,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         }
     }
 
-    public async void CloseHintPanel(int index)
+    public void CloseHintPanel(int index)
     {
         switch (index)
         {
@@ -473,9 +474,11 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 break;
             case 2:
                 SecondHintPanel.SetActive(false);
+                CountDown_UI.Setup(countdownTime);
                 break;
             case 3:
                 ThirdHintPanel.SetActive(false);
+                CountDown_UI.Setup(countdownTime);
                 break;
         }
     }
