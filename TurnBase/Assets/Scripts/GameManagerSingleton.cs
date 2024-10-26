@@ -55,6 +55,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public GameObject BossDeathPanel;
     public GameObject FirstHintPanel;
     public GameObject SecondHintPanel;
+    public GameObject ThirdHintPanel;
 
     public PlayerComponent Player;
     public BossComponent Boss;
@@ -76,6 +77,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     private int currTurnNum;
     private List<int> BossActionList = new List<int>();
     private int currHighlight = -1;
+    private int currTutorialNum = 0;
 
     void Start()
     {
@@ -236,6 +238,16 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         
         // todo 检测玩家血量并决定下一个boss指令
         HandleBossActions();
+
+        switch (currTurnNum)
+        {
+            case 1:
+                ShowHintPanel(2);
+                break;
+            case 2:
+                ShowHintPanel(3);
+                break;
+        }
     }
 
     /// <summary>
@@ -247,7 +259,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         PlayerInputComponent.InputEnabled = false;
         // 计时器暂停（等到下一回合重置）
         CountDown.Instance.SetTimerPause();
-        
+        // 当玩家完成输入之后，看作过了一轮
+        currTutorialNum++;
         // 进入对战
         StartCoroutine(BattleCoroutine());
     }
@@ -431,10 +444,44 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         return Boss.MoveToReady();
     }
 
-    public async void StartGame()
+    public async void ShowHintPanel(int index)
+    {
+        switch (index)
+        {
+            case 1:
+                await BossAliveAnimation();
+                FirstHintPanel.SetActive(true);
+                break;
+            case 2:
+                SecondHintPanel.SetActive(true);
+                break;
+            case 3:
+                ThirdHintPanel.SetActive(true);
+                break;
+                
+        }
+    }
+
+    public async void CloseHintPanel(int index)
+    {
+        switch (index)
+        {
+            case 1:
+                FirstHintPanel.SetActive(false);
+                GamePanel.SetActive(true);
+                StartGame();
+                break;
+            case 2:
+                SecondHintPanel.SetActive(false);
+                break;
+            case 3:
+                ThirdHintPanel.SetActive(false);
+                break;
+        }
+    }
+
+    private void StartGame()
     { 
-        GamePanel.SetActive(true);
-        await BossAliveAnimation();
         BossStartPoss();
         StartCoroutine(WaitForTask(HandleBossInput(inputLists[0])));
         

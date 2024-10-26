@@ -237,28 +237,21 @@ public class PasswordPanelComponent : MonoBehaviour
         }
     }
 
-    public void ShowHint1()
-    {
-        GameManagerSingleton.Instance.FirstHintPanel.SetActive(true);
-    }
-
     public void ShowPasswordPanel()
     {
-        GameManagerSingleton.Instance.FirstHintPanel.SetActive(false);
-        gameObject.SetActive(true);
         Setup();
-    }
-
-    public void ShowHint2()
-    {
-        gameObject.SetActive(false);
-        GameManagerSingleton.Instance.SecondHintPanel.SetActive(true);
+        gameObject.SetActive(true);
     }
     
     // 隐藏这个按钮直到所有对密码环节完成
     public void HandleStart()
     {
-        GameManagerSingleton.Instance.StartGame();
-        GameManagerSingleton.Instance.SecondHintPanel.SetActive(false);
+        gameObject.SetActive(false);
+        GameManagerSingleton.Instance.ShowHintPanel(1);
+    }
+
+    public void CloseHintPanel(int index)
+    {
+        GameManagerSingleton.Instance.CloseHintPanel(index);
     }
 }

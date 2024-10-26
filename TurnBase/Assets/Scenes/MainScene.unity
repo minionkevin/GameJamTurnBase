@@ -229,6 +229,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 409978418937827021, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
   m_PrefabInstance: {fileID: 1864919629}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &633108958 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3776095939194398642, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+  m_PrefabInstance: {fileID: 1864919629}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,6 +331,11 @@ Transform:
 --- !u!1 &712527971 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6475519514103748426, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+  m_PrefabInstance: {fileID: 1864919629}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &836247812 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1315523547331260500, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
   m_PrefabInstance: {fileID: 1864919629}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &938414345
@@ -806,6 +816,7 @@ MonoBehaviour:
   BossDeathPanel: {fileID: 1048846000}
   FirstHintPanel: {fileID: 511643638}
   SecondHintPanel: {fileID: 1216103469}
+  ThirdHintPanel: {fileID: 836247812}
   Player: {fileID: 0}
   Boss: {fileID: 0}
   PlayerInputList: 
@@ -842,9 +853,53 @@ PrefabInstance:
       propertyPath: m_Spacing
       value: -15
       objectReference: {fileID: 0}
+    - target: {fileID: 996249732730561958, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2929676953768897822, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054447194491184252, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054447194491184252, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054447194491184252, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054447194491184252, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 633108958}
+    - target: {fileID: 5054447194491184252, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 2109544013}
+    - target: {fileID: 5054447194491184252, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054447194491184252, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ShowPasswordPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054447194491184252, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054447194491184252, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: PasswordPanelComponent, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054447194491184252, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5989128072714080401, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: HintText
@@ -998,6 +1053,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6694531026034847806, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: HandleStart
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -1092,6 +1151,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2833003471767681335, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
   m_PrefabInstance: {fileID: 1864919629}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2109544013 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5989128072714080401, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+  m_PrefabInstance: {fileID: 1864919629}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d34acbf8e4e904099d166fd5fd9a9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2136563074
 GameObject:
   m_ObjectHideFlags: 0
