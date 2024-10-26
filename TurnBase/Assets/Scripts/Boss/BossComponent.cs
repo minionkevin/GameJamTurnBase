@@ -25,7 +25,9 @@ public class BossComponent : MonoBehaviour
     private BossHandComponent leftHand;
     private BossHandComponent rightHand;
 
-    public void Setup(int2 bossHeadPos, int2 bossLeftHandPos, int2 bossRightHandPos,GameObject head, GameObject leftHand, GameObject rightHand)
+    AudioManager audioManager;
+
+    public void Setup(int2 bossHeadPos, int2 bossLeftHandPos, int2 bossRightHandPos,GameObject head, GameObject leftHand, GameObject rightHand,AudioManager am)
     {
         currHeadPos = bossHeadPos;
         currLeftHandPos = bossLeftHandPos;
@@ -38,6 +40,8 @@ public class BossComponent : MonoBehaviour
 
         this.leftHand = leftHand.GetComponent<BossHandComponent>();
         this.rightHand = rightHand.GetComponent<BossHandComponent>();
+
+        audioManager = am;
     }
 
     #region attack1-连续下劈
@@ -62,7 +66,7 @@ public class BossComponent : MonoBehaviour
             case 5:
                 DoAttackAndMoveHand(Attack1StepCheck(false));
                 break;
-            
+
         }
     }
     
@@ -108,6 +112,8 @@ public class BossComponent : MonoBehaviour
             await DoVerticalAttack(rightHandObj,currRightHandPos,false);
             rightHand.PlayChop();
         }
+        audioManager.AudioUI.clip = audioManager.AudioDic["interface4"];
+        audioManager.AudioUI.Play();
     }
     
     private bool Attack1StepCheck(bool isFirstTime)
@@ -138,9 +144,11 @@ public class BossComponent : MonoBehaviour
             if(isMoveBack)MoveObject(rightHandObj,isPlayerOnLeft?currLeftHandPos.x + 1:currLeftHandPos.x - 1,attack1yPos,ref currRightHandPos);
             leftHand.PlayChop();
         }
+        audioManager.AudioUI.clip = audioManager.AudioDic["interface4"];
+        audioManager.AudioUI.Play();
     }
     #endregion
-    
+
     #region attack2-左右双掌 
     public void DoAttack2Pre()
     {
@@ -175,7 +183,9 @@ public class BossComponent : MonoBehaviour
                 break;
             case 5:
                 MoveObject(rightHandObj, width - 2, height - 2, ref currRightHandPos);
-                await DoHeadVerticalAttack(); 
+                await DoHeadVerticalAttack();
+                audioManager.AudioUI.clip = audioManager.AudioDic["interface4"];
+                audioManager.AudioUI.Play();
                 await MoveObject(headObj, currHeadPos.x, 1, ref currHeadPos);
                 break;
         }
@@ -202,7 +212,10 @@ public class BossComponent : MonoBehaviour
     {
         GameManagerSingleton.Instance.BossLeftAnimator.Play("bossFist");
         GameManagerSingleton.Instance.BossRightAnimator.Play("bossFist");
-        
+
+        audioManager.AudioUI.clip = audioManager.AudioDic["部件蓄力"];
+        audioManager.AudioUI.Play();
+
         var tcs = new TaskCompletionSource<bool>();
         StartCoroutine(PlayAnimationAndWait("WarningTrigger", "bossWarning", tcs));
         SetupBossStartPos(new int2(1, height - 2),
@@ -225,6 +238,10 @@ public class BossComponent : MonoBehaviour
     
         var tcs = new TaskCompletionSource<bool>();
         StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
+
+        audioManager.AudioUI.clip = audioManager.AudioDic["激光扫射"];
+        audioManager.AudioUI.Play();
+
         return tcs.Task;
     }
     
@@ -502,6 +519,9 @@ public class BossComponent : MonoBehaviour
             else currRightHandPos = pos;
             await TileManagerSingleton.Instance.AddObjectToTile(pos,obj);   
         }
+
+        audioManager.AudioUI.clip = audioManager.AudioDic["拍掌 命中"];
+        audioManager.AudioUI.Play();
     }
     
     // placeholder animation

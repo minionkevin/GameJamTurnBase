@@ -44,7 +44,7 @@ public class PasswordPanelComponent : MonoBehaviour
             numComponent.PasswordSetup(indices[i]+1, this);
             numButton.Add(num);
         }
-        //btnContinue.gameObject.SetActive(false);
+        btnContinue.gameObject.SetActive(false);
 
         isPlayerA = GameManagerSingleton.Instance.IsPlayerA;
         if (isPlayerA)

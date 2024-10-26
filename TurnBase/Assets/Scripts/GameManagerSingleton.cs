@@ -107,7 +107,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         TileManagerSingleton.Instance.AddObjectToTile(bossLeftHandPos,bossLeftHand);
         var bossRightHand = Instantiate(BossRightHandPrefab);
         TileManagerSingleton.Instance.AddObjectToTile(bossRightHandPos,bossRightHand);
-        bossComponent.Setup(bossHeadPos,bossLeftHandPos,bossRightHandPos,bossHead,bossLeftHand,bossRightHand);
+        bossComponent.Setup(bossHeadPos, bossLeftHandPos, bossRightHandPos, bossHead, bossLeftHand, bossRightHand, audioManager);
 
         // Animator
         BossAnimator = bossHead.GetComponent<Animator>();
