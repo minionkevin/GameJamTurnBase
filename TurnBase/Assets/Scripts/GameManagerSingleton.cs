@@ -502,7 +502,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     {
         if (IsPlayerDie) yield break;
         ReorderInput();
-            
+        
         for (int i = 0; i < inputLists.Count; i++)
         {
             if (i % 2 == 0)
@@ -563,12 +563,13 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         PlayerHp_UI.Setup(playerStartHp);
         currTurnNum = 0;
         currHighlight = -1;
+        if(currTurnNum <= 3) currTutorialNum = 0;
+        
+        HandlePlayerDie(false);
+        HandleBossDie(false);
         
         HandlePlayerTurn();
         StartCoroutine(BattleCoroutine());
-
-        HandlePlayerDie(false);
-        HandleBossDie(false);
     }
 
     public void HandlePlayerDie(bool value)

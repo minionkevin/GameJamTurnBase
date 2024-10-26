@@ -221,7 +221,7 @@ public class BossComponent : MonoBehaviour
             int2 pos = tile.GetTilePos();
             if(!pos.Equals(targetPos)) attackList.Add(pos);
         }
-        GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
+        GameManagerSingleton.Instance.Player.CheckForDamage(attackList,2);
     
         var tcs = new TaskCompletionSource<bool>();
         StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
@@ -313,7 +313,7 @@ public class BossComponent : MonoBehaviour
                 attackList.Add(pos);
             }
         }
-        GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
+        GameManagerSingleton.Instance.Player.CheckForDamage(attackList,2);
         
         var tcs = new TaskCompletionSource<bool>();
         StartCoroutine(isLeft ? PlayAnimationAndWait("LeftLaserTrigger", "bossLaserL", tcs) : PlayAnimationAndWait("RightLaserTrigger", "bossLaserR", tcs));
@@ -424,7 +424,7 @@ public class BossComponent : MonoBehaviour
             int2 targetPos = new int2(currHeadPos.x, currHeadPos.y--);
             if (CheckLimit(targetPos)) attackList.Add(targetPos);
         }
-        GameManagerSingleton.Instance.Player.CheckForDamage(attackList,1);
+        GameManagerSingleton.Instance.Player.CheckForDamage(attackList,2);
         currHeadPos = attackList[^1];
         return TriggerVerticalAttackAnimation(attackList[^1],headObj);
     }

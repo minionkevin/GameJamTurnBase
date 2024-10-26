@@ -779,7 +779,7 @@ MonoBehaviour:
   Height: 4
   BossData: {fileID: 11400000, guid: b8583f42c5881f84d8865c991b14f09d, type: 2}
   AItemData: {fileID: 11400000, guid: 6c96cd782392add4dbfe3713f1f6ab88, type: 2}
-  BItemData: {fileID: 11400000, guid: 0bb938a018af24d408c5b0b4d1d252f4, type: 2}
+  BItemData: {fileID: 11400000, guid: 2a86f2d833b95774ebf29fe50a5648cf, type: 2}
   ABossInputData: {fileID: 11400000, guid: 3d429f112b81c1c418bb749815ce8159, type: 2}
   BBossInputData: {fileID: 11400000, guid: 6efe26bb416fbf74586ff4e7676b789f, type: 2}
   bossHeadPos:
@@ -791,8 +791,8 @@ MonoBehaviour:
   bossRightHandPos:
     x: 5
     y: 0
-  bossStartHp: 40
-  playerStartHp: 5
+  bossStartHp: 60
+  playerStartHp: 1
   countdownTime: 120
   PlayerStartPos:
     x: 4
