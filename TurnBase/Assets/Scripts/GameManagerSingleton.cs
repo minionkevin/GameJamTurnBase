@@ -75,7 +75,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public TextMeshProUGUI CurrTurnLabel;
     
     private int currTurnNum;
-    private List<int> BossActionList = new List<int>();
+    public List<int> BossActionList = new List<int>();
     private int currHighlight = -1;
     private int currTutorialNum = 0;
 
@@ -237,7 +237,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         // todo 检测玩家血量并决定下一个boss指令
         HandleBossActions();
 
-        switch (currTurnNum)
+        switch (currTutorialNum)
         {
             case 1:
                 ShowHintPanel(2);
@@ -279,6 +279,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     private void BossStartPoss()
     {
         inputLists.Add(BossData.BossActions[BossActionList[0]].BossActions[0]);
+        Debug.LogError(BossActionList[0]);
+        
+        Debug.LogError(BossData.BossActions[BossActionList[0]].BossActions[0]);
     }
 
     /// <summary>
@@ -296,9 +299,12 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     }
 
     private Task HandleBossInput(int value)
-    {
+    {   
+        Debug.LogError(value);
         if(IsPlayerDie) return null;
         if (value == -1) return null;
+        
+        // Debug.LogError(value);
         switch (value)
         {
             case BossInputType.ATTACK10:
@@ -554,12 +560,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         BossAnimator.Play("bossIdle");
         // BossAnimator.CrossFade("bossIdle",0.1f);
         
-        PlayerInput.ClearMemoryList();
-        BossInputList.Clear();
-        PlayerInputList.Clear();
-        inputLists.Clear();
         Player.Reset();
-
         PlayerHp_UI.Clear();
         
         BossHp_UI.Setup(bossStartHp);
@@ -571,8 +572,8 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         HandlePlayerDie(false);
         HandleBossDie(false);
         
-        HandlePlayerTurn();
-        StartCoroutine(BattleCoroutine());
+        inputLists.Clear();
+        StartGame();
     }
 
     public void HandlePlayerDie(bool value)
