@@ -454,13 +454,13 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                 }
                 case PlayerInputType.ATTACK2:
                 {
-                    audioManager.AudioPlayer.clip = audioManager.AudioDic["swing3"];
+                    audioManager.AudioPlayer.clip = audioManager.AudioDic["长矛刺"];
                     audioManager.AudioPlayer.Play();
                     return Player.DoCrossAttack();
                 }
                 case PlayerInputType.DEFENSE:
                 {
-                    audioManager.AudioPlayer.clip = audioManager.AudioDic["防护罩开启"];
+                    audioManager.AudioPlayer.clip = audioManager.AudioDic["举起镜子"];
                     audioManager.AudioPlayer.Play();
                     Player.IsLastDefense = true;
                     return Player.DoProtected();

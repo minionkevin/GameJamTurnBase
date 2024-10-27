@@ -112,7 +112,7 @@ public class BossComponent : MonoBehaviour
             await DoVerticalAttack(rightHandObj,currRightHandPos,false);
             rightHand.PlayChop();
         }
-        audioManager.AudioUI.clip = audioManager.AudioDic["interface4"];
+        audioManager.AudioUI.clip = audioManager.AudioDic["巨石撞击地面"];
         audioManager.AudioUI.Play();
     }
     
@@ -144,7 +144,7 @@ public class BossComponent : MonoBehaviour
             if(isMoveBack)MoveObject(rightHandObj,isPlayerOnLeft?currLeftHandPos.x + 1:currLeftHandPos.x - 1,attack1yPos,ref currRightHandPos);
             leftHand.PlayChop();
         }
-        audioManager.AudioUI.clip = audioManager.AudioDic["interface4"];
+        audioManager.AudioUI.clip = audioManager.AudioDic["巨石撞击地面"];
         audioManager.AudioUI.Play();
     }
     #endregion
@@ -184,7 +184,7 @@ public class BossComponent : MonoBehaviour
             case 5:
                 MoveObject(rightHandObj, width - 2, height - 2, ref currRightHandPos);
                 await DoHeadVerticalAttack();
-                audioManager.AudioUI.clip = audioManager.AudioDic["interface4"];
+                audioManager.AudioUI.clip = audioManager.AudioDic["巨石撞击地面"];
                 audioManager.AudioUI.Play();
                 await MoveObject(headObj, currHeadPos.x, 1, ref currHeadPos);
                 break;
@@ -523,7 +523,7 @@ public class BossComponent : MonoBehaviour
             await TileManagerSingleton.Instance.AddObjectToTile(pos,obj);   
         }
 
-        audioManager.AudioUI.clip = audioManager.AudioDic["拍掌 命中"];
+        audioManager.AudioUI.clip = audioManager.AudioDic["巨石撞击地面"];
         audioManager.AudioUI.Play();
     }
     
