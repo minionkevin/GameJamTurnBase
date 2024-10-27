@@ -336,7 +336,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d97d0f26cacd28649917b27bbfb8a2eb, type: 3}
   - {fileID: 8300000, guid: fae37b69e2e7b60418e4f556854c60bd, type: 3}
   - {fileID: 8300000, guid: d2a49c48302c5274fab040550b5c7a5d, type: 3}
-  - {fileID: 8300000, guid: f2b9851fca69a6249b96fde334cc1ce5, type: 3}
+  - {fileID: 8300000, guid: 143859ed40278574394aaf77311e4db1, type: 3}
   - {fileID: 8300000, guid: 8380f3f0474dbad4eb69d5901a31f9e6, type: 3}
   - {fileID: 8300000, guid: 549676d8ab35edb4caddbb8cdfcb7b04, type: 3}
   - {fileID: 8300000, guid: 3c006d63330d3c542ab69a8727402bb3, type: 3}
@@ -344,7 +344,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 105091833ea33cb478cdb7c765dc334a, type: 3}
   - {fileID: 8300000, guid: caae7ecd95d5bb0448f4a7d0536ae608, type: 3}
   - {fileID: 8300000, guid: 7f0b7c6c1936b7a4fa8e32c5283ad0de, type: 3}
-  - {fileID: 8300000, guid: 855141e5a1e58934cb5c7f206256cd40, type: 3}
+  - {fileID: 8300000, guid: 488eed619965fd247a3f6a179a24bfe1, type: 3}
   - {fileID: 8300000, guid: 49f8c04b0fe764440807f694ee27c794, type: 3}
   - {fileID: 8300000, guid: c740893563d3a5e46bd796660eb8df36, type: 3}
   - {fileID: 8300000, guid: 1a3f46793953729448dcdb1a8b1c8bba, type: 3}
@@ -355,6 +355,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4086087cd3d8aa2448976dec8c7d3df8, type: 3}
   - {fileID: 8300000, guid: 7161e6ddd99b2bd4c905e1c86c565947, type: 3}
   - {fileID: 8300000, guid: 7f6f15de87085ef4b8381c6db964818e, type: 3}
+  - {fileID: 8300000, guid: 8c81931b59c8ee743b496e14818c3199, type: 3}
+  - {fileID: 8300000, guid: 2f2bd361788be484aade85d490046944, type: 3}
+  - {fileID: 8300000, guid: bdf27d802b4182b44ae5943b29c0f951, type: 3}
 --- !u!114 &300765798 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5817492077207233095, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
@@ -1318,6 +1321,7 @@ PrefabInstance:
       propertyPath: audioManager
       value: 
       objectReference: {fileID: 290195721}
+
     - target: {fileID: 3996034675924738379, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
