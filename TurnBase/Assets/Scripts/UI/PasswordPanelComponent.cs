@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PasswordPanelComponent : MonoBehaviour
 {
@@ -11,9 +12,9 @@ public class PasswordPanelComponent : MonoBehaviour
     public List<GameObject> NumImage = new List<GameObject>();
     public List<RectTransform> NumPosList = new List<RectTransform>();
     public RectTransform HintPanel = new RectTransform();
-    public Text HintText;
+    public TMP_Text HintText;
     public RectTransform ConfirmPanel = new RectTransform();
-    public Text ConfirmText;
+    public TMP_Text ConfirmText;
     public Button btnContinue;
     private List<GameObject> numButton = new List<GameObject>();
     bool isPlayerA;
