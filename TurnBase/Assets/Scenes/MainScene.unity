@@ -1233,14 +1233,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2451691398068744949, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 2929676953768897822, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3873725878160149167, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3915801342201384294, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: audioManager
       value: 
       objectReference: {fileID: 290195721}
+    - target: {fileID: 4403059431162493100, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4403059431162493100, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4403059431162493100, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4403059431162493100, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -25
+      objectReference: {fileID: 0}
     - target: {fileID: 4660398942587850481, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1249,6 +1273,22 @@ PrefabInstance:
       propertyPath: audioManager
       value: 
       objectReference: {fileID: 290195721}
+    - target: {fileID: 5984917173961152221, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5984917173961152221, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5984917173961152221, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5984917173961152221, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -25
+      objectReference: {fileID: 0}
     - target: {fileID: 5989128072714080401, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: audioManager
       value: 
