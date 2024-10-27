@@ -12,9 +12,9 @@ public class PasswordPanelComponent : MonoBehaviour
     public List<GameObject> NumImage = new List<GameObject>();
     public List<RectTransform> NumPosList = new List<RectTransform>();
     public RectTransform HintPanel = new RectTransform();
-    public TMP_Text HintText;
+    public Text HintText;
     public RectTransform ConfirmPanel = new RectTransform();
-    public TMP_Text ConfirmText;
+    public Text ConfirmText;
     public Button btnContinue;
     private List<GameObject> numButton = new List<GameObject>();
     bool isPlayerA;
