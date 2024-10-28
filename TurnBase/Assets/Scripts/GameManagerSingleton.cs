@@ -74,8 +74,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
     public bool IsPlayerA;
     public bool IsPlayerDie;
-
-    public TextMeshProUGUI CurrTurnLabel;
     
     private int currTurnNum;
     public List<int> BossActionList = new List<int>();
@@ -137,7 +135,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         SetupItems();
         
         // Timer setup
-        CurrTurnLabel.text = currTurnNum.ToString();
         CountDown_UI.OnTimerEnd += HandleTimerEnd;
 
         audioManager.AudioBGM.clip = audioManager.AudioDic["游戏主bgm"];
@@ -595,7 +592,6 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
         currTurnNum++;
         if (currTurnNum > 19) currTurnNum -= 10;
 
-        CurrTurnLabel.text = currTurnNum.ToString();
         // 重新开始下一轮
         HandlePlayerTurn();
     }
