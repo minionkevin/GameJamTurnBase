@@ -1307,6 +1307,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3873725878160149167, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3915801342201384294, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: audioManager
       value: 
@@ -1329,19 +1333,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4403059431162493100, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4403059431162493100, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4403059431162493100, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 4403059431162493100, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 4414975393869351945, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1385,19 +1389,19 @@ PrefabInstance:
       objectReference: {fileID: 290195721}
     - target: {fileID: 5984917173961152221, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5984917173961152221, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5984917173961152221, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 5984917173961152221, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 5989128072714080401, guid: 0b151c9bc9e02994aa08182f72219728, type: 3}
       propertyPath: audioManager

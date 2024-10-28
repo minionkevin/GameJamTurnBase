@@ -56,14 +56,14 @@ public class PasswordPanelComponent : MonoBehaviour
         else
         {
             HintPanel.gameObject.SetActive(true);
-            HintText.text = "根据玩家A的提示依次点亮图标";
+            HintText.text = "根据搭档的提示依次点亮符文";
         }
     }
 
     public void showPasswordHint()
     {
         HintPanel.gameObject.SetActive(true);
-        HintText.text = "press→";
+        HintText.text = "请依次点亮，并告诉你的搭档";
         ConfirmText.text = "";
 
         for (int i = phase * 3; i < (phase + 1) * 3; i++)
@@ -129,7 +129,7 @@ public class PasswordPanelComponent : MonoBehaviour
                 {
                     Password.selectPWSeed(seedSequenceID);
                     //HintPanel.gameObject.SetActive(false);
-                    string msg = isPlayerA ? "等待玩家B完成后，点击继续" : "点击Continue继续";
+                    string msg = isPlayerA ? "等待搭档完成后，点击继续" : "石像已被唤醒";
                     HintText.text = msg;
                     ConfirmPanel.gameObject.SetActive(false);
                     if(!isPlayerA)
@@ -144,7 +144,7 @@ public class PasswordPanelComponent : MonoBehaviour
                 }
                 //验证通过，显示等待信息
                 string player = isPlayerA ? "B" : "A";
-                HintText.text = "按照玩家" + player + "的提示输入：";
+                HintText.text = "按照搭档的提示输入：";
                 //清空
                 for (int i = 1; i < ConfirmPanel.childCount; i++)//keep text, remove others
                 {

@@ -20,13 +20,13 @@ public class ItemComponent : MonoBehaviour
     {
         // 更新manager
         GameManagerSingleton.Instance.ItemDic[Id]--;
-        if (Id == 3) GameManagerSingleton.Instance.ItemDic[Id] = 0;
+        //if (Id == 3) GameManagerSingleton.Instance.ItemDic[Id] = 0;
 
         if (GameManagerSingleton.Instance.ItemDic[Id] == 0)
         {
             GetComponent<Button>().interactable = false;
-            if (Id == 3) GameManagerSingleton.Instance.HealCountLabel.text = "0";
         }
+        if (Id == 3) GameManagerSingleton.Instance.HealCountLabel.text = GameManagerSingleton.Instance.ItemDic[3].ToString();
         switchPanel.SendItem(Id);
     }
 }
