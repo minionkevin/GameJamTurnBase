@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using Random = UnityEngine.Random;
 
 public class PasswordPanelComponent : MonoBehaviour
@@ -245,10 +243,7 @@ public class PasswordPanelComponent : MonoBehaviour
             HintText.text = "seedSequenceID=" + seedSequenceID;
         }
     }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A)) HandleStart();
-    }
+
     public void ShowPasswordPanel()
     {
         Setup();
