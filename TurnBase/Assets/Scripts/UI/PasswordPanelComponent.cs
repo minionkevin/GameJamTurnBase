@@ -199,11 +199,6 @@ public class PasswordPanelComponent : MonoBehaviour
         audioManager.AudioUI.Play();
     }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.A)) HandleStart();
-    }
-
     void updateButtonsView(int btnID)
     {
         string spriteName = "";
