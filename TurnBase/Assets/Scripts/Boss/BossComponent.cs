@@ -8,6 +8,7 @@ using UnityEngine;
 public class BossComponent : MonoBehaviour
 {
     public Material BossUnderDamageMaterial;
+    public SpriteRenderer BossSprite;
     
     private int2 currHeadPos;
     private int2 currLeftHandPos;
@@ -557,7 +558,7 @@ public class BossComponent : MonoBehaviour
         return x >= 0 && x < width && y >= 0 && y < height;
     }
     
-    public async void CheckForDamage(int value, List<int2> attackList)
+    public void CheckForDamage(int value, List<int2> attackList)
     {
         foreach (int2 pos in attackList)
         {
@@ -568,20 +569,23 @@ public class BossComponent : MonoBehaviour
             if (left||right||head)
             {
                 GameManagerSingleton.Instance.BossHp_UI.OnTakeDamage(value);
-                GameManagerSingleton.Instance.BossAnimator.SetTrigger("DamageTrigger");
             }
             
-            // GameObject changeObj;
-            // if (left) changeObj = GameManagerSingleton.Instance.BossLeftHand;
-            // else if (right) changeObj = GameManagerSingleton.Instance.BossRightHand;
-            // else if (head) changeObj = GameManagerSingleton.Instance.BossHead;
-            // else continue;
-            //
-            // var tmp = changeObj.GetComponent<SpriteRenderer>().material;
-            // changeObj.GetComponent<SpriteRenderer>().material = BossUnderDamageMaterial;
-            // await Task.Delay(5000);
-            // changeObj.GetComponent<SpriteRenderer>().material = tmp;
+            if (left)
+            { 
+                HandleHandTakeDamage(GameManagerSingleton.Instance.BossLeftHand.GetComponent<BossHandComponent>());
+            }
+            else if (right)
+            {
+                HandleHandTakeDamage(GameManagerSingleton.Instance.BossRightHand.GetComponent<BossHandComponent>());
+            }
+            else if (head) GameManagerSingleton.Instance.BossAnimator.SetTrigger("DamageTrigger");
         }
+    }
+
+    private void HandleHandTakeDamage(BossHandComponent bossHand)
+    {
+        bossHand.HandleAttack(BossUnderDamageMaterial);
     }
     
     private bool CheckPos(int2 targetPos, int2 bossPoss)
