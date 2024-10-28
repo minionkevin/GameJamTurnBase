@@ -58,7 +58,7 @@ public class PlayerComponent : MonoBehaviour
         int2 newPos = dir + currPlayerPos;
         if (!CheckLimit(newPos)) return null;
         currPlayerPos = newPos;
-        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger(dir.Equals(new int2(-1, 0)) ? "MoveLeftTrigger" : "MoveRightTrigger");
+        if(dir.y==0) GameManagerSingleton.Instance.PlayerAnimator.SetTrigger(dir.Equals(new int2(-1, 0)) ? "MoveLeftTrigger" : "MoveRightTrigger");
         return TileManagerSingleton.Instance.MoveObjectToTile(currPlayerPos, gameObject);
     }
     
@@ -81,7 +81,7 @@ public class PlayerComponent : MonoBehaviour
         isJumping = true;
         GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("JumpTrigger");
         await DoMove(new int2(0, 1));
-        GameManagerSingleton.Instance.PlayerAnimator.SetTrigger("JumpIdleTrigger");
+        GameManagerSingleton.Instance.PlayerAnimator.SetBool("Jump",true);
 
         IsLastJump = true;
     }
@@ -93,6 +93,7 @@ public class PlayerComponent : MonoBehaviour
         DoMove(new int2(0, -1));
         audioManager.AudioPlayer.clip = audioManager.AudioDic["跳跃到落地"];
         audioManager.AudioPlayer.Play();
+        GameManagerSingleton.Instance.PlayerAnimator.SetBool("Jump",false);
         IsLastJump = false;
     }
 

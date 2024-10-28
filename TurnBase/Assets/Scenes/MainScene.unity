@@ -1188,6 +1188,9 @@ MonoBehaviour:
   PlayerAnimator: {fileID: 0}
   BossLeftAnimator: {fileID: 0}
   BossRightAnimator: {fileID: 0}
+  BossHead: {fileID: 0}
+  BossLeftHand: {fileID: 0}
+  BossRightHand: {fileID: 0}
   CountDown_UI: {fileID: 1159561586}
   BossHp_UI: {fileID: 1700279860}
   PlayerHp_UI: {fileID: 373681431}

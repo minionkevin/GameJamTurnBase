@@ -203,6 +203,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d75820a263a4dcb4399ba9ca3051007f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BossUnderDamageMaterial: {fileID: 2100000, guid: fd8f23081e1375f4ca90518e7e0e7850, type: 2}
+  BossSprite: {fileID: 0}
 --- !u!1 &2624729064775105722
 GameObject:
   m_ObjectHideFlags: 0

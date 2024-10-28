@@ -5336,7 +5336,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Chop: {fileID: 5441916251372812340}
   Palm: {fileID: 8795700831739189697}
-  Fist: {fileID: 0}
+  Fist: {fileID: 7045662974434834008}
+  HandSprites:
+  - {fileID: 6630469950531672433}
+  - {fileID: 8621067973519459496}
+  - {fileID: 6411573051912574258}
 --- !u!1001 &7598626884246677674
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5509,6 +5513,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: abad7e83adde528428ce66fad1dd06ec, type: 3}
+--- !u!198 &7045662974434834008 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1397001722868380011, guid: abad7e83adde528428ce66fad1dd06ec, type: 3}
+  m_PrefabInstance: {fileID: 8260759017486468915}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7045662974453098046 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1397001722882482445, guid: abad7e83adde528428ce66fad1dd06ec, type: 3}

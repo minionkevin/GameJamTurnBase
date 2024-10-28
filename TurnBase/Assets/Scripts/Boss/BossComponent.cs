@@ -7,6 +7,9 @@ using UnityEngine;
 
 public class BossComponent : MonoBehaviour
 {
+    public Material BossUnderDamageMaterial;
+    public SpriteRenderer BossSprite;
+    
     private int2 currHeadPos;
     private int2 currLeftHandPos;
     private int2 currRightHandPos;
@@ -559,16 +562,35 @@ public class BossComponent : MonoBehaviour
     {
         foreach (int2 pos in attackList)
         {
-            if (TileManagerSingleton.Instance.CheckPos(currLeftHandPos, pos) ||
-                     TileManagerSingleton.Instance.CheckPos(currRightHandPos, pos) ||
-                     TileManagerSingleton.Instance.CheckPos(currHeadPos, pos))
+            bool left = CheckPos(currLeftHandPos, pos);
+            bool right = CheckPos(currRightHandPos, pos);
+            bool head = CheckPos(currHeadPos, pos);
+            
+            if (left||right||head)
             {
                 GameManagerSingleton.Instance.BossHp_UI.OnTakeDamage(value);
             }
-            TileManagerSingleton.Instance.ChangeTileColorBoss(pos);
+            
+            if (left)
+            { 
+                HandleHandTakeDamage(GameManagerSingleton.Instance.BossLeftHand.GetComponent<BossHandComponent>());
+            }
+            else if (right)
+            {
+                HandleHandTakeDamage(GameManagerSingleton.Instance.BossRightHand.GetComponent<BossHandComponent>());
+            }
+            else if (head) GameManagerSingleton.Instance.BossAnimator.SetTrigger("DamageTrigger");
         }
-        
-        GameManagerSingleton.Instance.BossAnimator.SetTrigger("DamageTrigger");
+    }
+
+    private void HandleHandTakeDamage(BossHandComponent bossHand)
+    {
+        bossHand.HandleAttack(BossUnderDamageMaterial);
+    }
+    
+    private bool CheckPos(int2 targetPos, int2 bossPoss)
+    {
+        return TileManagerSingleton.Instance.CheckPos(targetPos, bossPoss);
     }
 
     public Task DieAnimation()
