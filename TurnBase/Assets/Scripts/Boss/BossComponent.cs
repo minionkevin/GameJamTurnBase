@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class BossComponent : MonoBehaviour
 {
+    public Material BossUnderDamageMaterial;
+    
     private int2 currHeadPos;
     private int2 currLeftHandPos;
     private int2 currRightHandPos;
@@ -555,20 +557,36 @@ public class BossComponent : MonoBehaviour
         return x >= 0 && x < width && y >= 0 && y < height;
     }
     
-    public void CheckForDamage(int value, List<int2> attackList)
+    public async void CheckForDamage(int value, List<int2> attackList)
     {
         foreach (int2 pos in attackList)
         {
-            if (TileManagerSingleton.Instance.CheckPos(currLeftHandPos, pos) ||
-                     TileManagerSingleton.Instance.CheckPos(currRightHandPos, pos) ||
-                     TileManagerSingleton.Instance.CheckPos(currHeadPos, pos))
+            bool left = CheckPos(currLeftHandPos, pos);
+            bool right = CheckPos(currRightHandPos, pos);
+            bool head = CheckPos(currHeadPos, pos);
+            
+            if (left||right||head)
             {
                 GameManagerSingleton.Instance.BossHp_UI.OnTakeDamage(value);
+                GameManagerSingleton.Instance.BossAnimator.SetTrigger("DamageTrigger");
             }
-            TileManagerSingleton.Instance.ChangeTileColorBoss(pos);
+            
+            // GameObject changeObj;
+            // if (left) changeObj = GameManagerSingleton.Instance.BossLeftHand;
+            // else if (right) changeObj = GameManagerSingleton.Instance.BossRightHand;
+            // else if (head) changeObj = GameManagerSingleton.Instance.BossHead;
+            // else continue;
+            //
+            // var tmp = changeObj.GetComponent<SpriteRenderer>().material;
+            // changeObj.GetComponent<SpriteRenderer>().material = BossUnderDamageMaterial;
+            // await Task.Delay(5000);
+            // changeObj.GetComponent<SpriteRenderer>().material = tmp;
         }
-        
-        GameManagerSingleton.Instance.BossAnimator.SetTrigger("DamageTrigger");
+    }
+    
+    private bool CheckPos(int2 targetPos, int2 bossPoss)
+    {
+        return TileManagerSingleton.Instance.CheckPos(targetPos, bossPoss);
     }
 
     public Task DieAnimation()

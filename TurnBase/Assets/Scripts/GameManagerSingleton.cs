@@ -43,6 +43,9 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public Animator PlayerAnimator;
     public Animator BossLeftAnimator;
     public Animator BossRightAnimator;
+    public GameObject BossHead;
+    public GameObject BossLeftHand;
+    public GameObject BossRightHand;
 
     public CountDown CountDown_UI;
     public BossHp BossHp_UI;
@@ -97,23 +100,23 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
 
         // Boss spawn
         // 这里的boss只是一个数据载体，剩余的三个boss prefab才是视觉上看到的
-        var bossHead = Instantiate(BossHeadPrefab);
-        TileManagerSingleton.Instance.AddObjectToTile(bossHeadPos,bossHead);
-        var bossComponent = bossHead.GetComponent<BossComponent>();
+        BossHead = Instantiate(BossHeadPrefab);
+        TileManagerSingleton.Instance.AddObjectToTile(bossHeadPos,BossHead);
+        var bossComponent = BossHead.GetComponent<BossComponent>();
         Boss = bossComponent;
         
         // Boss hand spawn
-        var bossLeftHand = Instantiate(BossLeftHandPrefab);
-        TileManagerSingleton.Instance.AddObjectToTile(bossLeftHandPos,bossLeftHand);
-        var bossRightHand = Instantiate(BossRightHandPrefab);
-        TileManagerSingleton.Instance.AddObjectToTile(bossRightHandPos,bossRightHand);
-        bossComponent.Setup(bossHeadPos, bossLeftHandPos, bossRightHandPos, bossHead, bossLeftHand, bossRightHand, audioManager);
+        BossLeftHand = Instantiate(BossLeftHandPrefab);
+        TileManagerSingleton.Instance.AddObjectToTile(bossLeftHandPos,BossLeftHand);
+        BossRightHand = Instantiate(BossRightHandPrefab);
+        TileManagerSingleton.Instance.AddObjectToTile(bossRightHandPos,BossRightHand);
+        bossComponent.Setup(bossHeadPos, bossLeftHandPos, bossRightHandPos, BossHead, BossLeftHand, BossRightHand, audioManager);
 
         // Animator
-        BossAnimator = bossHead.GetComponent<Animator>();
+        BossAnimator = BossHead.GetComponent<Animator>();
         PlayerAnimator = player.GetComponent<Animator>();
-        BossLeftAnimator = bossLeftHand.GetComponent<Animator>();
-        BossRightAnimator = bossRightHand.GetComponent<Animator>();
+        BossLeftAnimator = BossLeftHand.GetComponent<Animator>();
+        BossRightAnimator = BossRightHand.GetComponent<Animator>();
 
         foreach (var data in IsPlayerA ? ABossInputData.InputList : BBossInputData.InputList)
         {
@@ -578,7 +581,7 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
                     
                 yield return StartCoroutine(WaitForTask(HandleBossInput(inputLists[i])));
             }   
-            yield return new WaitForSecondsRealtime(1f);
+            yield return new WaitForSecondsRealtime(0.75f);
         }   
         
         

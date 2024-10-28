@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Random = UnityEngine.Random;
 
 public class PasswordPanelComponent : MonoBehaviour
 {
@@ -195,6 +197,11 @@ public class PasswordPanelComponent : MonoBehaviour
         }
         audioManager.AudioUI.clip = audioManager.AudioDic["激活符号"];
         audioManager.AudioUI.Play();
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.A)) HandleStart();
     }
 
     void updateButtonsView(int btnID)
