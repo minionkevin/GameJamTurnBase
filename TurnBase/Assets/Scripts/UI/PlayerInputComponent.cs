@@ -35,6 +35,7 @@ public class PlayerInputComponent : MonoBehaviour
             if (itemData[i - 3] <= 0) buttonList[i].interactable = false;
             else buttonList[i].interactable = true;
         }
+        GameManagerSingleton.Instance.HealCountLabel.text = GameManagerSingleton.Instance.ItemDic[3].ToString();
     }
 
     public void UpdateCurrMemory(List<int> index)
@@ -133,6 +134,7 @@ public class PlayerInputComponent : MonoBehaviour
         if (!InputEnabled || memoryList.Count >= MaxActionCount) return;
         if (healButton == null) healButton = button;
         GameManagerSingleton.Instance.ItemDic[3]--;
+        GameManagerSingleton.Instance.HealCountLabel.text =  GameManagerSingleton.Instance.ItemDic[3].ToString();
         healTmp++;
         AddBtnToMemoryList(6);
         GameManagerSingleton.Instance.PlayerInputList.Add(PlayerInputType.HEAL);
@@ -208,6 +210,7 @@ public class PlayerInputComponent : MonoBehaviour
         if (healTmp > 0)
         {
             GameManagerSingleton.Instance.ItemDic[3]+=healTmp;
+            GameManagerSingleton.Instance.HealCountLabel.text =  GameManagerSingleton.Instance.ItemDic[3].ToString();
             healTmp = 0;
             RefreshHeal();
         }

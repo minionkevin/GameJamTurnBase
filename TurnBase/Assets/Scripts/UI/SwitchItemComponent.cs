@@ -69,7 +69,7 @@ public class SwitchItemComponent : MonoBehaviour
     
     public async void SendItem(int id)
     {
-        audioManager.AudioUI.clip = audioManager.AudioDic["ÎïÆ·´«ËÍ³É¹¦"];
+        audioManager.AudioUI.clip = audioManager.AudioDic["ç‰©å“ä¼ é€æˆåŠŸ"];
         audioManager.AudioUI.Play();
 
         Password.ItemPasswordRenew(id);
@@ -163,7 +163,7 @@ public class SwitchItemComponent : MonoBehaviour
     }
 
 
-    public void UpdateInputAction()
+    private void UpdateInputAction()
     {
         if(deleteId!=-1)   GameManager.UpdateItems(deleteId);
     }

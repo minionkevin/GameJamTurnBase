@@ -11,4 +11,10 @@ public class PlayerDeathComponent : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void ShowStaff()
+    {
+        gameObject.SetActive(false);
+        GameManagerSingleton.Instance.StaffPanel.SetActive(true);
+    }
 }

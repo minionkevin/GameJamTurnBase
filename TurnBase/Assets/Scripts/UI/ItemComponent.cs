@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,11 +20,12 @@ public class ItemComponent : MonoBehaviour
     {
         // 更新manager
         GameManagerSingleton.Instance.ItemDic[Id]--;
+        if (Id == 3) GameManagerSingleton.Instance.ItemDic[Id] = 0;
 
-        if (GameManagerSingleton.Instance.ItemDic[Id] == 0) GetComponent<Button>().interactable = false;
-        else
+        if (GameManagerSingleton.Instance.ItemDic[Id] == 0)
         {
-            // 更新数量label
+            GetComponent<Button>().interactable = false;
+            if (Id == 3) GameManagerSingleton.Instance.HealCountLabel.text = "0";
         }
         switchPanel.SendItem(Id);
     }

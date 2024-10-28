@@ -25,7 +25,6 @@ public class BaseSingleton<T>: MonoBehaviour where T:BaseSingleton<T>
         }
         else if (instance != this)
         {
-            Debug.LogError("Another instance "+  typeof(T).Name + " exists");
             Destroy(gameObject);
         }
     }

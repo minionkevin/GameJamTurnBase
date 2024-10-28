@@ -59,7 +59,10 @@ public class GameManagerSingleton : BaseSingleton<GameManagerSingleton>
     public GameObject FirstHintPanel;
     public GameObject SecondHintPanel;
     public GameObject ThirdHintPanel;
+    public GameObject StaffPanel;
 
+    public TextMeshProUGUI HealCountLabel;
+        
     public PlayerComponent Player;
     public BossComponent Boss;
     
