@@ -245,7 +245,10 @@ public class PasswordPanelComponent : MonoBehaviour
             HintText.text = "seedSequenceID=" + seedSequenceID;
         }
     }
-
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A)) HandleStart();
+    }
     public void ShowPasswordPanel()
     {
         Setup();
